@@ -1,8 +1,55 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
 ---
 
-<BaseLayout title="Shen Europe">
-  <h1>Samuel Shen Double Basses in Europe</h1>
-  <p>Personally selected instruments, available for trial in Berlin.</p>
+<BaseLayout
+  title="Shen Europe | Samuel Shen Double Basses"
+  description="Samuel Shen double basses selected in Suzhou and prepared in Berlin."
+>
+  <Hero />
+  <section>
+    <p>Shen Europe</p>
+
+    <h1>Samuel Shen Double Basses in Europe</h1>
+	<h1 class="bg-red-500 p-10 text-6xl font-bold text-white">
+
+  Tailwind Test
+
+</h1>
+    <p>
+      Personally selected in Suzhou and professionally prepared in Berlin.
+      Available for trial in Berlin or by special order throughout Europe.
+    </p>
+
+    <p>
+      <a href="/available">View available instruments</a>
+    </p>
+  </section>
+
+  <section>
+    <h2>Models</h2>
+
+    <p>
+      Explore selected Shen models and learn which shapes, construction levels
+      and sizes may suit your needs.
+    </p>
+
+    <p>
+      <a href="/models">View models</a>
+    </p>
+  </section>
+
+  <section>
+    <h2>Available in Berlin</h2>
+
+    <p>
+      A small selection of instruments is available for immediate trial and
+      purchase. Other Shen models can be ordered through Shen Europe.
+    </p>
+
+    <p>
+      <a href="/available">See current availability</a>
+    </p>
+  </section>
 </BaseLayout>
