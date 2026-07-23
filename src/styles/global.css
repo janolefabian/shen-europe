@@ -1,9 +1,40 @@
 @import "tailwindcss";
 
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #171717;
+  background: #ffffff;
+  text-rendering: optimizeLegibility;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  @apply bg-white text-neutral-900;
+  margin: 0;
+}
+
+header[data-scrolled="true"] {
+  height: 68px;
+}
+
+@media (min-width: 640px) {
+  header[data-scrolled="true"] {
+    height: 82px;
+  }
+}
+
+header[data-scrolled="true"] .logo {
+  font-size: 1.35rem;
+}
+
+@media (min-width: 640px) {
+  header[data-scrolled="true"] .logo {
+    font-size: 1.6rem;
+  }
+}
+
+.font-serif {
+  font-family: "Times New Roman", Times, serif;
 }

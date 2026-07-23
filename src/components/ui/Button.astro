@@ -1,0 +1,52 @@
+---
+interface Props {
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  variant?: "solid" | "outline" | "text";
+  size?: "sm" | "md" | "lg";
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  type = "button",
+  variant = "solid",
+  size = "md",
+  class: className = "",
+  ariaLabel,
+} = Astro.props;
+
+const base = "inline-flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2";
+const variants = {
+  solid: "bg-neutral-950 text-white hover:bg-neutral-700",
+  outline: "border border-neutral-950 text-neutral-950 hover:bg-neutral-950 hover:text-white",
+  text: "border-b border-neutral-950 pb-1 text-neutral-950 hover:opacity-55",
+};
+const sizes = {
+  sm: variant === "text" ? "text-sm" : "px-4 py-2 text-sm",
+  md: variant === "text" ? "text-sm font-medium" : "px-6 py-3 text-sm font-medium",
+  lg: variant === "text" ? "text-base font-medium" : "px-8 py-4 text-base font-medium",
+};
+const rounded = variant === "text" ? "" : "rounded-full";
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      aria-label={ariaLabel}
+      class:list={[base, variants[variant], sizes[size], rounded, className]}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button
+      type={type}
+      aria-label={ariaLabel}
+      class:list={[base, variants[variant], sizes[size], rounded, className]}
+    >
+      <slot />
+    </button>
+  )
+}

@@ -1,5 +1,28 @@
-<footer>
+---
+import Container from "./layout/Container.astro";
+---
 
-  <p>© {new Date().getFullYear()} Shen Europe</p>
+<footer class="border-t border-neutral-200 bg-white">
+  <Container class="grid gap-10 py-10 md:grid-cols-2">
+    <div>
+      <p class="font-serif text-2xl tracking-[-0.03em] text-neutral-950">
+        Shen Europe
+      </p>
 
+      <p class="mt-4 max-w-md text-sm leading-relaxed text-neutral-600">
+        Samuel Shen double basses selected in Suzhou and professionally prepared
+        in Berlin.
+      </p>
+    </div>
+
+    <div class="md:text-right">
+      <p class="text-sm text-neutral-700">
+        Operated by Tempera Strings GmbH, Berlin
+      </p>
+
+      <p class="mt-2 text-sm text-neutral-500">
+        © {new Date().getFullYear()} Shen Europe
+      </p>
+    </div>
+  </Container>
 </footer>

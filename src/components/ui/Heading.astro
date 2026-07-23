@@ -1,0 +1,24 @@
+---
+interface Props {
+  as?: "h1" | "h2" | "h3" | "h4";
+  size?: "hero" | "xl" | "lg" | "md";
+  class?: string;
+}
+
+const {
+  as: Tag = "h2",
+  size = "lg",
+  class: className = "",
+} = Astro.props;
+
+const sizes = {
+  hero: "text-[clamp(3.4rem,8vw,7.6rem)] leading-[0.96] tracking-[-0.045em]",
+  xl: "text-5xl leading-[0.98] tracking-[-0.04em] sm:text-6xl lg:text-7xl",
+  lg: "text-4xl leading-[1.02] tracking-[-0.035em] sm:text-5xl lg:text-6xl",
+  md: "text-3xl leading-tight tracking-[-0.025em] sm:text-4xl",
+};
+---
+
+<Tag class:list={["font-serif font-normal text-neutral-950", sizes[size], className]}>
+  <slot />
+</Tag>

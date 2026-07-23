@@ -1,0 +1,31 @@
+---
+interface Props {
+  as?: "p" | "div" | "span";
+  size?: "sm" | "base" | "lg" | "xl";
+  tone?: "default" | "muted" | "light";
+  class?: string;
+}
+
+const {
+  as: Tag = "p",
+  size = "base",
+  tone = "default",
+  class: className = "",
+} = Astro.props;
+
+const sizes = {
+  sm: "text-sm leading-relaxed",
+  base: "text-base leading-relaxed",
+  lg: "text-lg leading-[1.7]",
+  xl: "text-xl leading-[1.65]",
+};
+const tones = {
+  default: "text-neutral-800",
+  muted: "text-neutral-600",
+  light: "text-white/80",
+};
+---
+
+<Tag class:list={[sizes[size], tones[tone], className]}>
+  <slot />
+</Tag>
