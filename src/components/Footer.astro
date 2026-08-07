@@ -1,28 +1,32 @@
 ---
 import Container from "./layout/Container.astro";
+import Grid from "./layout/Grid.astro";
+import Stack from "./layout/Stack.astro";
+import Heading from "./ui/Heading.astro";
+import Text from "./ui/Text.astro";
 ---
 
 <footer class="border-t border-neutral-200 bg-white">
-  <Container class="grid gap-10 py-10 md:grid-cols-2">
-    <div>
-      <p class="font-serif text-2xl tracking-[-0.03em] text-neutral-950">
-        Shen Europe
-      </p>
+  <Container class="py-10">
+    <Grid columns={2} gap="lg">
+      <Stack gap="sm">
+        <Heading as="h2" size="sm"> Shen Europe </Heading>
 
-      <p class="mt-4 max-w-md text-sm leading-relaxed text-neutral-600">
-        Samuel Shen double basses selected in Suzhou and professionally prepared
-        in Berlin.
-      </p>
-    </div>
+        <Text size="sm" tone="muted" class="max-w-md">
+          Samuel Shen double basses selected in Suzhou and professionally
+          prepared in Berlin.
+        </Text>
+      </Stack>
 
-    <div class="md:text-right">
-      <p class="text-sm text-neutral-700">
-        Operated by Tempera Strings GmbH, Berlin
-      </p>
+      <Stack gap="xs" class="md:items-end md:text-right">
+        <Text size="sm" class="text-neutral-700">
+          Operated by Tempera Strings GmbH, Berlin
+        </Text>
 
-      <p class="mt-2 text-sm text-neutral-500">
-        © {new Date().getFullYear()} Shen Europe
-      </p>
-    </div>
+        <Text size="sm" tone="muted">
+          © {new Date().getFullYear()} Shen Europe
+        </Text>
+      </Stack>
+    </Grid>
   </Container>
 </footer>

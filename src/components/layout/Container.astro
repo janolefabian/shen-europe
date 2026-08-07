@@ -5,14 +5,10 @@ interface Props {
   size?: "wide" | "content" | "narrow";
 }
 
-const {
-  as: Tag = "div",
-  class: className = "",
-  size = "wide",
-} = Astro.props;
+const { as: Tag = "div", class: className = "", size = "wide" } = Astro.props;
 
 const widths = {
-  wide: "max-w-[1600px]",
+  wide: "max-w-[var(--container-wide)]",
   content: "max-w-6xl",
   narrow: "max-w-3xl",
 };
@@ -20,7 +16,10 @@ const widths = {
 
 <Tag
   class:list={[
-    "mx-auto w-full px-5 sm:px-8 lg:px-12",
+    "mx-auto w-full",
+    "px-[var(--spacing-page-mobile)]",
+    "sm:px-[var(--spacing-page-tablet)]",
+    "lg:px-[var(--spacing-page-desktop)]",
     widths[size],
     className,
   ]}

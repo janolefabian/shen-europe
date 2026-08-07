@@ -1,0 +1,43 @@
+---
+interface GalleryImage {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+interface Props {
+  images?: GalleryImage[];
+}
+
+const { images = [] } = Astro.props;
+---
+
+{
+  images.length > 0 && (
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {images.map((image, index) => (
+        <figure
+          class:list={[
+            "overflow-hidden",
+            index === 0 && images.length >= 3 ? "sm:col-span-2" : "",
+          ]}
+        >
+          <div class="overflow-hidden bg-neutral-100">
+            <img
+              src={image.src}
+              alt={image.alt}
+              loading="lazy"
+              class="h-auto w-full object-cover"
+            />
+          </div>
+
+          {image.caption && (
+            <figcaption class="pt-3 text-sm leading-relaxed text-neutral-500">
+              {image.caption}
+            </figcaption>
+          )}
+        </figure>
+      ))}
+    </div>
+  )
+}

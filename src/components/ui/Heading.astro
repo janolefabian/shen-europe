@@ -1,7 +1,7 @@
 ---
 interface Props {
   as?: "h1" | "h2" | "h3" | "h4";
-  size?: "hero" | "xl" | "lg" | "md";
+  size?: "hero" | "xl" | "lg" | "md" | "sm";
   class?: string;
 }
 
@@ -16,6 +16,7 @@ const sizes = {
   xl: "text-5xl leading-[0.98] tracking-[-0.04em] sm:text-6xl lg:text-7xl",
   lg: "text-4xl leading-[1.02] tracking-[-0.035em] sm:text-5xl lg:text-6xl",
   md: "text-3xl leading-tight tracking-[-0.025em] sm:text-4xl",
+  sm: "text-2xl leading-tight tracking-[-0.02em]",
 };
 ---
 

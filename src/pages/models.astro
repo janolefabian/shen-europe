@@ -1,21 +1,23 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/layout/Section.astro";
+import Stack from "../components/layout/Stack.astro";
+import Heading from "../components/ui/Heading.astro";
+import Text from "../components/ui/Text.astro";
 ---
 
 <BaseLayout
   title="Shen Double Bass Models | Shen Europe"
   description="Explore selected Samuel Shen double bass models available in Europe."
 >
-  <section class="mx-auto max-w-[1600px] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
-    <h1
-      class="font-serif max-w-4xl text-5xl leading-[0.98] tracking-[-0.04em] text-neutral-950 sm:text-6xl lg:text-7xl"
-    >
-      Models
-    </h1>
+  <Section spacing="lg">
+    <Stack gap="md" class="max-w-4xl">
+      <Heading as="h1" size="xl">Models</Heading>
 
-    <p class="mt-8 max-w-2xl text-lg leading-relaxed text-neutral-700">
-      Explore selected Shen models, construction levels and outlines. Other
-      models can be ordered through Shen Europe.
-    </p>
-  </section>
+      <Text size="lg" class="max-w-2xl">
+        Explore selected Shen models, construction levels and outlines. Other
+        models can be ordered through Shen Europe.
+      </Text>
+    </Stack>
+  </Section>
 </BaseLayout>

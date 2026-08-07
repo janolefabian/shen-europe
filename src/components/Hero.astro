@@ -1,3 +1,10 @@
+---
+import Stack from "./layout/Stack.astro";
+import Button from "./ui/Button.astro";
+import Heading from "./ui/Heading.astro";
+import Text from "./ui/Text.astro";
+---
+
 <section class="bg-white">
   <div
     class="grid min-h-[calc(100vh-88px)] grid-cols-1 lg:min-h-[calc(100vh-108px)] lg:grid-cols-2"
@@ -5,31 +12,28 @@
     <div
       class="flex items-center px-5 py-16 sm:px-8 sm:py-20 lg:px-12 xl:px-14"
     >
-      <div class="max-w-[660px]">
-        <h1
-          class="font-serif text-[clamp(3.4rem,15vw,5.5rem)] leading-[0.96] font-normal tracking-[-0.045em] text-neutral-950 lg:text-[clamp(4.6rem,7vw,7.6rem)]"
-        >
+      <Stack gap="lg" class="max-w-[660px]">
+        <Heading as="h1" size="hero">
           Samuel Shen<br />
           Double Basses<br />
           in Europe
-        </h1>
+        </Heading>
 
-        <p
-          class="mt-8 max-w-[610px] text-base leading-[1.7] text-neutral-700 sm:mt-10 sm:text-lg lg:mt-12 lg:text-[1.15rem]"
-        >
+        <Text size="lg" class="max-w-[610px]">
           Personally selected in Suzhou and professionally prepared in Berlin.
           Available for trial in Berlin or by special order throughout Europe.
-        </p>
+        </Text>
 
-        <div class="mt-10 sm:mt-12 lg:mt-14">
-          <a
+        <div>
+          <Button
             href="/available"
-            class="inline-block border-b-2 border-neutral-950 pb-2 text-xs font-semibold tracking-[0.11em] text-neutral-950 uppercase transition-opacity hover:opacity-55 sm:text-sm"
+            variant="text"
+            class="border-b-2 pb-2 text-xs font-semibold tracking-[0.11em] uppercase sm:text-sm"
           >
             View available instruments
-          </a>
+          </Button>
         </div>
-      </div>
+      </Stack>
     </div>
 
     <div class="min-h-[62vh] overflow-hidden lg:min-h-[calc(100vh-108px)]">

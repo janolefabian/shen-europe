@@ -1,10 +1,33 @@
 @import "tailwindcss";
 
+@theme {
+  --font-serif: "Times New Roman", Times, serif;
+  --font-sans: Arial, Helvetica, sans-serif;
+
+  --color-page: #ffffff;
+  --color-text: #171717;
+  --color-muted: #525252;
+  --color-border: #e5e5e5;
+
+  --container-wide: 100rem;
+
+  --spacing-page-mobile: 1.25rem;
+  --spacing-page-tablet: 2rem;
+  --spacing-page-desktop: 3rem;
+
+  --spacing-section-mobile: 5rem;
+  --spacing-section-desktop: 7rem;
+
+  --header-height-mobile: 5.5rem;
+  --header-height-desktop: 6.75rem;
+}
+
 :root {
-  font-family: Arial, Helvetica, sans-serif;
-  color: #171717;
-  background: #ffffff;
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-page);
   text-rendering: optimizeLegibility;
+  font-synthesis: none;
 }
 
 html {
@@ -14,6 +37,8 @@ html {
 body {
   margin: 0;
 }
+
+/* Header scroll state */
 
 header[data-scrolled="true"] {
   height: 68px;
@@ -33,8 +58,4 @@ header[data-scrolled="true"] .logo {
   header[data-scrolled="true"] .logo {
     font-size: 1.6rem;
   }
-}
-
-.font-serif {
-  font-family: "Times New Roman", Times, serif;
 }
