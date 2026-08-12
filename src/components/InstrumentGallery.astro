@@ -10,20 +10,15 @@ const { images = [] } = Astro.props;
 
 {
   images.length > 0 && (
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      {images.map((image, index) => (
-        <figure
-          class:list={[
-            "overflow-hidden",
-            index % 5 === 0 && images.length > 2 ? "sm:col-span-2" : "",
-          ]}
-        >
-          <div class="overflow-hidden bg-neutral-100">
+    <div class="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
+      {images.map((image) => (
+        <figure class="overflow-hidden">
+          <div class="aspect-[2/3] overflow-hidden bg-neutral-100">
             <img
               src={image.src}
               alt={image.alt}
               loading="lazy"
-              class="h-auto w-full transition duration-500 hover:scale-[1.01]"
+              class="h-full w-full object-cover object-center transition duration-500 hover:scale-[1.01]"
             />
           </div>
         </figure>

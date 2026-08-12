@@ -96,6 +96,10 @@ Supported status values are:
 Sold instruments keep their detail page but are omitted from the available
 instruments page. The numeric `order` field controls listing order.
 
+The optional `condition` field accepts `new`, `demonstrator` or `pre-owned`.
+Use the optional `strings` and `bridge` fields for the setup currently fitted
+to the individual instrument.
+
 ### Optional fields
 
 Most specifications and the YouTube video ID are optional. Leave a field out

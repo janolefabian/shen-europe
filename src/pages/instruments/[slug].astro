@@ -33,8 +33,15 @@ const statusLabels = {
   sold: "Sold",
 };
 
+const conditionLabels = {
+  new: "New",
+  demonstrator: "Demonstrator instrument",
+  "pre-owned": "Pre-owned",
+};
+
 const specifications = [
   ["Inventory", data.inventory],
+  ["Condition", data.condition ? conditionLabels[data.condition] : undefined],
   ["Model", data.model],
   ["Outline", data.outline],
   ["Size", data.size],
@@ -50,6 +57,8 @@ const specifications = [
   ["Neck", data.neck],
   ["Fingerboard", data.fingerboard],
   ["Tuning machines", data.tuningMachines],
+  ["Strings", data.strings],
+  ["Bridge", data.bridge],
   ["Endpin", data.endpin],
   ["Warranty", data.warranty],
 ].filter((item): item is [string, string] => Boolean(item[1]));
@@ -136,9 +145,9 @@ const specifications = [
 
   {
     images.gallery.length > 0 && (
-      <section class="border-t border-neutral-200 py-20 sm:py-24 lg:py-32">
-        <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
-          <h2 class="mb-10 font-serif text-4xl leading-[1.02] tracking-[-0.035em] text-neutral-950 sm:text-5xl lg:mb-14">
+      <section class="border-t border-neutral-200 py-16 sm:py-20 lg:py-24">
+        <div class="mx-auto w-full max-w-[1200px] px-5 sm:px-8 lg:px-12">
+          <h2 class="mb-8 font-serif text-4xl leading-[1.02] tracking-[-0.035em] text-neutral-950 sm:text-5xl lg:mb-10">
             Gallery
           </h2>
           <InstrumentGallery images={images.gallery} />

@@ -24,6 +24,7 @@ const instruments = defineCollection({
     year: z.number().int().optional(),
 
     status: z.enum(["available", "reserved", "coming-soon", "sold"]),
+    condition: z.enum(["new", "demonstrator", "pre-owned"]).optional(),
     order: z.number().int().default(100),
     featured: z.boolean().default(false),
 
@@ -46,6 +47,8 @@ const instruments = defineCollection({
     neck: z.string().optional(),
     fingerboard: z.string().optional(),
     tuningMachines: z.string().optional(),
+    strings: z.string().optional(),
+    bridge: z.string().optional(),
 
     endpin: z.string().optional(),
     warranty: z.string().optional(),
