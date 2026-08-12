@@ -8,9 +8,15 @@ const instruments = defineCollection({
   }),
 
   schema: z.object({
-    title: z.string(),
-    slug: z.string(),
-    inventory: z.string(),
+    title: z.string().trim().min(1),
+    slug: z
+      .string()
+      .trim()
+      .regex(
+        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+        "Use lowercase letters, numbers and single hyphens only.",
+      ),
+    inventory: z.string().trim().min(1),
 
     model: z.string(),
     outline: z.string(),

@@ -1,13 +1,14 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 
 import InstrumentGallery from "../../components/InstrumentGallery.astro";
 import YouTubeVideo from "../../components/YouTubeVideo.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getInstrumentImages } from "../../lib/instrumentImages";
+import { getInstruments } from "../../lib/instruments";
 
 export async function getStaticPaths() {
-  const instruments = await getCollection("instruments");
+  const instruments = await getInstruments();
 
   return instruments.map((instrument) => ({
     params: { slug: instrument.data.slug },

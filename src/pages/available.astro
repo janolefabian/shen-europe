@@ -1,10 +1,9 @@
 ---
-import { getCollection } from "astro:content";
-
 import InstrumentCard from "../components/InstrumentCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getInstruments } from "../lib/instruments";
 
-const instruments = (await getCollection("instruments"))
+const instruments = (await getInstruments())
   .filter((instrument) => instrument.data.status !== "sold")
   .sort((a, b) => a.data.order - b.data.order);
 ---
