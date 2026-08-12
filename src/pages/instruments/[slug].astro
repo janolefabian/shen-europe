@@ -20,8 +20,10 @@ const { instrument } = Astro.props;
 const { data } = instrument;
 const { Content } = await render(instrument);
 
-const folder = instrument.id.replace(/\/index$/, "");
-const images = getInstrumentImages(folder, data.title);
+const images = getInstrumentImages(
+  instrument.filePath ?? instrument.id,
+  data.title,
+);
 
 const statusLabels = {
   available: "Available",

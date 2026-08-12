@@ -51,10 +51,18 @@ export interface InstrumentImages {
   gallery: InstrumentImage[];
 }
 
+function instrumentFolder(source: string): string {
+  return source
+    .replace(/\\/g, "/")
+    .replace(/^.*?src\/content\/instruments\//, "")
+    .replace(/\/index(?:\.(?:md|mdx))?$/, "");
+}
+
 export function getInstrumentImages(
-  folder: string,
+  source: string,
   title: string,
 ): InstrumentImages {
+  const folder = instrumentFolder(source);
   const folderPrefix = `/src/content/instruments/${folder}/`;
 
   const entries = Object.entries(imageModules)
