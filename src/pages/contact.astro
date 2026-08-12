@@ -1,10 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Section from "../components/layout/Section.astro";
-import Stack from "../components/layout/Stack.astro";
-import Heading from "../components/ui/Heading.astro";
-import Text from "../components/ui/Text.astro";
 import { getInstruments } from "../lib/instruments";
+
+const contactEmail = "contact@tempera-strings.com";
+const contactPhone = "+49 (0) 30 88697738";
+const contactPhoneHref = "+493088697738";
 
 const instrumentTitles = Object.fromEntries(
   (await getInstruments()).map((instrument) => [
@@ -12,49 +12,218 @@ const instrumentTitles = Object.fromEntries(
     instrument.data.title,
   ]),
 );
+
+const mailto = (subject: string, body: string) =>
+  `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+const generalInquiryUrl = mailto(
+  "Instrument enquiry",
+  "Hello Shen Europe,\n\nI would like to enquire about a Samuel Shen double bass.\n\nBest regards,\n",
+);
+
+const trialUrl = mailto(
+  "Trial request in Berlin",
+  "Hello Shen Europe,\n\nI would like to arrange a trial in Berlin.\n\nBest regards,\n",
+);
+
+const specialOrderUrl = mailto(
+  "Special order enquiry",
+  "Hello Shen Europe,\n\nI would like to discuss a special order for a Samuel Shen double bass.\n\nBest regards,\n",
+);
+
+const dealerUrl = mailto(
+  "Dealer partnership enquiry",
+  "Hello Shen Europe,\n\nI am interested in discussing a possible dealer partnership.\n\nCompany:\nLocation:\n\nBest regards,\n",
+);
 ---
 
 <BaseLayout
   title="Contact | Shen Europe"
-  description="Contact Shen Europe to arrange a trial, discuss an available instrument or place a special order."
+  description="Contact Shen Europe to arrange a trial in Berlin, enquire about an available instrument, discuss a special order or dealer partnership."
 >
-  <Section spacing="lg">
-    <Stack gap="md" class="max-w-4xl">
-      <Heading as="h1" size="xl">Contact</Heading>
+  <section class="py-20 sm:py-24 lg:py-32">
+    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
+      <div class="max-w-4xl">
+        <h1 class="font-serif text-5xl leading-[0.98] tracking-[-0.04em] text-neutral-950 sm:text-6xl lg:text-7xl">
+          Contact
+        </h1>
 
-      <Text size="lg" class="max-w-2xl">
-        Arrange a trial in Berlin, ask about an available instrument or discuss a
-        special order.
-      </Text>
-
-      <div
-        data-instrument-context
-        class="hidden max-w-2xl border-t border-neutral-200 pt-6"
-      >
-        <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-          Instrument enquiry
-        </p>
-        <p
-          data-instrument-title
-          class="mt-3 font-serif text-3xl tracking-[-0.025em] text-neutral-950"
-        >
-        </p>
-        <p class="mt-4 text-base leading-relaxed text-neutral-600">
-          Pricing and current availability are provided on request.
+        <p class="mt-8 max-w-3xl text-lg leading-relaxed text-neutral-600">
+          Arrange a trial in Berlin, enquire about an available instrument or
+          discuss a special order. Trade enquiries from European dealers are
+          also welcome.
         </p>
       </div>
-    </Stack>
-  </Section>
+
+      <div class="mt-16 grid gap-14 border-t border-neutral-200 pt-10 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-24">
+        <div>
+          <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
+            Direct contact
+          </p>
+
+          <dl class="mt-8 space-y-7">
+            <div>
+              <dt class="text-sm text-neutral-500">Email</dt>
+              <dd class="mt-2">
+                <a
+                  href={`mailto:${contactEmail}`}
+                  class="text-lg text-neutral-950 underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-950"
+                >
+                  {contactEmail}
+                </a>
+              </dd>
+            </div>
+
+            <div>
+              <dt class="text-sm text-neutral-500">Telephone</dt>
+              <dd class="mt-2">
+                <a
+                  href={`tel:${contactPhoneHref}`}
+                  class="text-lg text-neutral-950 underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-950"
+                >
+                  {contactPhone}
+                </a>
+              </dd>
+            </div>
+
+            <div>
+              <dt class="text-sm text-neutral-500">Location</dt>
+              <dd class="mt-2 text-lg text-neutral-950">Berlin · by appointment</dd>
+            </div>
+          </dl>
+
+          <p class="mt-10 max-w-sm text-sm leading-relaxed text-neutral-500">
+            Enquiries open in your email application. No information is stored
+            on this website.
+          </p>
+        </div>
+
+        <div>
+          <div
+            data-instrument-context
+            class="hidden border-b border-neutral-200 pb-10"
+          >
+            <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
+              Selected instrument
+            </p>
+            <p
+              data-instrument-title
+              class="mt-3 font-serif text-3xl tracking-[-0.025em] text-neutral-950 sm:text-4xl"
+            >
+            </p>
+            <p class="mt-4 text-base leading-relaxed text-neutral-600">
+              Pricing and current availability are provided on request.
+            </p>
+            <a
+              href={generalInquiryUrl}
+              data-instrument-email
+              class="mt-7 inline-flex items-center justify-center rounded-full bg-neutral-950 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
+            >
+              Enquire about this instrument
+            </a>
+          </div>
+
+          <div class="divide-y divide-neutral-200 border-y border-neutral-200">
+            <a
+              href={trialUrl}
+              data-trial-email
+              class="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8"
+            >
+              <span>
+                <span class="block font-serif text-2xl tracking-[-0.02em] text-neutral-950">
+                  Arrange a trial
+                </span>
+                <span class="mt-2 block text-sm leading-relaxed text-neutral-600">
+                  Visit by appointment and try an available instrument in Berlin.
+                </span>
+              </span>
+              <span class="text-sm font-medium text-neutral-950 transition-transform group-hover:translate-x-1" aria-hidden="true">
+                →
+              </span>
+            </a>
+
+            <a
+              href={generalInquiryUrl}
+              class="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8"
+            >
+              <span>
+                <span class="block font-serif text-2xl tracking-[-0.02em] text-neutral-950">
+                  Ask about an instrument
+                </span>
+                <span class="mt-2 block text-sm leading-relaxed text-neutral-600">
+                  Request current pricing, availability and further details.
+                </span>
+              </span>
+              <span class="text-sm font-medium text-neutral-950 transition-transform group-hover:translate-x-1" aria-hidden="true">
+                →
+              </span>
+            </a>
+
+            <a
+              href={specialOrderUrl}
+              class="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8"
+            >
+              <span>
+                <span class="block font-serif text-2xl tracking-[-0.02em] text-neutral-950">
+                  Discuss a special order
+                </span>
+                <span class="mt-2 block text-sm leading-relaxed text-neutral-600">
+                  Talk through model, outline, specifications and setup preferences.
+                </span>
+              </span>
+              <span class="text-sm font-medium text-neutral-950 transition-transform group-hover:translate-x-1" aria-hidden="true">
+                →
+              </span>
+            </a>
+
+            <a
+              href={dealerUrl}
+              class="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8"
+            >
+              <span>
+                <span class="block font-serif text-2xl tracking-[-0.02em] text-neutral-950">
+                  Dealer partnership
+                </span>
+                <span class="mt-2 block text-sm leading-relaxed text-neutral-600">
+                  Introduce your business and discuss working with Shen Europe.
+                </span>
+              </span>
+              <span class="text-sm font-medium text-neutral-950 transition-transform group-hover:translate-x-1" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
 
-<script define:vars={{ instrumentTitles }}>
+<script define:vars={{ contactEmail, instrumentTitles }}>
   const slug = new URLSearchParams(window.location.search).get("instrument");
   const title = slug ? instrumentTitles[slug] : undefined;
   const context = document.querySelector("[data-instrument-context]");
   const titleElement = document.querySelector("[data-instrument-title]");
+  const instrumentEmail = document.querySelector("[data-instrument-email]");
+  const trialEmail = document.querySelector("[data-trial-email]");
 
-  if (title && context && titleElement) {
+  const createMailto = (subject, body) =>
+    `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  if (title && context && titleElement && instrumentEmail) {
     titleElement.textContent = title;
+    instrumentEmail.href = createMailto(
+      `Instrument enquiry – ${title}`,
+      `Hello Shen Europe,\n\nI would like to enquire about ${title}.\n\nBest regards,\n`,
+    );
+
+    if (trialEmail) {
+      trialEmail.href = createMailto(
+        `Trial request – ${title}`,
+        `Hello Shen Europe,\n\nI would like to arrange a trial of ${title} in Berlin.\n\nBest regards,\n`,
+      );
+    }
+
     context.classList.remove("hidden");
   }
 </script>
