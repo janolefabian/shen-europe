@@ -17,6 +17,16 @@ location: "Berlin"
 
 shortDescription: "A projecting, soloistic Mirecourt model with a broad, refined voice that remains present and full in the upper register."
 
+hero: "hero.jpg"
+gallery:
+  - "01-front.jpg"
+  - "02-back.jpg"
+  - "03-side.jpg"
+  - "04-side2.jpg"
+  - "05-detail-corner.jpg"
+  - "06-detail-corner2.jpg"
+  - "07-detail-corner3.jpg"
+
 # Optional: enter only the YouTube video ID, not the full URL.
 # youtubeVideoId: "ABC123xyz"
 

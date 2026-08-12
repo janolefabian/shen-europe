@@ -51,6 +51,11 @@ export interface InstrumentImages {
   gallery: InstrumentImage[];
 }
 
+export interface InstrumentImageReferences {
+  hero?: string | null;
+  gallery?: string[];
+}
+
 function instrumentFolder(source: string): string {
   return source
     .replace(/\\/g, "/")
@@ -61,6 +66,7 @@ function instrumentFolder(source: string): string {
 export function getInstrumentImages(
   source: string,
   title: string,
+  references: InstrumentImageReferences = {},
 ): InstrumentImages {
   const folder = instrumentFolder(source);
   const folderPrefix = `/src/content/instruments/${folder}/`;
@@ -73,20 +79,37 @@ export function getInstrumentImages(
       filename: filenameFromPath(path),
     }));
 
-  const heroEntry = entries.find(({ filename }) =>
-    /^hero\.(jpg|jpeg|png|webp|avif)$/i.test(filename),
-  );
+  const entryByPath = new Map(entries.map((entry) => [entry.path, entry]));
+  const resolveReference = (reference: string) => {
+    const normalizedReference = reference.replace(/\\/g, "/").replace(/^\.\//, "");
+    const path = normalizedReference.startsWith("src/content/instruments/")
+      ? `/${normalizedReference}`
+      : `${folderPrefix}${normalizedReference}`;
 
-  const galleryEntries = entries
-    .filter(({ filename }) => !/^hero\./i.test(filename))
-    .sort((a, b) => {
-      const orderDifference = imageOrder(a.path) - imageOrder(b.path);
-      if (orderDifference !== 0) return orderDifference;
-      return a.filename.localeCompare(b.filename, undefined, {
-        numeric: true,
-        sensitivity: "base",
-      });
-    });
+    return entryByPath.get(path);
+  };
+
+  const heroEntry =
+    (references.hero ? resolveReference(references.hero) : undefined) ??
+    entries.find(({ filename }) =>
+      /^hero\.(jpg|jpeg|png|webp|avif)$/i.test(filename),
+    );
+
+  const galleryEntries =
+    references.gallery && references.gallery.length > 0
+      ? references.gallery
+          .map(resolveReference)
+          .filter((entry): entry is (typeof entries)[number] => Boolean(entry))
+      : entries
+          .filter(({ filename }) => !/^hero\./i.test(filename))
+          .sort((a, b) => {
+            const orderDifference = imageOrder(a.path) - imageOrder(b.path);
+            if (orderDifference !== 0) return orderDifference;
+            return a.filename.localeCompare(b.filename, undefined, {
+              numeric: true,
+              sensitivity: "base",
+            });
+          });
 
   const toImage = (entry: (typeof entries)[number]): InstrumentImage => {
     const label = humanizeFilename(entry.filename);

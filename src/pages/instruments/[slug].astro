@@ -23,6 +23,7 @@ const { Content } = await render(instrument);
 const images = getInstrumentImages(
   instrument.filePath ?? instrument.id,
   data.title,
+  { hero: data.hero, gallery: data.gallery },
 );
 const inquiryUrl = `/contact?instrument=${encodeURIComponent(data.slug)}`;
 

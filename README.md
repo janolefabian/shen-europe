@@ -38,6 +38,51 @@ npm run build
 
 The static output is written to `dist/`.
 
+## Local instrument admin
+
+The project includes a local-only content editor powered by Keystatic. It writes
+directly to the Markdown files and images in this repository. There is no login,
+cloud database or public admin route.
+
+Start the editor:
+
+```sh
+npm run admin
+```
+
+Open the local URL printed by Astro and add `/keystatic`, for example:
+
+```text
+http://127.0.0.1:4321/keystatic
+```
+
+The port may be different when another local server is already running.
+
+Useful commands:
+
+```sh
+npm run admin:status
+npm run admin:logs
+npm run admin:stop
+```
+
+To add an instrument in the editor:
+
+1. Open **Instruments** and choose **Add**. Alternatively, open a similar
+   instrument and use **Duplicate entry**.
+2. Enter the public title and a stable internal content-folder name.
+3. Enter a unique public URL slug and inventory number.
+4. Complete status, condition, specifications and description.
+5. Upload one hero image and the gallery images.
+6. Drag gallery entries into the desired display order.
+7. Choose **Create** or **Save**.
+8. Check the public page locally and run `npm run build` before publishing.
+
+Changes are saved immediately to `src/content/instruments/`. Review and commit
+these files with Git just like other project changes. The Keystatic integration
+is disabled during production builds, so `/keystatic` is never included in
+`dist/`.
+
 ## Managing instruments
 
 Each instrument is one folder inside `src/content/instruments/`:

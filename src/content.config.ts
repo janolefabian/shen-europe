@@ -21,7 +21,7 @@ const instruments = defineCollection({
     model: z.string(),
     outline: z.string(),
     size: z.string().optional(),
-    year: z.number().int().optional(),
+    year: z.number().int().nullable().optional(),
 
     status: z.enum(["available", "reserved", "coming-soon", "sold"]),
     condition: z.enum(["new", "demonstrator", "pre-owned"]).optional(),
@@ -31,6 +31,9 @@ const instruments = defineCollection({
     location: z.string().default("Berlin"),
 
     shortDescription: z.string(),
+
+    hero: z.string().nullable().optional(),
+    gallery: z.array(z.string()).default([]),
 
     youtubeVideoId: z.string().optional(),
 
