@@ -4,6 +4,14 @@ import Section from "../components/layout/Section.astro";
 import Stack from "../components/layout/Stack.astro";
 import Heading from "../components/ui/Heading.astro";
 import Text from "../components/ui/Text.astro";
+import { getInstruments } from "../lib/instruments";
+
+const instrumentTitles = Object.fromEntries(
+  (await getInstruments()).map((instrument) => [
+    instrument.data.slug,
+    instrument.data.title,
+  ]),
+);
 ---
 
 <BaseLayout
@@ -18,6 +26,35 @@ import Text from "../components/ui/Text.astro";
         Arrange a trial in Berlin, ask about an available instrument or discuss a
         special order.
       </Text>
+
+      <div
+        data-instrument-context
+        class="hidden max-w-2xl border-t border-neutral-200 pt-6"
+      >
+        <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
+          Instrument enquiry
+        </p>
+        <p
+          data-instrument-title
+          class="mt-3 font-serif text-3xl tracking-[-0.025em] text-neutral-950"
+        >
+        </p>
+        <p class="mt-4 text-base leading-relaxed text-neutral-600">
+          Pricing and current availability are provided on request.
+        </p>
+      </div>
     </Stack>
   </Section>
 </BaseLayout>
+
+<script define:vars={{ instrumentTitles }}>
+  const slug = new URLSearchParams(window.location.search).get("instrument");
+  const title = slug ? instrumentTitles[slug] : undefined;
+  const context = document.querySelector("[data-instrument-context]");
+  const titleElement = document.querySelector("[data-instrument-title]");
+
+  if (title && context && titleElement) {
+    titleElement.textContent = title;
+    context.classList.remove("hidden");
+  }
+</script>

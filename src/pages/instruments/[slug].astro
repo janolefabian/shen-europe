@@ -24,6 +24,7 @@ const images = getInstrumentImages(
   instrument.filePath ?? instrument.id,
   data.title,
 );
+const inquiryUrl = `/contact?instrument=${encodeURIComponent(data.slug)}`;
 
 const statusLabels = {
   available: "Available",
@@ -108,14 +109,10 @@ const specifications = [
             <dd class="mt-1 text-neutral-950">{data.location}</dd>
           </div>
 
-          {
-            data.price && (
-              <div>
-                <dt class="text-neutral-500">Price</dt>
-                <dd class="mt-1 text-neutral-950">{data.price}</dd>
-              </div>
-            )
-          }
+          <div>
+            <dt class="text-neutral-500">Pricing</dt>
+            <dd class="mt-1 text-neutral-950">On request</dd>
+          </div>
 
           {
             data.stringLength && (
@@ -128,10 +125,10 @@ const specifications = [
         </dl>
 
         <a
-          href="/contact"
+          href={inquiryUrl}
           class="mt-10 inline-block border-b-2 border-neutral-950 pb-2 text-sm font-semibold tracking-[0.1em] uppercase transition-opacity hover:opacity-55"
         >
-          Arrange a trial
+          Enquire about this instrument
         </a>
       </div>
     </div>

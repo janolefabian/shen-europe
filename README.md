@@ -98,9 +98,10 @@ instruments page. The numeric `order` field controls listing order.
 
 ### Optional fields
 
-Most specifications, price and YouTube video ID are optional. Leave a field out
-instead of adding an empty value. For YouTube, store only the video ID rather
-than the complete URL.
+Most specifications and the YouTube video ID are optional. Leave a field out
+instead of adding an empty value. Public instrument entries deliberately do not
+contain pricing; prices are provided on request. For YouTube, store only the
+video ID rather than the complete URL.
 
 The Markdown below the frontmatter becomes the long-form description on the
 instrument detail page.

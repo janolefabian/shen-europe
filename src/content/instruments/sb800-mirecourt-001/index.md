@@ -12,7 +12,6 @@ status: "available"
 order: 1
 featured: true
 
-price: "€9,000"
 location: "Berlin"
 
 shortDescription: "A compact, responsive Mirecourt model with a focused fundamental and comfortable access to the upper register."

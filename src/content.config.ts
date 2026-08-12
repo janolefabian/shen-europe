@@ -27,7 +27,6 @@ const instruments = defineCollection({
     order: z.number().int().default(100),
     featured: z.boolean().default(false),
 
-    price: z.string().optional(),
     location: z.string().default("Berlin"),
 
     shortDescription: z.string(),
