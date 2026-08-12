@@ -1,23 +1,19 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
-const galleryImage = z.object({
-  src: z.string(),
-  alt: z.string(),
-  caption: z.string().optional(),
-});
-
 const instruments = defineCollection({
   loader: glob({
     base: "./src/content/instruments",
-    pattern: "**/*.{md,mdx}",
+    pattern: "**/index.md",
   }),
 
   schema: z.object({
     title: z.string(),
+    slug: z.string(),
+    inventory: z.string(),
+
     model: z.string(),
     outline: z.string(),
-
     size: z.string().optional(),
     year: z.number().int().optional(),
 
@@ -30,12 +26,6 @@ const instruments = defineCollection({
 
     shortDescription: z.string(),
 
-    heroImage: z.string(),
-    heroImageAlt: z.string(),
-
-    gallery: z.array(galleryImage).default([]),
-
-    // Store only the ID, e.g. "abc123XYZ", not the whole YouTube URL.
     youtubeVideoId: z.string().optional(),
 
     stringLength: z.string().optional(),
@@ -57,6 +47,4 @@ const instruments = defineCollection({
   }),
 });
 
-export const collections = {
-  instruments,
-};
+export const collections = { instruments };

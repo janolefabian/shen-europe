@@ -1,46 +1,46 @@
 ---
 import { getCollection } from "astro:content";
+
 import InstrumentCard from "../components/InstrumentCard.astro";
-import Section from "../components/layout/Section.astro";
-import Stack from "../components/layout/Stack.astro";
-import Heading from "../components/ui/Heading.astro";
-import Text from "../components/ui/Text.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const instruments = (await getCollection("instruments", ({ data }) =>
-  data.status !== "sold"
-)).sort((a, b) => a.data.order - b.data.order);
+const instruments = (await getCollection("instruments"))
+  .filter((instrument) => instrument.data.status !== "sold")
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout
   title="Available Shen Double Basses | Shen Europe"
-  description="Samuel Shen double basses currently available, reserved or expected for trial and purchase in Berlin."
+  description="Samuel Shen double basses currently available, reserved or arriving soon in Berlin."
 >
-  <Section spacing="lg">
-    <Stack gap="xl">
-      <Stack gap="md" class="max-w-4xl">
-        <Heading as="h1" size="xl">Available Instruments</Heading>
+  <section class="py-20 sm:py-24 lg:py-32">
+    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
+      <div class="max-w-3xl">
+        <h1 class="font-serif text-5xl leading-[0.98] tracking-[-0.04em] text-neutral-950 sm:text-6xl lg:text-7xl">
+          Available Instruments
+        </h1>
 
-        <Text size="lg" tone="muted" class="max-w-2xl">
+        <p class="mt-8 text-lg leading-relaxed text-neutral-600">
           A small selection of personally selected instruments is available for
           trial in Berlin. Other Shen models can be ordered through Shen Europe.
-        </Text>
-      </Stack>
+        </p>
+      </div>
 
-      {instruments.length > 0 ? (
-        <div class="grid gap-x-10 gap-y-20 lg:grid-cols-2 xl:gap-x-14">
-          {instruments.map((instrument) => (
-            <InstrumentCard instrument={instrument} />
-          ))}
-        </div>
-      ) : (
-        <div class="border-t border-neutral-200 pt-10">
-          <Text size="lg">No instruments are currently listed.</Text>
-          <Text tone="muted" class="mt-3">
-            Please contact us to discuss a special order.
-          </Text>
-        </div>
-      )}
-    </Stack>
-  </Section>
+      {
+        instruments.length > 0 ? (
+          <div class="mt-16 grid gap-x-8 gap-y-20 lg:grid-cols-2">
+            {instruments.map((instrument) => (
+              <InstrumentCard instrument={instrument} />
+            ))}
+          </div>
+        ) : (
+          <div class="mt-16 border-t border-neutral-200 pt-10">
+            <p class="text-lg text-neutral-700">
+              No instruments are currently listed.
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
 </BaseLayout>

@@ -1,5 +1,8 @@
 ---
 title: "Shen SB-800 Mirecourt"
+slug: "sb800-mirecourt"
+inventory: "SHEN-0001"
+
 model: "SB-800"
 outline: "Mirecourt"
 size: "3/4"
@@ -9,26 +12,16 @@ status: "available"
 order: 1
 featured: true
 
-price: "€11,000"
+price: "€9,000"
 location: "Berlin"
 
 shortDescription: "A compact, responsive Mirecourt model with a focused fundamental and comfortable access to the upper register."
 
-heroImage: "/images/sb800_bg.jpg"
-heroImageAlt: "Shen SB-800 Mirecourt double bass"
-
-gallery:
-  - src: "/images/sb800_bg.jpg"
-    alt: "Shen SB-800 Mirecourt double bass"
-    caption: "Example image. Replace this with the individual photographs of this instrument."
-
-# Optional: add the YouTube video ID only, not the full URL.
-# Example URL: https://www.youtube.com/watch?v=ABC123xyz
-youtubeVideoId: "_-6QYyjPwjw"
+# Optional: enter only the YouTube video ID, not the full URL.
+# youtubeVideoId: "ABC123xyz"
 
 stringLength: "41.25 in / 104.8 cm"
 bodyLength: "43 7/8 in / 111.4 cm"
-weight: "9.4 kg"
 
 topMaterial: "Fully carved spruce"
 backMaterial: "Fully carved, highly figured maple"
@@ -44,4 +37,6 @@ endpin: "Shen composite plug with 10 mm rod and replaceable screw-on tip"
 warranty: "1 year limited warranty"
 ---
 
-Ich schreibe mal was
+This is an example instrument entry. Replace these paragraphs with the individual character of this exact bass.
+
+You can describe response, tonal character, setup, condition, selection notes and the kind of player the instrument may suit.

@@ -1,12 +1,8 @@
 ---
-interface GalleryImage {
-  src: string;
-  alt: string;
-  caption?: string;
-}
+import type { InstrumentImage } from "../lib/instrumentImages";
 
 interface Props {
-  images?: GalleryImage[];
+  images?: InstrumentImage[];
 }
 
 const { images = [] } = Astro.props;
@@ -19,7 +15,7 @@ const { images = [] } = Astro.props;
         <figure
           class:list={[
             "overflow-hidden",
-            index === 0 && images.length >= 3 ? "sm:col-span-2" : "",
+            index % 5 === 0 && images.length > 2 ? "sm:col-span-2" : "",
           ]}
         >
           <div class="overflow-hidden bg-neutral-100">
@@ -27,15 +23,9 @@ const { images = [] } = Astro.props;
               src={image.src}
               alt={image.alt}
               loading="lazy"
-              class="h-auto w-full object-cover"
+              class="h-auto w-full transition duration-500 hover:scale-[1.01]"
             />
           </div>
-
-          {image.caption && (
-            <figcaption class="pt-3 text-sm leading-relaxed text-neutral-500">
-              {image.caption}
-            </figcaption>
-          )}
         </figure>
       ))}
     </div>

@@ -4,12 +4,13 @@ import { getCollection, render } from "astro:content";
 import InstrumentGallery from "../../components/InstrumentGallery.astro";
 import YouTubeVideo from "../../components/YouTubeVideo.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getInstrumentImages } from "../../lib/instrumentImages";
 
 export async function getStaticPaths() {
   const instruments = await getCollection("instruments");
 
   return instruments.map((instrument) => ({
-    params: { id: instrument.id },
+    params: { slug: instrument.data.slug },
     props: { instrument },
   }));
 }
@@ -17,6 +18,9 @@ export async function getStaticPaths() {
 const { instrument } = Astro.props;
 const { data } = instrument;
 const { Content } = await render(instrument);
+
+const folder = instrument.id.replace(/\/index$/, "");
+const images = getInstrumentImages(folder, data.title);
 
 const statusLabels = {
   available: "Available",
@@ -26,6 +30,7 @@ const statusLabels = {
 };
 
 const specifications = [
+  ["Inventory", data.inventory],
   ["Model", data.model],
   ["Outline", data.outline],
   ["Size", data.size],
@@ -43,7 +48,7 @@ const specifications = [
   ["Tuning machines", data.tuningMachines],
   ["Endpin", data.endpin],
   ["Warranty", data.warranty],
-].filter((item) => Boolean(item[1]));
+].filter((item): item is [string, string] => Boolean(item[1]));
 ---
 
 <BaseLayout
@@ -54,11 +59,19 @@ const specifications = [
     <div
       class="min-h-[62vh] overflow-hidden bg-neutral-100 lg:min-h-[calc(100vh-108px)]"
     >
-      <img
-        src={data.heroImage}
-        alt={data.heroImageAlt}
-        class="h-full w-full object-cover object-center"
-      />
+      {
+        images.hero ? (
+          <img
+            src={images.hero.src}
+            alt={images.hero.alt}
+            class="h-full w-full object-cover object-center"
+          />
+        ) : (
+          <div class="flex h-full min-h-[62vh] items-center justify-center text-neutral-400">
+            Image coming soon
+          </div>
+        )
+      }
     </div>
 
     <div
@@ -84,9 +97,7 @@ const specifications = [
         >
           <div>
             <dt class="text-neutral-500">Status</dt>
-            <dd class="mt-1 text-neutral-950">
-              {statusLabels[data.status]}
-            </dd>
+            <dd class="mt-1 text-neutral-950">{statusLabels[data.status]}</dd>
           </div>
 
           <div>
@@ -124,16 +135,13 @@ const specifications = [
   </section>
 
   {
-    data.gallery.length > 0 && (
+    images.gallery.length > 0 && (
       <section class="border-t border-neutral-200 py-20 sm:py-24 lg:py-32">
         <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
-          <div class="mb-10 lg:mb-14">
-            <h2 class="font-serif text-4xl leading-[1.02] font-normal tracking-[-0.035em] text-neutral-950 sm:text-5xl">
-              Gallery
-            </h2>
-          </div>
-
-          <InstrumentGallery images={data.gallery} />
+          <h2 class="mb-10 font-serif text-4xl leading-[1.02] tracking-[-0.035em] text-neutral-950 sm:text-5xl lg:mb-14">
+            Gallery
+          </h2>
+          <InstrumentGallery images={images.gallery} />
         </div>
       </section>
     )
@@ -143,10 +151,9 @@ const specifications = [
     data.youtubeVideoId && (
       <section class="border-t border-neutral-200 py-20 sm:py-24 lg:py-32">
         <div class="mx-auto w-full max-w-[1200px] px-5 sm:px-8 lg:px-12">
-          <h2 class="font-serif text-4xl leading-[1.02] font-normal tracking-[-0.035em] text-neutral-950 sm:text-5xl">
+          <h2 class="font-serif text-4xl leading-[1.02] tracking-[-0.035em] text-neutral-950 sm:text-5xl">
             Listen to this instrument
           </h2>
-
           <div class="mt-10">
             <YouTubeVideo
               videoId={data.youtubeVideoId}
@@ -160,38 +167,32 @@ const specifications = [
 
   <section class="border-t border-neutral-200 py-20 sm:py-24 lg:py-32">
     <div
-      class="mx-auto grid w-full max-w-[1600px] gap-16 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-24 lg:px-12"
+      class="mx-auto grid w-full max-w-[1600px] gap-16 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-24 lg:px-12"
     >
       <div>
-        <h2
-          class="font-serif text-3xl leading-tight font-normal tracking-[-0.025em] text-neutral-950 sm:text-4xl"
-        >
+        <h2 class="font-serif text-4xl tracking-[-0.03em] text-neutral-950">
           Details
         </h2>
       </div>
 
-      <div>
-        <dl class="divide-y divide-neutral-200 border-t border-neutral-200">
-          {
-            specifications.map(([label, value]) => (
-              <div class="grid gap-2 py-4 sm:grid-cols-[180px_1fr] sm:gap-8">
-                <dt class="text-sm text-neutral-500">{label}</dt>
-                <dd class="text-sm leading-relaxed text-neutral-950">
-                  {value}
-                </dd>
-              </div>
-            ))
-          }
-        </dl>
-      </div>
+      <dl class="divide-y divide-neutral-200 border-t border-neutral-200">
+        {
+          specifications.map(([label, value]) => (
+            <div class="grid gap-2 py-4 sm:grid-cols-[180px_1fr] sm:gap-8">
+              <dt class="text-sm text-neutral-500">{label}</dt>
+              <dd class="text-sm leading-relaxed text-neutral-950">{value}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </div>
   </section>
 
   <section class="border-t border-neutral-200 py-16 sm:py-20 lg:py-24">
-    <div class="mx-auto w-full max-w-3xl px-5 sm:px-8 lg:px-12">
-      <div class="instrument-copy text-lg leading-relaxed text-neutral-700">
-        <Content />
-      </div>
+    <div
+      class="instrument-copy mx-auto w-full max-w-3xl px-5 text-lg leading-relaxed text-neutral-700 sm:px-8"
+    >
+      <Content />
     </div>
   </section>
 </BaseLayout>
