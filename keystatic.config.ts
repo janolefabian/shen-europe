@@ -4,24 +4,13 @@ import {
   bassModelOptions,
   bassQualityOptions,
 } from "./src/lib/instrumentTaxonomy";
+import {
+  instrumentPhotoCategoryLabels,
+  instrumentPhotoCategoryOptions,
+} from "./src/lib/instrumentPhotos";
 
 const optionalText = (label: string, description?: string) =>
   fields.text({ label, description });
-
-const photoCategoryOptions = [
-  { label: "Front – komplett", value: "front-complete" },
-  { label: "Detail – Ecke", value: "corner-detail" },
-  { label: "Detail – Mechaniken", value: "tuning-machines-detail" },
-  { label: "Detail – Schnecke", value: "scroll-detail" },
-  { label: "Korpus – Front", value: "body-front" },
-  { label: "Korpus – Back", value: "body-back" },
-  { label: "Seite (Zarge)", value: "side-ribs" },
-  { label: "Seite (Zarge + Front)", value: "side-ribs-front" },
-] as const;
-
-const photoCategoryLabels = Object.fromEntries(
-  photoCategoryOptions.map(({ label, value }) => [value, label]),
-) as Record<(typeof photoCategoryOptions)[number]["value"], string>;
 
 const AdminHomeLink = () =>
   createElement(
@@ -81,7 +70,7 @@ export default config({
         publication: fields.select({
           label: "Veröffentlichung",
           description:
-            "Entwürfe bleiben vollständig unsichtbar. Unvollständige Einträge werden auch bei versehentlicher Freigabe nicht öffentlich angezeigt.",
+            "Entwürfe bleiben vollständig unsichtbar. Öffentlich werden nur vollständige Einträge mit Front- oder Korpusfoto angezeigt.",
           defaultValue: "draft",
           options: [
             { label: "Entwurf", value: "draft" },
@@ -97,18 +86,18 @@ export default config({
             }),
             category: fields.select({
               label: "Kategorie",
-              options: photoCategoryOptions,
+              options: instrumentPhotoCategoryOptions,
               defaultValue: "body-front",
             }),
           }),
           {
             label: "Fotos – Schnellerfassung",
             description:
-              "Für einen neuen Entwurf reicht: Qualitätsstufe und Modell auswählen, Fotos hinzufügen, Kategorien zuweisen und speichern. Alle weiteren Daten können später folgen.",
+              "Für einen Entwurf reicht ein Foto. Vor der Veröffentlichung ist mindestens „Front – komplett“ oder „Korpus – Front“ erforderlich.",
             itemLabel: (props) => {
               const category = props.fields.category.value;
               const filename = props.fields.image.value?.filename;
-              const label = photoCategoryLabels[category];
+              const label = instrumentPhotoCategoryLabels[category];
 
               return filename ? `${label} · ${filename}` : label;
             },
@@ -118,7 +107,7 @@ export default config({
         hero: fields.image({
           label: "Optionales Titelbild",
           description:
-            "Kann leer bleiben. Ohne separates Titelbild wird automatisch das Foto „Front – komplett“ verwendet.",
+            "Kann leer bleiben. Automatische Reihenfolge: „Front – komplett“, „Korpus – Front“, danach die sinnvollste vorhandene Ansicht.",
         }),
 
         slug: fields.text({

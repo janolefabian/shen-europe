@@ -1,3 +1,8 @@
+import {
+  getAutomaticHeroReference,
+  type CategorizedInstrumentPhoto,
+} from "./instrumentPhotos";
+
 type ImageModule = {
   default: string;
 };
@@ -51,20 +56,7 @@ export interface InstrumentImages {
   gallery: InstrumentImage[];
 }
 
-export type InstrumentPhotoCategory =
-  | "front-complete"
-  | "corner-detail"
-  | "tuning-machines-detail"
-  | "scroll-detail"
-  | "body-front"
-  | "body-back"
-  | "side-ribs"
-  | "side-ribs-front";
-
-export interface InstrumentGalleryReference {
-  image: string;
-  category: InstrumentPhotoCategory;
-}
+export type InstrumentGalleryReference = CategorizedInstrumentPhoto;
 
 export interface InstrumentImageReferences {
   hero?: string | null;
@@ -121,17 +113,17 @@ export function getInstrumentImages(
             });
           });
 
-  const frontCompleteReference = references.gallery?.find(
-    ({ category }) => category === "front-complete",
-  )?.image;
+  const automaticHeroReference = references.gallery
+    ? getAutomaticHeroReference(references.gallery)
+    : undefined;
   const heroEntry =
     (references.hero ? resolveReference(references.hero) : undefined) ??
+    (automaticHeroReference
+      ? resolveReference(automaticHeroReference.image)
+      : undefined) ??
     entries.find(({ filename }) =>
       /^hero\.(jpg|jpeg|png|webp|avif)$/i.test(filename),
-    ) ??
-    (frontCompleteReference
-      ? resolveReference(frontCompleteReference)
-      : undefined);
+    );
 
   const toImage = (entry: (typeof entries)[number]): InstrumentImage => {
     const label = humanizeFilename(entry.filename);

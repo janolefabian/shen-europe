@@ -1,16 +1,8 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
+import { instrumentPhotoCategoryValues } from "./lib/instrumentPhotos";
 
-const instrumentPhotoCategory = z.enum([
-  "front-complete",
-  "corner-detail",
-  "tuning-machines-detail",
-  "scroll-detail",
-  "body-front",
-  "body-back",
-  "side-ribs",
-  "side-ribs-front",
-]);
+const instrumentPhotoCategory = z.enum(instrumentPhotoCategoryValues);
 
 const publicSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 

@@ -14,6 +14,7 @@ import {
   bassQualityValues,
   isBassModelAvailableForQuality,
 } from "../lib/instrumentTaxonomy";
+import { instrumentPhotoCategoryValues } from "../lib/instrumentPhotos";
 
 export const prerender = false;
 
@@ -27,18 +28,7 @@ const inventoryCounterFile = resolve(
 );
 const inventoryPrefix = "BASS";
 
-const categoryValues = [
-  "front-complete",
-  "corner-detail",
-  "tuning-machines-detail",
-  "scroll-detail",
-  "body-front",
-  "body-back",
-  "side-ribs",
-  "side-ribs-front",
-] as const;
-
-const validCategories = new Set<string>(categoryValues);
+const validCategories = new Set<string>(instrumentPhotoCategoryValues);
 const validQualityLevels = new Set<string>(bassQualityValues);
 const maximumFileCount = 40;
 const maximumFileSize = 40 * 1024 * 1024;

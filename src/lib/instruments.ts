@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+import { hasPublicationPhoto } from "./instrumentPhotos";
 
 type Instrument = CollectionEntry<"instruments">;
 
@@ -9,6 +10,10 @@ export const publicationRequiredFields = [
   "outline",
   "shortDescription",
 ] as const;
+
+export type PublicationRequirement =
+  | (typeof publicationRequiredFields)[number]
+  | "publicationPhoto";
 
 function assertUniqueField(
   instruments: Instrument[],
@@ -34,10 +39,16 @@ function assertUniqueField(
 
 export function getPublicationMissingFields(
   instrument: Instrument,
-): Array<(typeof publicationRequiredFields)[number]> {
-  return publicationRequiredFields.filter(
+): PublicationRequirement[] {
+  const missingFields: PublicationRequirement[] = publicationRequiredFields.filter(
     (field) => !instrument.data[field].trim(),
   );
+
+  if (!hasPublicationPhoto(instrument.data.gallery)) {
+    missingFields.push("publicationPhoto");
+  }
+
+  return missingFields;
 }
 
 export async function getInstruments(): Promise<Instrument[]> {

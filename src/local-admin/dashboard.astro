@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import { getPublicationMissingFields } from "../lib/instruments";
+import { getInstrumentPhotoStatus } from "../lib/instrumentPhotos";
 
 export const prerender = false;
 
@@ -31,6 +32,7 @@ const fieldLabels = {
   model: "Qualitätsstufe",
   outline: "Modell",
   shortDescription: "Kurzbeschreibung",
+  publicationPhoto: "Front- oder Korpusfoto",
 } as const;
 
 const folderName = (source: string) =>
@@ -458,6 +460,9 @@ const availabilityLabels = {
                   .filter(Boolean)
                   .join(" · ");
                 const missingFields = getPublicationMissingFields(instrument);
+                const photoStatus = getInstrumentPhotoStatus(
+                  instrument.data.gallery,
+                );
                 const isIncompletePublished =
                   instrument.data.publication === "published" &&
                   missingFields.length > 0;
@@ -496,8 +501,14 @@ const availabilityLabels = {
                             ? "Entwurf"
                             : "Öffentlich"}
                       </span>
-                      <span>
-                        {instrument.data.gallery.length} Fotos
+                      <span
+                        title={
+                          photoStatus.missingLabels.length > 0
+                            ? `Noch empfohlen: ${photoStatus.missingLabels.join(", ")}`
+                            : "Empfohlener Fotosatz vollständig"
+                        }
+                      >
+                        {instrument.data.gallery.length} Fotos · {photoStatus.completed}/{photoStatus.total} Ansichten
                       </span>
                       <span>{availabilityLabels[instrument.data.status]}</span>
                     </div>
