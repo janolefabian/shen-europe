@@ -4,10 +4,12 @@ import { getInstrumentImages } from "../lib/instrumentImages";
 
 interface Props {
   instrument: CollectionEntry<"instruments">;
+  variant?: "default" | "compact";
 }
 
-const { instrument } = Astro.props;
+const { instrument, variant = "default" } = Astro.props;
 const { data } = instrument;
+const compact = variant === "compact";
 
 const images = getInstrumentImages(
   instrument.filePath ?? instrument.id,
@@ -38,14 +40,22 @@ const instrumentUrl = `/instruments/${data.slug}/`;
     class="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-4"
     aria-label={`View ${data.title}`}
   >
-    <div class="aspect-[3/4] overflow-hidden bg-neutral-100">
+    <div
+      class:list={[
+        "relative overflow-hidden bg-neutral-100",
+        compact ? "aspect-[4/5]" : "aspect-[3/4]",
+      ]}
+    >
       {
         images.hero ? (
           <img
             src={images.hero.src}
             alt={images.hero.alt}
             loading="lazy"
-            class="h-full w-full object-cover object-center transition duration-500 ease-out group-hover:scale-[1.015]"
+            class:list={[
+              "h-full w-full object-center transition duration-500 ease-out group-hover:scale-[1.015]",
+              compact ? "object-contain" : "object-cover",
+            ]}
           />
         ) : (
           <div class="flex h-full items-center justify-center text-sm text-neutral-400">
@@ -53,34 +63,60 @@ const instrumentUrl = `/instruments/${data.slug}/`;
           </div>
         )
       }
+
+      {
+        compact && (
+          <span class="absolute top-3 right-3 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-3 py-1.5 text-xs font-medium text-neutral-700 backdrop-blur-sm">
+            <span class:list={["size-1.5 rounded-full", statusDots[data.status]]} aria-hidden="true" />
+            {statusLabels[data.status]}
+          </span>
+        )
+      }
     </div>
   </a>
 
-  <div class="pt-6">
+  <div class:list={[compact ? "pt-4" : "pt-6"]}>
     <div class="flex flex-wrap items-start justify-between gap-4">
       <div>
-        <p class="text-sm text-neutral-500">
-          {data.model} · {data.outline}
-        </p>
+        {!compact && <p class="text-sm text-neutral-500">{data.model} · {data.outline}</p>}
 
-        <h2 class="mt-2 font-serif text-3xl leading-tight tracking-[-0.025em] text-neutral-950">
+        <h2
+          class:list={[
+            "font-serif leading-tight tracking-[-0.025em] text-neutral-950",
+            compact ? "text-2xl" : "mt-2 text-3xl",
+          ]}
+        >
           <a href={instrumentUrl} class="transition-opacity hover:opacity-55">
             {data.title}
           </a>
         </h2>
       </div>
 
-      <span class="inline-flex shrink-0 items-center gap-2 rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700">
-        <span class:list={["size-1.5 rounded-full", statusDots[data.status]]} aria-hidden="true"></span>
-        {statusLabels[data.status]}
-      </span>
+      {
+        !compact && (
+          <span class="inline-flex shrink-0 items-center gap-2 rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700">
+            <span class:list={["size-1.5 rounded-full", statusDots[data.status]]} aria-hidden="true" />
+            {statusLabels[data.status]}
+          </span>
+        )
+      }
     </div>
 
-    <p class="mt-5 max-w-xl text-base leading-relaxed text-neutral-600">
+    <p
+      class:list={[
+        "max-w-xl text-neutral-600",
+        compact ? "mt-3 text-sm leading-relaxed" : "mt-5 text-base leading-relaxed",
+      ]}
+    >
       {data.shortDescription}
     </p>
 
-    <dl class="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-neutral-200 pt-5 text-sm sm:grid-cols-3">
+    <dl
+      class:list={[
+        "grid grid-cols-2 border-t border-neutral-200 text-sm sm:grid-cols-3",
+        compact ? "mt-4 gap-x-4 gap-y-3 pt-4" : "mt-6 gap-x-6 gap-y-4 pt-5",
+      ]}
+    >
       <div>
         <dt class="text-neutral-500">Pricing</dt>
         <dd class="mt-1 text-neutral-950">On request</dd>
@@ -101,7 +137,10 @@ const instrumentUrl = `/instruments/${data.slug}/`;
 
     <a
       href={instrumentUrl}
-      class="mt-7 inline-block border-b border-neutral-950 pb-1 text-sm font-medium text-neutral-950 transition-opacity hover:opacity-55"
+      class:list={[
+        "inline-block border-b border-neutral-950 pb-1 text-sm font-medium text-neutral-950 transition-opacity hover:opacity-55",
+        compact ? "mt-5" : "mt-7",
+      ]}
     >
       View instrument
     </a>

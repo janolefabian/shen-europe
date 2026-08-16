@@ -51,9 +51,24 @@ export interface InstrumentImages {
   gallery: InstrumentImage[];
 }
 
+export type InstrumentPhotoCategory =
+  | "front-complete"
+  | "corner-detail"
+  | "tuning-machines-detail"
+  | "scroll-detail"
+  | "body-front"
+  | "body-back"
+  | "side-ribs"
+  | "side-ribs-front";
+
+export interface InstrumentGalleryReference {
+  image: string;
+  category: InstrumentPhotoCategory;
+}
+
 export interface InstrumentImageReferences {
   hero?: string | null;
-  gallery?: string[];
+  gallery?: InstrumentGalleryReference[];
 }
 
 function instrumentFolder(source: string): string {
@@ -89,15 +104,10 @@ export function getInstrumentImages(
     return entryByPath.get(path);
   };
 
-  const heroEntry =
-    (references.hero ? resolveReference(references.hero) : undefined) ??
-    entries.find(({ filename }) =>
-      /^hero\.(jpg|jpeg|png|webp|avif)$/i.test(filename),
-    );
-
   const galleryEntries =
     references.gallery && references.gallery.length > 0
       ? references.gallery
+          .map(({ image }) => image)
           .map(resolveReference)
           .filter((entry): entry is (typeof entries)[number] => Boolean(entry))
       : entries
@@ -110,6 +120,18 @@ export function getInstrumentImages(
               sensitivity: "base",
             });
           });
+
+  const frontCompleteReference = references.gallery?.find(
+    ({ category }) => category === "front-complete",
+  )?.image;
+  const heroEntry =
+    (references.hero ? resolveReference(references.hero) : undefined) ??
+    entries.find(({ filename }) =>
+      /^hero\.(jpg|jpeg|png|webp|avif)$/i.test(filename),
+    ) ??
+    (frontCompleteReference
+      ? resolveReference(frontCompleteReference)
+      : undefined);
 
   const toImage = (entry: (typeof entries)[number]): InstrumentImage => {
     const label = humanizeFilename(entry.filename);

@@ -1,0 +1,865 @@
+---
+import {
+  bassModelGroups,
+  bassQualityOptions,
+} from "../lib/instrumentTaxonomy";
+
+export const prerender = false;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Instrument schnell anlegen | Shen Europe</title>
+    <style is:global>
+      :root {
+        color-scheme: light;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: #171717;
+        background: #f5f5f3;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      button,
+      .file-button {
+        cursor: pointer;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 28px 0 80px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 56px;
+      }
+
+      .brand {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 22px;
+      }
+
+      .back-link {
+        color: #525252;
+        font-size: 14px;
+        text-decoration: none;
+      }
+
+      .back-link:hover {
+        color: #171717;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(42px, 7vw, 76px);
+        font-weight: 400;
+        line-height: 0.98;
+        letter-spacing: -0.045em;
+      }
+
+      .intro {
+        max-width: 700px;
+        margin: 24px 0 0;
+        color: #5f5f5f;
+        font-size: 18px;
+        line-height: 1.65;
+      }
+
+      form {
+        margin-top: 52px;
+      }
+
+      .panel {
+        border: 1px solid #deded9;
+        background: #fff;
+        padding: clamp(24px, 4vw, 42px);
+      }
+
+      .field-label,
+      .section-label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 13px;
+        font-weight: 650;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .classification-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px;
+      }
+
+      .classification-select {
+        width: 100%;
+        min-height: 58px;
+        border: 1px solid #bfbfba;
+        border-radius: 0;
+        padding: 0 14px;
+        outline: none;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(20px, 3vw, 28px);
+        color: #171717;
+        background: #fff;
+      }
+
+      .classification-select:focus {
+        border-color: #171717;
+      }
+
+      .hint {
+        margin: 10px 0 0;
+        color: #777;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .upload-section {
+        margin-top: 42px;
+        border-top: 1px solid #e5e5e1;
+        padding-top: 36px;
+      }
+
+      .dropzone {
+        display: grid;
+        place-items: center;
+        min-height: 220px;
+        border: 1px dashed #aaa9a3;
+        padding: 34px;
+        text-align: center;
+        transition: 150ms ease;
+      }
+
+      .dropzone.is-dragging {
+        border-color: #171717;
+        background: #f5f5f3;
+      }
+
+      .dropzone-title {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 28px;
+      }
+
+      .dropzone-copy {
+        margin: 10px 0 20px;
+        color: #6b6b6b;
+        font-size: 14px;
+      }
+
+      .upload-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .file-button,
+      .secondary-button,
+      .primary-button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #171717;
+        padding: 0 18px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .file-button,
+      .secondary-button {
+        color: #171717;
+        background: #fff;
+      }
+
+      .primary-button {
+        color: #fff;
+        background: #171717;
+      }
+
+      .primary-button:disabled {
+        cursor: not-allowed;
+        opacity: 0.35;
+      }
+
+      .file-button input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+
+      .photo-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 260px));
+        gap: 18px;
+        justify-content: start;
+        margin-top: 24px;
+      }
+
+      .photo-card {
+        width: 100%;
+        max-width: 260px;
+        border: 1px solid #deded9;
+        background: #fafaf8;
+      }
+
+      .photo-preview {
+        width: 100%;
+        height: 220px;
+        display: block;
+        object-fit: contain;
+        background: #eee;
+      }
+
+      .photo-fields {
+        padding: 14px;
+      }
+
+      .filename {
+        overflow: hidden;
+        margin: 0 0 12px;
+        color: #777;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .category-select {
+        width: 100%;
+        min-height: 42px;
+        border: 1px solid #cfcfca;
+        border-radius: 0;
+        padding: 0 10px;
+        color: #171717;
+        background: #fff;
+      }
+
+      .category-select.needs-category {
+        border-color: #b7791f;
+        background: #fffaf0;
+      }
+
+      .assignment-status {
+        display: none;
+        margin: 14px 0 0;
+        color: #6a6a6a;
+        font-size: 13px;
+      }
+
+      .assignment-status.is-visible {
+        display: block;
+      }
+
+      .assignment-status.is-incomplete {
+        color: #8a5a12;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 10px;
+      }
+
+      .icon-button {
+        min-width: 34px;
+        min-height: 32px;
+        border: 1px solid #d5d5d0;
+        color: #555;
+        background: #fff;
+      }
+
+      .remove-button {
+        margin-left: auto;
+      }
+
+      .submit-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-top: 26px;
+        border-top: 1px solid #e5e5e1;
+        padding-top: 26px;
+      }
+
+      .draft-note {
+        max-width: 580px;
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .submit-action {
+        display: grid;
+        justify-items: end;
+        gap: 8px;
+      }
+
+      .submit-requirement {
+        min-height: 20px;
+        margin: 0;
+        color: #8a5a12;
+        font-size: 13px;
+        text-align: right;
+      }
+
+      .status {
+        display: none;
+        margin-top: 20px;
+        border: 1px solid #d3d3ce;
+        padding: 16px 18px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .status.is-visible {
+        display: block;
+      }
+
+      .status.is-error {
+        border-color: #d8a6a0;
+        color: #8a2d23;
+        background: #fff5f3;
+      }
+
+      .success-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          width: min(100% - 24px, 1180px);
+          padding-top: 20px;
+        }
+
+        .topbar {
+          margin-bottom: 40px;
+        }
+
+        .panel {
+          padding: 22px 16px;
+        }
+
+        .classification-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .photo-list {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .photo-card {
+          max-width: none;
+        }
+
+        .submit-row {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .submit-action {
+          justify-items: stretch;
+        }
+
+        .submit-requirement {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="topbar" aria-label="Admin navigation">
+        <a class="brand back-link" href="/admin">Shen Europe Admin</a>
+        <a class="back-link" href="/admin">
+          Zur Admin-Übersicht →
+        </a>
+      </nav>
+
+      <h1>Neues Instrument aus Fotos anlegen</h1>
+      <p class="intro">
+        Wähle einen ganzen Ordner oder mehrere Fotos auf einmal. Danach kurz die
+        Qualitätsstufe, das Modell und die Bildkategorien prüfen – eine interne
+        ID wird automatisch vergeben. Alle weiteren Daten können später ergänzt
+        werden.
+      </p>
+
+      <form id="intake-form">
+        <section class="panel">
+          <div class="classification-grid">
+            <div>
+              <label class="field-label" for="quality-level">
+                Qualitätsstufe / Baureihe
+              </label>
+              <select class="classification-select" id="quality-level" required>
+                <option value="">Bitte auswählen …</option>
+                {bassQualityOptions.map((option) => (
+                  <option value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="instrument-model">
+                Modell / Form
+              </label>
+              <select class="classification-select" id="instrument-model" required>
+                <option value="">Bitte auswählen …</option>
+                {bassModelGroups.map((group) => (
+                  <optgroup label={group.label}>
+                    {group.options.map((option) => (
+                      <option
+                        value={option.value}
+                        data-qualities={option.qualities.join(",")}
+                      >
+                        {option.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+            </div>
+          </div>
+          <p class="hint">
+            Die interne ID, zum Beispiel BASS-0003, wird beim Speichern
+            automatisch und dauerhaft vergeben. Auch die spätere öffentliche
+            URL entsteht automatisch aus Qualitätsstufe, Modell und ID.
+          </p>
+
+          <div class="upload-section">
+            <span class="section-label">Fotos</span>
+            <div class="dropzone" id="dropzone">
+              <div>
+                <p class="dropzone-title">Bildsatz hier ablegen</p>
+                <p class="dropzone-copy">
+                  JPG, PNG, WebP oder AVIF · maximal 40 Bilder
+                </p>
+                <div class="upload-actions">
+                  <label class="file-button">
+                    Ordner auswählen
+                    <input
+                      id="folder-input"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/avif"
+                      multiple
+                      webkitdirectory
+                    />
+                  </label>
+                  <label class="file-button">
+                    Bilder auswählen
+                    <input
+                      id="file-input"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/avif"
+                      multiple
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="photo-list" id="photo-list"></div>
+            <p class="assignment-status" id="assignment-status"></p>
+            <p class="hint">
+              Kategorien werden nur bei eindeutig benannten Dateien
+              vorgeschlagen. Die Bildinhalte selbst werden derzeit nicht durch
+              eine KI analysiert.
+            </p>
+          </div>
+
+          <div class="submit-row">
+            <p class="draft-note">
+              Der Eintrag wird als <strong>Entwurf</strong> gespeichert und ist
+              auf der öffentlichen Website nicht sichtbar. Dateinamen werden
+              automatisch aus Reihenfolge und Kategorie erzeugt; die ID wird
+              nicht aus Qualitätsstufe oder Modell abgeleitet. Der automatisch
+              erzeugte Public-Slug kann vor der Veröffentlichung noch angepasst
+              werden.
+            </p>
+            <div class="submit-action">
+              <p class="submit-requirement" id="submit-requirement"></p>
+              <button class="primary-button" id="submit-button" type="submit" disabled>
+                Entwurf anlegen
+              </button>
+            </div>
+          </div>
+
+          <div class="status" id="status" role="status" aria-live="polite"></div>
+        </section>
+      </form>
+    </main>
+
+    <script>
+      const categoryOptions = [
+        { value: "front-complete", label: "Front – komplett" },
+        { value: "corner-detail", label: "Detail – Ecke" },
+        {
+          value: "tuning-machines-detail",
+          label: "Detail – Mechaniken",
+        },
+        { value: "scroll-detail", label: "Detail – Schnecke" },
+        { value: "body-front", label: "Korpus – Front" },
+        { value: "body-back", label: "Korpus – Back" },
+        { value: "side-ribs", label: "Seite (Zarge)" },
+        { value: "side-ribs-front", label: "Seite (Zarge + Front)" },
+      ];
+
+      const form = document.querySelector("#intake-form");
+      const qualityLevel = document.querySelector("#quality-level");
+      const instrumentModel = document.querySelector("#instrument-model");
+      const folderInput = document.querySelector("#folder-input");
+      const fileInput = document.querySelector("#file-input");
+      const dropzone = document.querySelector("#dropzone");
+      const photoList = document.querySelector("#photo-list");
+      const assignmentStatus = document.querySelector("#assignment-status");
+      const submitRequirement = document.querySelector("#submit-requirement");
+      const submitButton = document.querySelector("#submit-button");
+      const status = document.querySelector("#status");
+
+      let photos = [];
+
+      const suggestedCategory = (file) => {
+        const name = file.name.toLowerCase();
+
+        if (/mechanik|machine|tuner|tuning|peg/.test(name)) {
+          return "tuning-machines-detail";
+        }
+        if (/schnecke|scroll/.test(name)) return "scroll-detail";
+        if (/corner|ecke|detail/.test(name)) return "corner-detail";
+        if (/back|rear|rück|ruck/.test(name)) return "body-back";
+        if (/side2|angle|angled|three.?quarter/.test(name)) {
+          return "side-ribs-front";
+        }
+        if (/side|rib|zarge/.test(name)) return "side-ribs";
+        if (/body|korpus/.test(name)) return "body-front";
+        if (/front|full|komplett|gesamt/.test(name)) {
+          return "front-complete";
+        }
+
+        return "";
+      };
+
+      const updateSubmitState = () => {
+        const missingCategories = photos.filter(
+          (photo) => !photo.category,
+        ).length;
+
+        submitButton.disabled =
+          !qualityLevel.value ||
+          !instrumentModel.value ||
+          photos.length === 0 ||
+          missingCategories > 0;
+
+        submitRequirement.textContent =
+          !qualityLevel.value || !instrumentModel.value
+            ? "Bitte Qualitätsstufe und Modell auswählen."
+            : photos.length === 0
+            ? "Bitte zuerst Fotos auswählen."
+            : missingCategories > 0
+              ? `Noch ${missingCategories} ${missingCategories === 1 ? "Kategorie" : "Kategorien"} auswählen.`
+              : "Bereit zum Anlegen.";
+      };
+
+      const filterModelOptions = () => {
+        const selectedQuality = qualityLevel.value;
+        const options = Array.from(
+          instrumentModel.querySelectorAll("option[data-qualities]"),
+        );
+
+        options.forEach((option) => {
+          const qualities = option.dataset.qualities?.split(",") ?? [];
+          const isAvailable =
+            !selectedQuality || qualities.includes(selectedQuality);
+          option.hidden = !isAvailable;
+          option.disabled = !isAvailable;
+        });
+
+        instrumentModel.querySelectorAll("optgroup").forEach((group) => {
+          group.hidden = !Array.from(group.querySelectorAll("option")).some(
+            (option) => !option.disabled,
+          );
+        });
+
+        if (instrumentModel.selectedOptions[0]?.disabled) {
+          instrumentModel.value = "";
+        }
+
+        updateSubmitState();
+      };
+
+      const updateAssignmentStatus = () => {
+        if (photos.length === 0) {
+          assignmentStatus.className = "assignment-status";
+          assignmentStatus.textContent = "";
+          return;
+        }
+
+        const assigned = photos.filter((photo) => photo.category).length;
+        const remaining = photos.length - assigned;
+        assignmentStatus.className = [
+          "assignment-status",
+          "is-visible",
+          remaining > 0 ? "is-incomplete" : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
+        assignmentStatus.textContent =
+          remaining > 0
+            ? `${assigned} von ${photos.length} Fotos zugeordnet · noch ${remaining} prüfen`
+            : `Alle ${photos.length} Fotos sind zugeordnet.`;
+      };
+
+      const clearStatus = () => {
+        status.className = "status";
+        status.replaceChildren();
+      };
+
+      const renderPhotos = () => {
+        photoList.replaceChildren();
+
+        photos.forEach((photo, index) => {
+          const card = document.createElement("article");
+          card.className = "photo-card";
+
+          const image = document.createElement("img");
+          image.className = "photo-preview";
+          image.src = photo.previewUrl;
+          image.alt = `Vorschau ${photo.file.name}`;
+
+          const fields = document.createElement("div");
+          fields.className = "photo-fields";
+
+          const filename = document.createElement("p");
+          filename.className = "filename";
+          filename.title = photo.file.name;
+          filename.textContent = `${index + 1}. ${photo.file.name}`;
+
+          const select = document.createElement("select");
+          select.className = photo.category
+            ? "category-select"
+            : "category-select needs-category";
+          select.setAttribute("aria-label", `Kategorie für ${photo.file.name}`);
+
+          const emptyOption = document.createElement("option");
+          emptyOption.value = "";
+          emptyOption.textContent = "Kategorie wählen …";
+          emptyOption.selected = !photo.category;
+          select.append(emptyOption);
+
+          categoryOptions.forEach((option) => {
+            const element = document.createElement("option");
+            element.value = option.value;
+            element.textContent = option.label;
+            element.selected = option.value === photo.category;
+            select.append(element);
+          });
+
+          select.addEventListener("change", () => {
+            photo.category = select.value;
+            select.classList.toggle("needs-category", !select.value);
+            updateAssignmentStatus();
+            updateSubmitState();
+          });
+
+          const actions = document.createElement("div");
+          actions.className = "card-actions";
+
+          const moveUp = document.createElement("button");
+          moveUp.type = "button";
+          moveUp.className = "icon-button";
+          moveUp.textContent = "↑";
+          moveUp.title = "Nach vorne verschieben";
+          moveUp.disabled = index === 0;
+          moveUp.addEventListener("click", () => {
+            [photos[index - 1], photos[index]] = [
+              photos[index],
+              photos[index - 1],
+            ];
+            renderPhotos();
+          });
+
+          const moveDown = document.createElement("button");
+          moveDown.type = "button";
+          moveDown.className = "icon-button";
+          moveDown.textContent = "↓";
+          moveDown.title = "Nach hinten verschieben";
+          moveDown.disabled = index === photos.length - 1;
+          moveDown.addEventListener("click", () => {
+            [photos[index], photos[index + 1]] = [
+              photos[index + 1],
+              photos[index],
+            ];
+            renderPhotos();
+          });
+
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "icon-button remove-button";
+          remove.textContent = "×";
+          remove.title = "Bild entfernen";
+          remove.addEventListener("click", () => {
+            URL.revokeObjectURL(photo.previewUrl);
+            photos.splice(index, 1);
+            renderPhotos();
+          });
+
+          actions.append(moveUp, moveDown, remove);
+          fields.append(filename, select, actions);
+          card.append(image, fields);
+          photoList.append(card);
+        });
+
+        updateAssignmentStatus();
+        updateSubmitState();
+      };
+
+      const addFiles = (files) => {
+        const accepted = files.filter((file) =>
+          ["image/jpeg", "image/png", "image/webp", "image/avif"].includes(
+            file.type,
+          ),
+        );
+
+        const availableSlots = Math.max(0, 40 - photos.length);
+        accepted.slice(0, availableSlots).forEach((file) => {
+          photos.push({
+            file,
+            category: suggestedCategory(file),
+            previewUrl: URL.createObjectURL(file),
+          });
+        });
+
+        clearStatus();
+        renderPhotos();
+      };
+
+      folderInput.addEventListener("change", () => {
+        addFiles(Array.from(folderInput.files ?? []));
+        folderInput.value = "";
+      });
+
+      fileInput.addEventListener("change", () => {
+        addFiles(Array.from(fileInput.files ?? []));
+        fileInput.value = "";
+      });
+
+      qualityLevel.addEventListener("change", filterModelOptions);
+      instrumentModel.addEventListener("change", updateSubmitState);
+
+      ["dragenter", "dragover"].forEach((eventName) => {
+        dropzone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropzone.classList.add("is-dragging");
+        });
+      });
+
+      ["dragleave", "drop"].forEach((eventName) => {
+        dropzone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropzone.classList.remove("is-dragging");
+        });
+      });
+
+      dropzone.addEventListener("drop", (event) => {
+        addFiles(Array.from(event.dataTransfer?.files ?? []));
+      });
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        clearStatus();
+        submitButton.disabled = true;
+        submitButton.textContent = "Wird angelegt …";
+
+        const payload = new FormData();
+        payload.append("quality", qualityLevel.value);
+        payload.append("model", instrumentModel.value);
+
+        photos.forEach((photo) => {
+          payload.append("photos", photo.file, photo.file.name);
+          payload.append("categories", photo.category);
+        });
+
+        try {
+          const response = await fetch("/admin/api/instruments", {
+            method: "POST",
+            body: payload,
+          });
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.error || "Der Entwurf konnte nicht angelegt werden.");
+          }
+
+          status.className = "status is-visible";
+          const message = document.createElement("strong");
+          message.textContent = `${result.inventory} mit ${result.photoCount} Fotos als Entwurf angelegt.`;
+          const actions = document.createElement("div");
+          actions.className = "success-actions";
+
+          const editLink = document.createElement("a");
+          editLink.className = "primary-button";
+          editLink.href = result.editUrl;
+          editLink.textContent = "Daten im Admin ergänzen";
+
+          const anotherButton = document.createElement("button");
+          anotherButton.className = "secondary-button";
+          anotherButton.type = "button";
+          anotherButton.textContent = "Weiteres Instrument anlegen";
+          anotherButton.addEventListener("click", () => window.location.reload());
+
+          const overviewLink = document.createElement("a");
+          overviewLink.className = "secondary-button";
+          overviewLink.href = "/admin";
+          overviewLink.textContent = "Zur Admin-Übersicht";
+
+          actions.append(editLink, overviewLink, anotherButton);
+          status.append(message, actions);
+          submitButton.textContent = "Entwurf angelegt";
+        } catch (error) {
+          status.className = "status is-visible is-error";
+          status.textContent =
+            error instanceof Error ? error.message : "Unbekannter Fehler.";
+          submitButton.textContent = "Entwurf anlegen";
+          updateSubmitState();
+        }
+      });
+
+      filterModelOptions();
+    </script>
+  </body>
+</html>

@@ -2,6 +2,14 @@ import { getCollection, type CollectionEntry } from "astro:content";
 
 type Instrument = CollectionEntry<"instruments">;
 
+export const publicationRequiredFields = [
+  "slug",
+  "inventory",
+  "model",
+  "outline",
+  "shortDescription",
+] as const;
+
 function assertUniqueField(
   instruments: Instrument[],
   field: "slug" | "inventory",
@@ -10,6 +18,8 @@ function assertUniqueField(
 
   for (const instrument of instruments) {
     const value = instrument.data[field];
+    if (!value) continue;
+
     const existingId = seen.get(value);
 
     if (existingId) {
@@ -22,11 +32,34 @@ function assertUniqueField(
   }
 }
 
+export function getPublicationMissingFields(
+  instrument: Instrument,
+): Array<(typeof publicationRequiredFields)[number]> {
+  return publicationRequiredFields.filter(
+    (field) => !instrument.data[field].trim(),
+  );
+}
+
 export async function getInstruments(): Promise<Instrument[]> {
-  const instruments = await getCollection("instruments");
+  const allInstruments = await getCollection("instruments");
+  const markedAsPublished = allInstruments.filter(
+    (instrument) => instrument.data.publication === "published",
+  );
+  const incompletePublished = markedAsPublished.filter(
+    (instrument) => getPublicationMissingFields(instrument).length > 0,
+  );
+  const publishedInstruments = markedAsPublished.filter(
+    (instrument) => getPublicationMissingFields(instrument).length === 0,
+  );
 
-  assertUniqueField(instruments, "slug");
-  assertUniqueField(instruments, "inventory");
+  for (const instrument of incompletePublished) {
+    console.warn(
+      `Instrument "${instrument.data.title}" remains hidden because it is missing: ${getPublicationMissingFields(instrument).join(", ")}.`,
+    );
+  }
 
-  return instruments;
+  assertUniqueField(publishedInstruments, "slug");
+  assertUniqueField(publishedInstruments, "inventory");
+
+  return publishedInstruments;
 }

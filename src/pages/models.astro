@@ -1,23 +1,329 @@
 ---
+import type { CollectionEntry } from "astro:content";
+
+import Button from "../components/ui/Button.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Section from "../components/layout/Section.astro";
-import Stack from "../components/layout/Stack.astro";
-import Heading from "../components/ui/Heading.astro";
-import Text from "../components/ui/Text.astro";
+import { getInstruments } from "../lib/instruments";
+
+type Instrument = CollectionEntry<"instruments">;
+
+interface ModelReference {
+  model: string;
+  outline: string;
+  size?: string;
+  instruments: Instrument[];
+}
+
+const statusOrder = {
+  available: 0,
+  reserved: 1,
+  "coming-soon": 2,
+  sold: 3,
+} as const;
+
+const instruments = (await getInstruments()).sort(
+  (a, b) => statusOrder[a.data.status] - statusOrder[b.data.status],
+);
+
+const modelMap = new Map<string, ModelReference>();
+
+for (const instrument of instruments) {
+  const { model, outline, size } = instrument.data;
+  const key = [model, outline, size ?? ""].join("|");
+  const existing = modelMap.get(key);
+
+  if (existing) {
+    existing.instruments.push(instrument);
+  } else {
+    modelMap.set(key, { model, outline, size, instruments: [instrument] });
+  }
+}
+
+const modelReferences = Array.from(modelMap.values()).sort((a, b) =>
+  a.model.localeCompare(b.model, "en", { numeric: true }),
+);
+
+const getConstruction = (instrument: Instrument) => {
+  const { topMaterial, backMaterial, ribs } = instrument.data;
+  const materials = [topMaterial, backMaterial, ribs]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  if (
+    topMaterial?.toLowerCase().includes("fully carved") &&
+    backMaterial?.toLowerCase().includes("fully carved") &&
+    ribs?.toLowerCase().includes("fully carved")
+  ) {
+    return "Fully carved";
+  }
+
+  if (
+    topMaterial?.toLowerCase().includes("carved") &&
+    (materials.includes("laminated") || materials.includes("veneer"))
+  ) {
+    return "Hybrid";
+  }
+
+  if (materials.includes("laminated") || materials.includes("veneer")) {
+    return "Laminated";
+  }
+
+  return "See instrument details";
+};
+
+const getReferenceState = (reference: ModelReference) => {
+  const available = reference.instruments.filter(
+    (instrument) => instrument.data.status === "available",
+  ).length;
+  const reserved = reference.instruments.filter(
+    (instrument) => instrument.data.status === "reserved",
+  ).length;
+  const comingSoon = reference.instruments.filter(
+    (instrument) => instrument.data.status === "coming-soon",
+  ).length;
+
+  if (available > 0) {
+    return `${available} ${available === 1 ? "instrument" : "instruments"} available`;
+  }
+
+  if (reserved > 0) return "Currently reserved";
+  if (comingSoon > 0) return "Arriving soon";
+  return "Documented reference";
+};
+
+const modelParts = [
+  {
+    number: "01",
+    title: "Model",
+    text: "Indicates the construction level and material specification of the instrument.",
+  },
+  {
+    number: "02",
+    title: "Outline",
+    text: "Describes the body pattern and proportions on which the bass is based.",
+  },
+  {
+    number: "03",
+    title: "Size",
+    text: "Provides a useful reference for dimensions, while string length and body measurements give the fuller picture.",
+  },
+  {
+    number: "04",
+    title: "Setup",
+    text: "Shapes playability and response, and is considered in relation to both the individual bass and the player.",
+  },
+];
 ---
 
 <BaseLayout
-  title="Shen Double Bass Models | Shen Europe"
-  description="Explore selected Samuel Shen double bass models available in Europe."
+  title="Samuel Shen Double Bass Models | Shen Europe"
+  description="Understand Samuel Shen double bass models, outlines, sizes and setup, and explore models documented by Shen Europe."
 >
-  <Section spacing="lg">
-    <Stack gap="md" class="max-w-4xl">
-      <Heading as="h1" size="xl">Models</Heading>
+  <section class="py-20 sm:py-24 lg:py-32">
+    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
+      <div class="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)] lg:items-end lg:gap-24">
+        <div class="max-w-5xl">
+          <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
+            Samuel Shen double basses
+          </p>
 
-      <Text size="lg" class="max-w-2xl">
-        Explore selected Shen models, construction levels and outlines. Other
-        models can be ordered through Shen Europe.
-      </Text>
-    </Stack>
-  </Section>
+          <h1 class="mt-6 font-serif text-5xl leading-[0.96] tracking-[-0.045em] text-neutral-950 sm:text-6xl lg:text-7xl xl:text-[5.25rem]">
+            A model is a framework, not a verdict
+          </h1>
+        </div>
+
+        <p class="max-w-xl text-lg leading-relaxed text-neutral-600">
+          Model, outline and size help narrow the field. They describe how an
+          instrument is built, but not everything about how an individual bass
+          will sound, respond or feel.
+        </p>
+      </div>
+
+      <ol class="mt-16 grid border-y border-neutral-200 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4">
+        {
+          modelParts.map((part, index) => (
+            <li
+              class:list={[
+                "py-7 sm:p-7 lg:p-8",
+                index > 0 && "border-t border-neutral-200",
+                index === 1 && "sm:border-t-0 sm:border-l sm:border-neutral-200",
+                index === 2 && "lg:border-t-0 lg:border-l lg:border-neutral-200",
+                index === 3 && "sm:border-l sm:border-neutral-200 lg:border-t-0",
+              ]}
+            >
+              <p class="text-xs tracking-[0.1em] text-neutral-400">
+                {part.number}
+              </p>
+              <h2 class="mt-5 font-serif text-3xl tracking-[-0.025em] text-neutral-950">
+                {part.title}
+              </h2>
+              <p class="mt-4 text-sm leading-relaxed text-neutral-600">
+                {part.text}
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="border-t border-neutral-200 bg-neutral-50 py-20 sm:py-24 lg:py-32">
+    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
+      <div class="grid gap-12 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:gap-24">
+        <div>
+          <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
+            Reading the reference
+          </p>
+        </div>
+
+        <div class="max-w-4xl">
+          <h2 class="font-serif text-4xl leading-[1.05] tracking-[-0.035em] text-neutral-950 sm:text-5xl lg:text-6xl">
+            Useful for orientation. Never a substitute for the instrument.
+          </h2>
+
+          <div class="mt-12 grid gap-px overflow-hidden border border-neutral-200 bg-neutral-200 sm:grid-cols-2">
+            <article class="bg-white p-7 sm:p-9">
+              <p class="text-xs tracking-[0.1em] text-neutral-500 uppercase">
+                What the model can tell you
+              </p>
+              <ul class="mt-7 divide-y divide-neutral-200 border-y border-neutral-200 text-base text-neutral-800">
+                <li class="py-4">Construction and materials</li>
+                <li class="py-4">Outline and general proportions</li>
+                <li class="py-4">Nominal size and specification</li>
+              </ul>
+            </article>
+
+            <article class="bg-white p-7 sm:p-9">
+              <p class="text-xs tracking-[0.1em] text-neutral-500 uppercase">
+                What requires the individual bass
+              </p>
+              <ul class="mt-7 divide-y divide-neutral-200 border-y border-neutral-200 text-base text-neutral-800">
+                <li class="py-4">Voice, projection and colour</li>
+                <li class="py-4">Response under the bow and hand</li>
+                <li class="py-4">The final setup and playing experience</li>
+              </ul>
+            </article>
+          </div>
+
+          <p class="mt-8 max-w-3xl text-base leading-relaxed text-neutral-600">
+            For that reason, Shen Europe documents available basses as
+            individual instruments. Model photography is added when a
+            corresponding instrument has been assessed and photographed in
+            Europe.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-neutral-200 py-20 sm:py-24 lg:py-32">
+    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
+      <div class="max-w-4xl">
+        <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
+          European reference
+        </p>
+        <h2 class="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.035em] text-neutral-950 sm:text-5xl">
+          Models documented by Shen Europe
+        </h2>
+        <p class="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-600">
+          This reference grows instrument by instrument. It begins with models
+          that have been inspected, described and prepared through Shen Europe.
+        </p>
+      </div>
+
+      {
+        modelReferences.length > 0 ? (
+          <div class="mt-12 border-t border-neutral-300">
+            {modelReferences.map((reference) => {
+              const instrument = reference.instruments[0];
+              const href = `/instruments/${instrument.data.slug}/`;
+
+              return (
+                <article class="group border-b border-neutral-200 py-8 sm:py-10">
+                  <div class="grid gap-7 lg:grid-cols-[minmax(220px,0.85fr)_minmax(0,1.15fr)_auto] lg:items-center lg:gap-12">
+                    <div>
+                      <p class="text-sm text-neutral-500">Model</p>
+                      <h3 class="mt-2 font-serif text-4xl tracking-[-0.035em] text-neutral-950 sm:text-5xl">
+                        {reference.model}
+                      </h3>
+                    </div>
+
+                    <dl class="grid grid-cols-2 gap-x-8 gap-y-6 text-sm sm:grid-cols-4">
+                      <div>
+                        <dt class="text-neutral-500">Outline</dt>
+                        <dd class="mt-2 text-neutral-950">{reference.outline}</dd>
+                      </div>
+                      <div>
+                        <dt class="text-neutral-500">Size</dt>
+                        <dd class="mt-2 text-neutral-950">
+                          {reference.size ?? "On request"}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt class="text-neutral-500">Example build</dt>
+                        <dd class="mt-2 text-neutral-950">
+                          {getConstruction(instrument)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt class="text-neutral-500">Current reference</dt>
+                        <dd class="mt-2 text-neutral-950">
+                          {getReferenceState(reference)}
+                        </dd>
+                      </div>
+                    </dl>
+
+                    <a
+                      href={href}
+                      class="inline-flex items-center gap-3 text-sm font-medium text-neutral-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-4"
+                    >
+                      View instrument
+                      <span
+                        class="transition-transform group-hover:translate-x-1"
+                        aria-hidden="true"
+                      >
+                        →
+                      </span>
+                    </a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <p class="mt-12 border-t border-neutral-200 pt-8 text-lg leading-relaxed text-neutral-600">
+            The first European model references are currently being prepared.
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="border-t border-neutral-200 bg-neutral-950 py-20 text-white sm:py-24 lg:py-32">
+    <div class="mx-auto grid w-full max-w-[1600px] gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-20 lg:px-12">
+      <div class="max-w-4xl">
+        <p class="text-sm tracking-[0.1em] text-neutral-400 uppercase">
+          Special orders
+        </p>
+        <h2 class="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.035em] sm:text-5xl lg:text-6xl">
+          Looking beyond the current reference?
+        </h2>
+        <p class="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-300">
+          The models shown here are not the limit of what can be discussed.
+          Start with musical use, dimensions and the qualities you are looking
+          for; model and specification can then be considered together.
+        </p>
+      </div>
+
+      <Button
+        href="/contact"
+        variant="outline"
+        size="lg"
+        class="border-white text-white hover:bg-white hover:text-neutral-950"
+      >
+        Discuss a special order
+      </Button>
+    </div>
+  </section>
 </BaseLayout>

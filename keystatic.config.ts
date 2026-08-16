@@ -1,20 +1,56 @@
 import { collection, config, fields } from "@keystatic/core";
-
-const requiredText = (label: string, description?: string) =>
-  fields.text({
-    label,
-    description,
-    validation: { isRequired: true },
-  });
+import { createElement } from "react";
+import {
+  bassModelOptions,
+  bassQualityOptions,
+} from "./src/lib/instrumentTaxonomy";
 
 const optionalText = (label: string, description?: string) =>
   fields.text({ label, description });
+
+const photoCategoryOptions = [
+  { label: "Front – komplett", value: "front-complete" },
+  { label: "Detail – Ecke", value: "corner-detail" },
+  { label: "Detail – Mechaniken", value: "tuning-machines-detail" },
+  { label: "Detail – Schnecke", value: "scroll-detail" },
+  { label: "Korpus – Front", value: "body-front" },
+  { label: "Korpus – Back", value: "body-back" },
+  { label: "Seite (Zarge)", value: "side-ribs" },
+  { label: "Seite (Zarge + Front)", value: "side-ribs-front" },
+] as const;
+
+const photoCategoryLabels = Object.fromEntries(
+  photoCategoryOptions.map(({ label, value }) => [value, label]),
+) as Record<(typeof photoCategoryOptions)[number]["value"], string>;
+
+const AdminHomeLink = () =>
+  createElement(
+    "a",
+    {
+      href: "/admin",
+      title: "Zur Admin-Übersicht",
+      style: {
+        alignItems: "center",
+        border: "1px solid currentColor",
+        borderRadius: "3px",
+        display: "inline-flex",
+        fontSize: "10px",
+        fontWeight: 700,
+        height: "22px",
+        letterSpacing: "0.06em",
+        padding: "0 6px",
+        textDecoration: "none",
+        textTransform: "uppercase",
+      },
+    },
+    "Admin",
+  );
 
 export default config({
   storage: { kind: "local" },
 
   ui: {
-    brand: { name: "Shen Europe" },
+    brand: { name: "Shen Europe", mark: AdminHomeLink },
     navigation: { Content: ["instruments"] },
   },
 
@@ -24,38 +60,99 @@ export default config({
       path: "src/content/instruments/*/",
       slugField: "title",
       entryLayout: "form",
-      columns: ["title", "inventory", "model", "status"],
+      columns: ["publication", "title", "slug", "model", "status"],
       format: { data: "yaml", contentField: "content" },
 
       schema: {
         title: fields.slug({
           name: {
-            label: "Title",
-            description: "Public instrument name.",
+            label: "Anzeigename",
+            description:
+              "Wird bei der Schnellerfassung automatisch aus Qualitätsstufe und Modell erzeugt. Die interne ID erscheint bewusst nicht im öffentlichen Titel.",
             validation: { isRequired: true },
           },
           slug: {
-            label: "Content folder",
+            label: "Interner Datensatz",
             description:
-              "Internal folder name. Keep this stable after publishing.",
+              "Bei der Schnellerfassung basiert er auf der internen ID. Danach möglichst nicht mehr ändern.",
           },
         }),
 
+        publication: fields.select({
+          label: "Veröffentlichung",
+          description:
+            "Entwürfe bleiben vollständig unsichtbar. Unvollständige Einträge werden auch bei versehentlicher Freigabe nicht öffentlich angezeigt.",
+          defaultValue: "draft",
+          options: [
+            { label: "Entwurf", value: "draft" },
+            { label: "Öffentlich", value: "published" },
+          ],
+        }),
+
+        gallery: fields.array(
+          fields.object({
+            image: fields.image({
+              label: "Bild",
+              validation: { isRequired: true },
+            }),
+            category: fields.select({
+              label: "Kategorie",
+              options: photoCategoryOptions,
+              defaultValue: "body-front",
+            }),
+          }),
+          {
+            label: "Fotos – Schnellerfassung",
+            description:
+              "Für einen neuen Entwurf reicht: Qualitätsstufe und Modell auswählen, Fotos hinzufügen, Kategorien zuweisen und speichern. Alle weiteren Daten können später folgen.",
+            itemLabel: (props) => {
+              const category = props.fields.category.value;
+              const filename = props.fields.image.value?.filename;
+              const label = photoCategoryLabels[category];
+
+              return filename ? `${label} · ${filename}` : label;
+            },
+          },
+        ),
+
+        hero: fields.image({
+          label: "Optionales Titelbild",
+          description:
+            "Kann leer bleiben. Ohne separates Titelbild wird automatisch das Foto „Front – komplett“ verwendet.",
+        }),
+
         slug: fields.text({
-          label: "Public URL slug",
-          description: "Used for /instruments/… — lowercase and hyphens only.",
+          label: "Öffentlicher URL-Pfad",
+          description:
+            "Wird bei der Schnellerfassung automatisch aus Qualitätsstufe, Modell und ID erzeugt. Vor der Veröffentlichung bei Bedarf anpassen; danach stabil lassen.",
           validation: {
-            isRequired: true,
             pattern: {
               regex: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
               message: "Use lowercase letters, numbers and single hyphens only.",
             },
           },
         }),
-        inventory: requiredText("Inventory number"),
+        inventory: optionalText(
+          "Interne ID",
+          "Wird bei der Schnellerfassung automatisch vergeben und danach nicht mehr geändert.",
+        ),
 
-        model: requiredText("Model", "For example SB-800."),
-        outline: requiredText("Outline", "For example Mirecourt."),
+        model: fields.select({
+          label: "Qualitätsstufe / Baureihe",
+          defaultValue: "",
+          options: [
+            { label: "Noch nicht festgelegt", value: "" },
+            ...bassQualityOptions,
+          ],
+        }),
+        outline: fields.select({
+          label: "Modell / Form",
+          defaultValue: "",
+          options: [
+            { label: "Noch nicht festgelegt", value: "" },
+            ...bassModelOptions,
+          ],
+        }),
         size: optionalText("Size", "For example 3/4."),
         year: fields.integer({ label: "Year" }),
 
@@ -95,26 +192,10 @@ export default config({
         }),
         shortDescription: fields.text({
           label: "Short description",
-          description: "Shown on cards and at the top of the detail page.",
+          description:
+            "Shown on cards and at the top of the detail page. Erst vor der Veröffentlichung nötig.",
           multiline: true,
-          validation: { isRequired: true },
         }),
-
-        hero: fields.image({
-          label: "Hero image",
-          description: "Main image used on listings and the detail page.",
-        }),
-        gallery: fields.array(
-          fields.image({
-            label: "Gallery image",
-            validation: { isRequired: true },
-          }),
-          {
-            label: "Gallery images",
-            description: "Drag entries to control their display order.",
-            itemLabel: () => "Gallery image",
-          },
-        ),
 
         youtubeVideoId: optionalText(
           "YouTube video ID",
@@ -136,6 +217,7 @@ export default config({
         tuningMachines: optionalText("Tuning machines"),
         strings: optionalText("Strings"),
         bridge: optionalText("Bridge"),
+        tailpiece: optionalText("Tailpiece"),
 
         endpin: optionalText("Endpin"),
         warranty: optionalText("Warranty"),

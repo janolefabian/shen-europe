@@ -1,6 +1,19 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
+const instrumentPhotoCategory = z.enum([
+  "front-complete",
+  "corner-detail",
+  "tuning-machines-detail",
+  "scroll-detail",
+  "body-front",
+  "body-back",
+  "side-ribs",
+  "side-ribs-front",
+]);
+
+const publicSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 const instruments = defineCollection({
   loader: glob({
     base: "./src/content/instruments",
@@ -9,17 +22,19 @@ const instruments = defineCollection({
 
   schema: z.object({
     title: z.string().trim().min(1),
+    publication: z.enum(["draft", "published"]).default("draft"),
     slug: z
       .string()
       .trim()
-      .regex(
-        /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      .refine(
+        (value) => value === "" || publicSlugPattern.test(value),
         "Use lowercase letters, numbers and single hyphens only.",
-      ),
-    inventory: z.string().trim().min(1),
+      )
+      .default(""),
+    inventory: z.string().trim().default(""),
 
-    model: z.string(),
-    outline: z.string(),
+    model: z.string().default(""),
+    outline: z.string().default(""),
     size: z.string().optional(),
     year: z.number().int().nullable().optional(),
 
@@ -30,10 +45,17 @@ const instruments = defineCollection({
 
     location: z.string().default("Berlin"),
 
-    shortDescription: z.string(),
+    shortDescription: z.string().default(""),
 
     hero: z.string().nullable().optional(),
-    gallery: z.array(z.string()).default([]),
+    gallery: z
+      .array(
+        z.object({
+          image: z.string(),
+          category: instrumentPhotoCategory,
+        }),
+      )
+      .default([]),
 
     youtubeVideoId: z.string().optional(),
 
@@ -52,6 +74,7 @@ const instruments = defineCollection({
     tuningMachines: z.string().optional(),
     strings: z.string().optional(),
     bridge: z.string().optional(),
+    tailpiece: z.string().optional(),
 
     endpin: z.string().optional(),
     warranty: z.string().optional(),

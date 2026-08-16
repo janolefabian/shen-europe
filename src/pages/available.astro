@@ -40,9 +40,9 @@ const instruments = (await getInstruments())
 
       {
         instruments.length > 0 ? (
-          <div class="mt-16 grid gap-x-8 gap-y-20 lg:grid-cols-2">
+          <div class="mt-14 grid max-w-[1360px] gap-x-7 gap-y-14 sm:grid-cols-2 xl:grid-cols-3">
             {instruments.map((instrument) => (
-              <InstrumentCard instrument={instrument} />
+              <InstrumentCard instrument={instrument} variant="compact" />
             ))}
           </div>
         ) : (
