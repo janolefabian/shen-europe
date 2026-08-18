@@ -4,14 +4,21 @@ import Button from "../components/ui/Button.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getInstruments } from "../lib/instruments";
 
-const instruments = (await getInstruments())
+const allInstruments = await getInstruments();
+const currentInstruments = allInstruments
   .filter((instrument) => instrument.data.status !== "sold")
   .sort((a, b) => a.data.order - b.data.order);
+const pastInstruments = allInstruments
+  .filter((instrument) => instrument.data.status === "sold")
+  .sort(
+    (a, b) =>
+      a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
+  );
 ---
 
 <BaseLayout
   title="Available Shen Double Basses | Shen Europe"
-  description="Samuel Shen double basses currently available, reserved or arriving soon in Berlin."
+  description="Samuel Shen double basses currently available, reserved or arriving soon in Berlin, with selected past instruments kept as references."
 >
   <section class="py-20 sm:py-24 lg:py-32">
     <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
@@ -39,9 +46,9 @@ const instruments = (await getInstruments())
       </div>
 
       {
-        instruments.length > 0 ? (
+        currentInstruments.length > 0 ? (
           <div class="mt-14 grid max-w-[1360px] gap-x-7 gap-y-14 sm:grid-cols-2 xl:grid-cols-3">
-            {instruments.map((instrument) => (
+            {currentInstruments.map((instrument) => (
               <InstrumentCard instrument={instrument} variant="compact" />
             ))}
           </div>
@@ -60,6 +67,37 @@ const instruments = (await getInstruments())
       }
     </div>
   </section>
+
+  {
+    pastInstruments.length > 0 && (
+      <section class="border-t border-neutral-200 bg-neutral-50 py-16 sm:py-20 lg:py-24">
+        <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
+          <div class="grid gap-7 lg:grid-cols-[minmax(240px,0.55fr)_minmax(0,1.45fr)] lg:gap-20">
+            <div>
+              <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
+                Previously in Europe
+              </p>
+              <h2 class="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.03em] text-neutral-950 sm:text-5xl">
+                Selected past instruments
+              </h2>
+            </div>
+
+            <p class="max-w-3xl text-lg leading-relaxed text-neutral-600">
+              A selection of instruments previously available through Shen
+              Europe. Their pages remain online as references for models,
+              materials and individual setups.
+            </p>
+          </div>
+
+          <div class="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {pastInstruments.map((instrument) => (
+              <InstrumentCard instrument={instrument} variant="archive" />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <section class="border-t border-neutral-200 py-16 sm:py-20 lg:py-24">
     <div class="mx-auto grid w-full max-w-[1600px] gap-8 px-5 sm:px-8 lg:grid-cols-[1fr_auto] lg:items-end lg:px-12">

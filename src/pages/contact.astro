@@ -200,10 +200,16 @@ const dealerUrl = mailto(
 </BaseLayout>
 
 <script define:vars={{ contactEmail, instrumentTitles }}>
-  const slug = new URLSearchParams(window.location.search).get("instrument");
+  const params = new URLSearchParams(window.location.search);
+  const instrumentSlug = params.get("instrument");
+  const similarSlug = params.get("similar");
+  const slug = instrumentSlug ?? similarSlug;
+  const isSimilarRequest = Boolean(similarSlug && !instrumentSlug);
   const title = slug ? instrumentTitles[slug] : undefined;
   const context = document.querySelector("[data-instrument-context]");
   const titleElement = document.querySelector("[data-instrument-title]");
+  const contextLabel = context?.querySelector("p:first-child");
+  const contextDescription = context?.querySelector("[data-instrument-title] + p");
   const instrumentEmail = document.querySelector("[data-instrument-email]");
   const trialEmail = document.querySelector("[data-trial-email]");
 
@@ -212,16 +218,29 @@ const dealerUrl = mailto(
 
   if (title && context && titleElement && instrumentEmail) {
     titleElement.textContent = title;
-    instrumentEmail.href = createMailto(
-      `Instrument enquiry: ${title}`,
-      `Hello Shen Europe,\n\nI would like to enquire about ${title}.\n\nBest regards,\n`,
-    );
-
-    if (trialEmail) {
-      trialEmail.href = createMailto(
-        `Trial request: ${title}`,
-        `Hello Shen Europe,\n\nI would like to arrange a trial of ${title} in Berlin.\n\nBest regards,\n`,
+    if (isSimilarRequest) {
+      if (contextLabel) contextLabel.textContent = "Reference instrument";
+      if (contextDescription) {
+        contextDescription.textContent =
+          "This instrument has been sold. Ask about a similar model or a future selection.";
+      }
+      instrumentEmail.textContent = "Ask about a similar instrument";
+      instrumentEmail.href = createMailto(
+        `Similar instrument enquiry: ${title}`,
+        `Hello Shen Europe,\n\nI am interested in an instrument similar to ${title}.\n\nBest regards,\n`,
       );
+    } else {
+      instrumentEmail.href = createMailto(
+        `Instrument enquiry: ${title}`,
+        `Hello Shen Europe,\n\nI would like to enquire about ${title}.\n\nBest regards,\n`,
+      );
+
+      if (trialEmail) {
+        trialEmail.href = createMailto(
+          `Trial request: ${title}`,
+          `Hello Shen Europe,\n\nI would like to arrange a trial of ${title} in Berlin.\n\nBest regards,\n`,
+        );
+      }
     }
 
     context.classList.remove("hidden");
