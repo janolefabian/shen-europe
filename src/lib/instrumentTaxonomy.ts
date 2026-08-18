@@ -5,9 +5,7 @@ export const bassQualityOptions = [
   { label: "SB-100", value: "SB-100" },
   { label: "SB-150", value: "SB-150" },
   { label: "SB-180", value: "SB-180" },
-  { label: "SB-190", value: "SB-190" },
   { label: "SB-200", value: "SB-200" },
-  { label: "SB-288", value: "SB-288" },
   { label: "SB-300", value: "SB-300" },
   { label: "SB-800", value: "SB-800" },
   { label: "SB-1000", value: "SB-1000" },
@@ -75,35 +73,20 @@ export const bassModelGroups = [
     ],
   },
   {
-    label: "Vollmassiv – Mahagoni",
-    options: [
-      {
-        label: "Shen Classic 3/4 Mahogany",
-        value: "Shen Classic 3/4 Mahogany",
-        qualities: ["SB-288"],
-      },
-    ],
-  },
-  {
     label: "Hybrid",
     options: [
       {
-        label: "Shen 3/4 Hybrid",
+        label: "Shen SB150 Hybrid",
         value: "Shen 3/4 Hybrid",
         qualities: ["SB-150"],
       },
       {
-        label: "Shen 3/4 Flamed Hybrid",
+        label: "Shen SB180 3/4 Hybrid",
         value: "Shen 3/4 Flamed Hybrid",
         qualities: ["SB-180"],
       },
       {
-        label: "Rogeri Hybrid",
-        value: "Rogeri Hybrid",
-        qualities: ["SB-190"],
-      },
-      {
-        label: "Gemunder 7/8 Hybrid",
+        label: "Shen SB150 7/8 Gemunder Hybrid Flatback",
         value: "Gemunder 7/8 Hybrid",
         qualities: ["SB-150"],
       },
@@ -113,12 +96,22 @@ export const bassModelGroups = [
     label: "Laminat",
     options: [
       {
-        label: "Shen Laminated",
-        value: "Shen Laminated",
-        qualities: ["SB-80", "SB-88", "SB-100"],
+        label: "Shen SB100 3/4",
+        value: "Shen SB100 3/4",
+        qualities: ["SB-100"],
       },
       {
-        label: "Shen Blonde",
+        label: "Shen SB88 3/4",
+        value: "Shen SB88 3/4",
+        qualities: ["SB-88"],
+      },
+      {
+        label: "Shen SB80",
+        value: "Shen SB80",
+        qualities: ["SB-80"],
+      },
+      {
+        label: "Shen SB90 Blonde",
         value: "Shen Blonde",
         qualities: ["SB-90"],
       },

@@ -12,8 +12,8 @@ order: 100
 featured: false
 location: "Berlin"
 shortDescription: >-
-  A fully carved SB-200 Rogeri Willow roundback with deep ribs, a warm tonal
-  foundation and the generous scale of a large 3/4 bass.
+  A fully carved large 3/4 Rogeri roundback with a spruce top, willow back and
+  ribs, and a warm orchestral sound.
 size: "Large 3/4"
 stringLength: "41.25 in / 104.8 cm"
 bodyLength: "44 5/8 in / 113.3 cm"
@@ -43,14 +43,14 @@ gallery:
     category: "body-front"
 ---
 
-## The Rogeri Willow concept
+## Body and response
 
-The SB-200 Rogeri Willow combines Shen's large Rogeri outline with a fully carved willow back and unusually deep willow ribs. The design is intended to favour warmth, breadth and a substantial low-register foundation.
+The SB-200 Rogeri Willow combines Shen's large Rogeri outline with a fully carved willow back and unusually deep willow ribs. It has a warm, broad sound and a strong low register.
 
 ## Construction
 
-This example is the roundback version. It has a fully carved spruce top, a fully carved willow back and willow ribs, with inlaid purfling and a hand-applied oil varnish. The maple neck carries an ebony fingerboard, and the setup includes individual Suzhou tuning machines and an ebony Hill-style tailpiece.
+This instrument is the roundback version. It has a fully carved spruce top, a fully carved willow back and willow ribs, with inlaid purfling and a hand-applied oil varnish. The maple neck carries an ebony fingerboard. The setup includes individual Suzhou tuning machines and an ebony Hill-style tailpiece.
 
-## Who it may suit
+## Size and use
 
-With its large 3/4 body, 44 5/8-inch body length and standard 41.25-inch string length, the Rogeri Willow is aimed at players who want the physical and tonal scale of a large bass, particularly for a warm and supportive orchestral foundation.
+The Rogeri Willow has a large 3/4 body, a 44 5/8-inch body length and a standard 41.25-inch string length. It is suited to players looking for a large orchestral bass with a warm sound.

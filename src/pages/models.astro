@@ -20,29 +20,28 @@ const catalogSections = [
   {
     number: "01",
     title: "Fully carved",
-    codes: "SB-200 — SB-1000",
+    codes: "SB-200, SB-300, SB-800, SB-1000",
     description:
-      "Carved solid woods throughout, with the broadest choice of outlines and tonewoods in the Shen range.",
+      "Carved solid wood throughout. This group includes maple and willow models in several outlines.",
     groupLabels: [
       "Vollmassiv – Ahorn",
       "Vollmassiv – Weide",
-      "Vollmassiv – Mahagoni",
     ],
   },
   {
     number: "02",
     title: "Hybrid",
-    codes: "SB-150 — SB-190",
+    codes: "SB-150, SB-180",
     description:
-      "A carved spruce top with laminated back and ribs, combining response with resilience.",
+      "A carved spruce top with laminated back and ribs.",
     groupLabels: ["Hybrid"],
   },
   {
     number: "03",
     title: "Laminated",
-    codes: "SB-80 — SB-100",
+    codes: "SB-80, SB-88, SB-90, SB-100",
     description:
-      "Robust, stable instruments for dependable everyday use and straightforward ownership.",
+      "Laminated top, back and ribs for regular transport and daily use.",
     groupLabels: ["Laminat"],
   },
 ] as const;
@@ -50,7 +49,6 @@ const catalogSections = [
 const publicGroupLabels: Record<string, string> = {
   "Vollmassiv – Ahorn": "Maple",
   "Vollmassiv – Weide": "Willow",
-  "Vollmassiv – Mahagoni": "Mahogany",
   Hybrid: "Hybrid models",
   Laminat: "Laminated models",
 };
@@ -78,11 +76,12 @@ const getAvailableForOption = (option: CatalogOption): Instrument[] => {
       instrument.data.outline === option.value,
   );
 };
+
 ---
 
 <BaseLayout
   title="Samuel Shen Double Bass Models | Shen Europe"
-  description="Explore the Samuel Shen double bass range by construction, model series, outline and tonewood, including laminated, hybrid and fully carved instruments."
+  description="An overview of Samuel Shen double basses by construction, model series, outline and tonewood."
 >
   <section class="py-20 sm:py-24 lg:py-32">
     <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
@@ -92,15 +91,15 @@ const getAvailableForOption = (option: CatalogOption): Instrument[] => {
             Samuel Shen double basses
           </p>
           <h1 class="mt-6 font-serif text-5xl leading-[0.96] tracking-[-0.045em] text-neutral-950 sm:text-6xl lg:text-7xl xl:text-[5.25rem]">
-            Start with construction. Then choose the instrument.
+            The Shen range by construction and model
           </h1>
         </div>
 
         <div class="max-w-xl">
           <p class="text-lg leading-relaxed text-neutral-600">
-            Shen model numbers describe a construction and specification level.
-            Outline, size, wood and setup then shape the instrument within that
-            level.
+            A Shen model number identifies the construction and specification
+            level. The outline, size and choice of wood describe the instrument
+            further.
           </p>
           <a
             href="#complete-range"
@@ -139,10 +138,24 @@ const getAvailableForOption = (option: CatalogOption): Instrument[] => {
         }
       </div>
 
-      <p class="mt-6 max-w-3xl text-sm leading-relaxed text-neutral-500">
-        A higher model number indicates a different specification level, not a
-        guaranteed judgement about the voice of an individual bass.
-      </p>
+      <div class="mt-12 grid gap-6 border-t border-neutral-200 pt-10 lg:grid-cols-[minmax(240px,0.55fr)_minmax(0,1.45fr)] lg:gap-20">
+        <h2 class="font-serif text-3xl tracking-[-0.025em] text-neutral-950">
+          What the model levels describe
+        </h2>
+        <div class="max-w-3xl space-y-4 text-base leading-relaxed text-neutral-600">
+          <p>
+            Shen model levels describe the materials, components and work
+            invested in an instrument. Higher levels involve a more selective
+            choice of woods, additional handwork, more detailed plate
+            graduation and higher-grade components. The precise combination
+            varies between models.
+          </p>
+          <p>
+            The price difference reflects the materials, components and work
+            invested in each instrument.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -159,9 +172,9 @@ const getAvailableForOption = (option: CatalogOption): Instrument[] => {
             Construction levels and available outlines
           </h2>
           <p class="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-600">
-            The same model series may be offered in several body patterns. This
-            reference shows which combinations belong together and whether a
-            corresponding instrument is currently in Europe.
+            Some model series are available in several body patterns. The list
+            below shows the available combinations and whether an example is
+            currently in Europe.
           </p>
         </div>
       </div>
@@ -199,45 +212,47 @@ const getAvailableForOption = (option: CatalogOption): Instrument[] => {
 
                       <div class="mt-4 border-y border-neutral-200 bg-white">
                         {group.options.map((option, optionIndex) => {
-                          const matchingInstruments = getAvailableForOption(option);
+                          const matchingInstruments =
+                            getAvailableForOption(option);
                           const firstInstrument = matchingInstruments[0];
 
                           return (
-                            <div
-                              class:list={[
-                                "grid gap-4 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-6",
-                                optionIndex > 0 && "border-t border-neutral-200",
-                              ]}
-                            >
-                              <div>
-                                <h5 class="text-base font-medium text-neutral-950">
-                                  {option.label}
-                                </h5>
-                                <div class="mt-3 flex flex-wrap gap-2">
-                                  {option.qualities.map((quality) => (
-                                    <span class="rounded-full border border-neutral-200 px-2.5 py-1 text-xs text-neutral-600">
-                                      {quality}
-                                    </span>
-                                  ))}
+                              <div
+                                class:list={[
+                                  "grid gap-4 px-5 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-6",
+                                  optionIndex > 0 &&
+                                    "border-t border-neutral-200",
+                                ]}
+                              >
+                                <div>
+                                  <h5 class="text-base font-medium text-neutral-950">
+                                    {option.label}
+                                  </h5>
+                                  <div class="mt-3 flex flex-wrap gap-2">
+                                    {option.qualities.map((quality) => (
+                                      <span class="rounded-full border border-neutral-200 px-2.5 py-1 text-xs text-neutral-600">
+                                        {quality}
+                                      </span>
+                                    ))}
+                                  </div>
                                 </div>
-                              </div>
 
-                              {firstInstrument ? (
-                                <a
-                                  href={`/instruments/${firstInstrument.data.slug}/`}
-                                  class="inline-flex items-center gap-2 text-sm font-medium text-neutral-950 transition-opacity hover:opacity-55"
-                                >
-                                  {matchingInstruments.length === 1
-                                    ? "1 instrument available"
-                                    : `${matchingInstruments.length} instruments available`}
-                                  <span aria-hidden="true">→</span>
-                                </a>
-                              ) : (
-                                <span class="text-sm text-neutral-500">
-                                  Available by special order
-                                </span>
-                              )}
-                            </div>
+                                {firstInstrument ? (
+                                  <a
+                                    href={`/instruments/${firstInstrument.data.slug}/`}
+                                    class="inline-flex items-center gap-2 text-sm font-medium text-neutral-950 transition-opacity hover:opacity-55"
+                                  >
+                                    {matchingInstruments.length === 1
+                                      ? "1 instrument available"
+                                      : `${matchingInstruments.length} instruments available`}
+                                    <span aria-hidden="true">→</span>
+                                  </a>
+                                ) : (
+                                  <span class="text-sm text-neutral-500">
+                                    Available by special order
+                                  </span>
+                                )}
+                              </div>
                           );
                         })}
                       </div>
@@ -265,8 +280,8 @@ const getAvailableForOption = (option: CatalogOption): Instrument[] => {
 
       <div>
         <p class="max-w-3xl text-lg leading-relaxed text-neutral-600">
-          Model and construction provide the framework. Voice, response, wood
-          and setup are documented for each individual instrument.
+          The model describes the specification. The instrument pages document
+          the voice, response, wood and setup of each bass in Europe.
         </p>
 
         {
@@ -328,9 +343,9 @@ const getAvailableForOption = (option: CatalogOption): Instrument[] => {
           Not sure which model fits?
         </h2>
         <p class="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-300">
-          Start with musical use, preferred dimensions and the response you are
-          looking for. Construction, outline and setup can then be considered
-          together.
+          Tell us how you will use the instrument, which dimensions work for
+          you and what kind of response you prefer. We can then narrow down the
+          construction, outline and setup.
         </p>
       </div>
 

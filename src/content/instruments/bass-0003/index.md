@@ -48,12 +48,12 @@ warranty: 1 year limited warranty
 ---
 ## Character
 
-This individual SB-800 has a distinctly soloistic character. Its voice is broad and projecting, retaining width and presence into the upper register. The instrument was selected for the quality of its wood and its refined tonal character.
+This SB-800 has a distinctly soloistic character. Its voice is broad and projecting, with width and presence in the upper register. The wood is of particularly high quality and the sound has a refined character.
 
 ## Response and setup
 
-It is suitable for both arco and pizzicato playing, with a response that remains relatively lean and direct. This demonstrator instrument is fitted with Tempera BASSO orchestral strings, high-quality individual tuning machines and a bridge made from carefully selected, high-grade wood.
+It works for both arco and pizzicato playing, with a relatively lean and direct response. This demonstrator is fitted with Tempera BASSO orchestral strings, high-quality individual tuning machines and selected bridge wood.
 
-## Who it may suit
+## Suitable for
 
 Its projection and strength in the upper register make it particularly suitable for students with solo ambitions.

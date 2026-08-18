@@ -213,13 +213,13 @@ const dealerUrl = mailto(
   if (title && context && titleElement && instrumentEmail) {
     titleElement.textContent = title;
     instrumentEmail.href = createMailto(
-      `Instrument enquiry – ${title}`,
+      `Instrument enquiry: ${title}`,
       `Hello Shen Europe,\n\nI would like to enquire about ${title}.\n\nBest regards,\n`,
     );
 
     if (trialEmail) {
       trialEmail.href = createMailto(
-        `Trial request – ${title}`,
+        `Trial request: ${title}`,
         `Hello Shen Europe,\n\nI would like to arrange a trial of ${title} in Berlin.\n\nBest regards,\n`,
       );
     }

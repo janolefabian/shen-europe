@@ -26,8 +26,8 @@ order: 100
 featured: true
 location: Berlin
 shortDescription: >-
-  A large-format SB-1000 Panormo roundback, built for substantial low-end depth
-  and an expansive orchestral presence.
+  A fully carved large 3/4 Panormo roundback with a broad body, deep low
+  register and 41.25-inch string length.
 stringLength: 41.25 in / 104.8 cm
 bodyLength: 44 1/4 in / 112.4 cm
 topMaterial: Fully carved spruce
@@ -41,14 +41,14 @@ tuningMachines: Euro individual tuning machines
 endpin: Shen composite plug with 10 mm rod and replaceable screw-on tip
 warranty: 1 year limited warranty
 ---
-## The Panormo concept
+## Body and response
 
-The SB-1000 is built on Shen's Grand Panormo pattern, a large 3/4 design conceived for players who want a substantial orchestral foundation. Its broad body and 44 1/4-inch body length are intended to support a deep, weighty low register and a commanding presence in a section.
+The SB-1000 uses Shen's Grand Panormo pattern. It is a large 3/4 bass with a broad body, a 44 1/4-inch body length and a 41.25-inch string length. The design provides a deep low register and a solid orchestral foundation.
 
 ## Construction
 
-This example is the roundback version of the Panormo. It is fully carved, with a spruce top, maple back and maple ribs, inlaid purfling and a hand-applied oil varnish. The neck is maple, the fingerboard ebony, and the instrument is fitted with individual European-style tuning machines.
+This demonstrator is the roundback version. It is fully carved, with a spruce top, maple back and maple ribs, inlaid purfling and a hand-applied oil varnish. It has a maple neck, an ebony fingerboard and individual European-style tuning machines.
 
-## Who it may suit
+## Size and use
 
-The Panormo is particularly relevant for orchestral players looking for the scale and foundation of a large bass while retaining a standard 41.25-inch string length. Its generous outline makes it best suited to players who actively want the physical and tonal dimensions of a big instrument.
+The Panormo is intended for orchestral players who want the scale and foundation of a large bass. Despite the large body, the string length remains a standard 41.25 inches.
