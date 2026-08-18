@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { getInstrumentImages } from "../lib/instrumentImages";
+import { withBasePath } from "../lib/sitePaths";
 
 interface Props {
   instrument: CollectionEntry<"instruments">;
@@ -32,7 +33,7 @@ const statusDots = {
   sold: "bg-neutral-400",
 } as const;
 
-const instrumentUrl = `/instruments/${data.slug}/`;
+const instrumentUrl = withBasePath(`/instruments/${data.slug}/`);
 const archiveMeta = [data.size, data.stringLength].filter(Boolean).join(" · ");
 ---
 

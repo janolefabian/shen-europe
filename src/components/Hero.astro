@@ -3,6 +3,7 @@ import Stack from "./layout/Stack.astro";
 import Button from "./ui/Button.astro";
 import Heading from "./ui/Heading.astro";
 import Text from "./ui/Text.astro";
+import { withBasePath } from "../lib/sitePaths";
 ---
 
 <section class="bg-white">
@@ -38,7 +39,7 @@ import Text from "./ui/Text.astro";
 
     <div class="min-h-[62vh] overflow-hidden lg:min-h-[calc(100vh-108px)]">
       <img
-        src="/images/sb800_bg_edit.jpg"
+        src={withBasePath("/images/sb800_bg_edit.jpg")}
         alt="Samuel Shen double bass"
         class="h-full w-full object-cover object-center"
       />

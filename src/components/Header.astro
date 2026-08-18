@@ -1,69 +1,279 @@
 ---
 import Container from "./layout/Container.astro";
+import { withBasePath, withoutBasePath } from "../lib/sitePaths";
 
-const currentPath = Astro.url.pathname;
+const currentPath = withoutBasePath(Astro.url.pathname);
 
 const navigation = [
-  { href: "/models", label: "Models" },
-  { href: "/available", label: "Available" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/models", label: "Models", activePaths: ["/models"] },
+  {
+    href: "/available",
+    label: "Available",
+    activePaths: ["/available", "/instruments"],
+    inventory: true,
+  },
+  { href: "/about", label: "About", activePaths: ["/about"] },
 ];
+
+const isItemActive = (activePaths: string[]) =>
+  activePaths.some(
+    (path) => currentPath === path || currentPath.startsWith(`${path}/`),
+  );
+
+const isContactActive =
+  currentPath === "/contact" || currentPath.startsWith("/contact/");
 ---
 
 <header
   data-header
-  class="sticky top-0 z-50 h-[88px] border-b border-neutral-200 bg-white/90 backdrop-blur-sm transition-all duration-300 ease-out sm:h-[108px]"
+  data-menu-open="false"
+  class="sticky top-0 z-50 h-[82px] border-b border-neutral-200 bg-white/95 backdrop-blur-md transition-[height,box-shadow] duration-300 ease-out lg:h-[98px]"
 >
-  <Container class="flex h-full items-center justify-between">
+  <Container class="relative flex h-full items-center justify-between gap-8">
     <a
-      href="/"
-      class="logo font-serif text-[1.35rem] leading-none tracking-[-0.035em] text-neutral-950 transition-all duration-300 ease-out sm:text-[2rem]"
+      href={withBasePath("/")}
+      class="logo group flex min-w-0 items-center gap-4 text-neutral-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-4"
+      aria-label="Shen Europe, home"
     >
-      Shen Europe
+      <span
+        class="logo-title shrink-0 font-serif text-[1.55rem] leading-none tracking-[-0.04em] transition-[font-size] duration-300 ease-out sm:text-[1.8rem] lg:text-[2rem]"
+      >
+        Shen Europe
+      </span>
+      <span
+        class="hidden border-l border-neutral-300 pl-4 text-[0.62rem] leading-[1.35] font-medium tracking-[0.13em] text-neutral-500 uppercase transition-colors group-hover:text-neutral-700 sm:block"
+      >
+        Double basses<br />Berlin
+      </span>
     </a>
 
-    <nav aria-label="Main navigation">
-      <ul class="flex items-center gap-3 sm:gap-8 lg:gap-10">
-        {
-          navigation.map((item) => {
-            const isActive =
-              currentPath === item.href ||
-              currentPath.startsWith(`${item.href}/`);
+    <div class="hidden items-center lg:flex">
+      <nav aria-label="Main navigation">
+        <ul class="flex items-center">
+          {
+            navigation.map((item) => {
+              const isActive = isItemActive(item.activePaths);
 
-            return (
-              <li>
-                <a
-                  href={item.href}
-                  aria-current={isActive ? "page" : undefined}
-                  class:list={[
-                    "border-b pb-1 text-[0.78rem] transition-opacity hover:opacity-55 sm:text-[1.05rem]",
-                    isActive
-                      ? "border-neutral-950 text-neutral-950"
-                      : "border-transparent text-neutral-700",
-                  ]}
-                >
-                  {item.label}
-                </a>
-              </li>
-            );
-          })
-        }
-      </ul>
-    </nav>
+              return (
+                <li>
+                  <a
+                    href={withBasePath(item.href)}
+                    aria-current={isActive ? "page" : undefined}
+                    class:list={[
+                      "group relative flex h-12 items-center gap-2 px-5 text-[0.8rem] font-medium tracking-[0.08em] uppercase transition-colors",
+                      isActive
+                        ? "text-neutral-950"
+                        : "text-neutral-500 hover:text-neutral-950",
+                    ]}
+                  >
+                    {item.inventory && (
+                      <span
+                        class:list={[
+                          "size-1.5 rounded-full transition-colors",
+                          isActive
+                            ? "bg-neutral-950"
+                            : "bg-neutral-300 group-hover:bg-neutral-950",
+                        ]}
+                        aria-hidden="true"
+                      />
+                    )}
+                    {item.label}
+                    <span
+                      class:list={[
+                        "absolute inset-x-5 bottom-0 h-px origin-left bg-neutral-950 transition-transform duration-300",
+                        isActive
+                          ? "scale-x-100"
+                          : "scale-x-0 group-hover:scale-x-100",
+                      ]}
+                      aria-hidden="true"
+                    />
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+
+      <a
+        href={withBasePath("/contact")}
+        aria-current={isContactActive ? "page" : undefined}
+        class:list={[
+          "ml-5 inline-flex h-12 items-center border px-5 text-[0.8rem] font-medium tracking-[0.08em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-4",
+          isContactActive
+            ? "border-neutral-950 bg-neutral-950 text-white"
+            : "border-neutral-300 text-neutral-950 hover:border-neutral-950 hover:bg-neutral-950 hover:text-white",
+        ]}
+      >
+        Contact
+      </a>
+    </div>
+
+    <button
+      type="button"
+      data-menu-toggle
+      class="group inline-flex h-11 items-center gap-3 border border-neutral-300 px-4 text-[0.72rem] font-medium tracking-[0.1em] text-neutral-950 uppercase transition-colors hover:border-neutral-950 lg:hidden"
+      aria-controls="mobile-navigation"
+      aria-expanded="false"
+    >
+      <span data-menu-label>Menu</span>
+      <span class="relative block h-3.5 w-4" aria-hidden="true">
+        <span
+          data-menu-line="top"
+          class="absolute top-1 left-0 h-px w-4 bg-current transition-transform duration-300"
+        ></span>
+        <span
+          data-menu-line="bottom"
+          class="absolute bottom-1 left-0 h-px w-4 bg-current transition-transform duration-300"
+        ></span>
+      </span>
+    </button>
   </Container>
+
+  <div
+    id="mobile-navigation"
+    data-mobile-menu
+    aria-hidden="true"
+    class="pointer-events-none absolute top-full left-0 w-full -translate-y-2 border-b border-neutral-200 bg-white opacity-0 shadow-[0_24px_45px_rgba(0,0,0,0.06)] transition-[opacity,transform,visibility] duration-300 invisible lg:hidden"
+  >
+    <Container class="py-6 sm:py-8">
+      <nav aria-label="Mobile navigation">
+        <ul class="divide-y divide-neutral-200 border-y border-neutral-200">
+          {
+            navigation.map((item) => {
+              const isActive = isItemActive(item.activePaths);
+
+              return (
+                <li>
+                  <a
+                    href={withBasePath(item.href)}
+                    aria-current={isActive ? "page" : undefined}
+                    data-menu-link
+                    class="group flex items-center justify-between py-4 sm:py-5"
+                  >
+                    <span class="flex items-center gap-3">
+                      {item.inventory && (
+                        <span
+                          class:list={[
+                            "size-2 rounded-full",
+                            isActive ? "bg-neutral-950" : "bg-neutral-300",
+                          ]}
+                          aria-hidden="true"
+                        />
+                      )}
+                      <span
+                        class:list={[
+                          "font-serif text-[1.8rem] leading-none tracking-[-0.025em] transition-colors sm:text-[2rem]",
+                          isActive
+                            ? "text-neutral-950"
+                            : "text-neutral-600 group-hover:text-neutral-950",
+                        ]}
+                      >
+                        {item.label}
+                      </span>
+                    </span>
+                    {isActive && (
+                      <span class="text-[0.65rem] tracking-[0.12em] text-neutral-500 uppercase">
+                        Current
+                      </span>
+                    )}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+
+        <a
+          href={withBasePath("/contact")}
+          data-menu-link
+          class="mt-6 flex items-center justify-between bg-neutral-950 px-5 py-4 text-white"
+        >
+          <span class="text-sm font-medium tracking-[0.1em] uppercase">
+            Contact
+          </span>
+          <span class="text-lg" aria-hidden="true">→</span>
+        </a>
+      </nav>
+    </Container>
+  </div>
 </header>
 
 <script>
-  const header = document.querySelector("[data-header]");
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const menuToggle = document.querySelector<HTMLButtonElement>(
+    "[data-menu-toggle]",
+  );
+  const menu = document.querySelector<HTMLElement>("[data-mobile-menu]");
+  const menuLabel = document.querySelector<HTMLElement>("[data-menu-label]");
 
   const setHeaderState = () => {
     if (!header) return;
 
-    const scrolled = window.scrollY > 12;
-    header.dataset.scrolled = String(scrolled);
+    header.dataset.scrolled = String(window.scrollY > 12);
+  };
+
+  const setMenuState = (isOpen: boolean) => {
+    if (!header || !menuToggle || !menu) return;
+
+    header.dataset.menuOpen = String(isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    menu.setAttribute("aria-hidden", String(!isOpen));
+
+    if (menuLabel) {
+      menuLabel.textContent = isOpen ? "Close" : "Menu";
+    }
   };
 
   setHeaderState();
+  setMenuState(false);
+
   window.addEventListener("scroll", setHeaderState, { passive: true });
+  menuToggle?.addEventListener("click", () => {
+    setMenuState(header?.dataset.menuOpen !== "true");
+  });
+
+  document.querySelectorAll("[data-menu-link]").forEach((link) => {
+    link.addEventListener("click", () => setMenuState(false));
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      setMenuState(false);
+      menuToggle?.focus();
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth >= 1024) setMenuState(false);
+  });
 </script>
+
+<style>
+  [data-header][data-scrolled="true"] {
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.04);
+  }
+
+  [data-header][data-menu-open="true"] [data-mobile-menu] {
+    pointer-events: auto;
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  [data-header][data-menu-open="true"] [data-menu-line="top"] {
+    transform: translateY(3px) rotate(45deg);
+  }
+
+  [data-header][data-menu-open="true"] [data-menu-line="bottom"] {
+    transform: translateY(-3px) rotate(-45deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-header],
+    [data-mobile-menu],
+    [data-menu-line] {
+      transition-duration: 0.01ms;
+    }
+  }
+</style>

@@ -5,6 +5,7 @@ import Button from "../components/ui/Button.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getInstruments } from "../lib/instruments";
 import { bassModelGroups } from "../lib/instrumentTaxonomy";
+import { withBasePath } from "../lib/sitePaths";
 
 type Instrument = CollectionEntry<"instruments">;
 type CatalogOption = (typeof bassModelGroups)[number]["options"][number];
@@ -239,7 +240,7 @@ const getAvailableForOption = (option: CatalogOption): Instrument[] => {
 
                                 {firstInstrument ? (
                                   <a
-                                    href={`/instruments/${firstInstrument.data.slug}/`}
+                                    href={withBasePath(`/instruments/${firstInstrument.data.slug}/`)}
                                     class="inline-flex items-center gap-2 text-sm font-medium text-neutral-950 transition-opacity hover:opacity-55"
                                   >
                                     {matchingInstruments.length === 1
@@ -311,7 +312,7 @@ const getAvailableForOption = (option: CatalogOption): Instrument[] => {
                   </span>
 
                   <a
-                    href={`/instruments/${instrument.data.slug}/`}
+                    href={withBasePath(`/instruments/${instrument.data.slug}/`)}
                     class="inline-flex items-center gap-2 text-sm font-medium text-neutral-950 transition-opacity hover:opacity-55"
                   >
                     View instrument <span aria-hidden="true">→</span>

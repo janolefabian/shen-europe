@@ -6,6 +6,7 @@ import YouTubeVideo from "../../components/YouTubeVideo.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getInstrumentImages } from "../../lib/instrumentImages";
 import { getInstruments } from "../../lib/instruments";
+import { withBasePath } from "../../lib/sitePaths";
 
 export async function getStaticPaths() {
   const instruments = await getInstruments();
@@ -26,9 +27,11 @@ const images = getInstrumentImages(
   { hero: data.hero, gallery: data.gallery },
 );
 const isSold = data.status === "sold";
-const inquiryUrl = isSold
-  ? `/contact?similar=${encodeURIComponent(data.slug)}`
-  : `/contact?instrument=${encodeURIComponent(data.slug)}`;
+const inquiryUrl = withBasePath(
+  isSold
+    ? `/contact?similar=${encodeURIComponent(data.slug)}`
+    : `/contact?instrument=${encodeURIComponent(data.slug)}`,
+);
 
 const statusLabels = {
   available: "Available",

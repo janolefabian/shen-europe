@@ -8,6 +8,8 @@ const enableLocalAdmin =
   !process.argv.includes("build") &&
   !process.argv.includes("preview") &&
   process.env.SKIP_KEYSTATIC !== "true";
+const usePagesBase =
+  process.argv.includes("build") || process.argv.includes("preview");
 
 const localInstrumentIntake = () => ({
   name: "shen-europe:local-instrument-intake",
@@ -44,6 +46,8 @@ const localInstrumentIntake = () => ({
 });
 
 export default defineConfig({
+  site: usePagesBase ? "https://janolefabian.github.io" : undefined,
+  base: usePagesBase ? "/shen-europe" : undefined,
   integrations: [
     react(),
     markdoc(),

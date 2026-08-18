@@ -1,4 +1,6 @@
 ---
+import { withBasePath } from "../../lib/sitePaths";
+
 interface Props {
   href?: string;
   type?: "button" | "submit" | "reset";
@@ -29,12 +31,13 @@ const sizes = {
   lg: variant === "text" ? "text-base font-medium" : "px-8 py-4 text-base font-medium",
 };
 const rounded = variant === "text" ? "" : "rounded-full";
+const resolvedHref = href ? withBasePath(href) : undefined;
 ---
 
 {
   href ? (
     <a
-      href={href}
+      href={resolvedHref}
       aria-label={ariaLabel}
       class:list={[base, variants[variant], sizes[size], rounded, className]}
     >
