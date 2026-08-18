@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [instrument-cms-v1]
+    branches: [master]
   workflow_dispatch:
 
 permissions:
