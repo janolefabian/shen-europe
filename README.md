@@ -1,5 +1,14 @@
 # Shen Europe
 
+## Editorial and visual direction
+
+Shen Europe should feel elegant, considered and high quality without reading like a marketing-led retail site. It serves both musicians and European dealers, with Shen Europe acting as importer and direct seller.
+
+- Prefer precise information and restrained hierarchy over promotional language.
+- Express value through typography, spacing, photography, materials, setup and documentation.
+- Keep calls to action clear but quiet.
+- Avoid exaggerated claims, urgency and conventional sales language.
+
 Static Astro website for presenting Samuel Shen double basses available through
 Shen Europe.
 

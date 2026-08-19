@@ -3,7 +3,7 @@ import Stack from "./layout/Stack.astro";
 import Button from "./ui/Button.astro";
 import Heading from "./ui/Heading.astro";
 import Text from "./ui/Text.astro";
-import { withBasePath } from "../lib/sitePaths";
+import sb800FrontImage from "../content/instruments/bass-0003/hero.png";
 ---
 
 <section class="bg-white">
@@ -39,8 +39,8 @@ import { withBasePath } from "../lib/sitePaths";
 
     <div class="min-h-[62vh] overflow-hidden lg:min-h-[calc(100vh-108px)]">
       <img
-        src={withBasePath("/images/sb800_bg_edit.jpg")}
-        alt="Samuel Shen double bass"
+        src={sb800FrontImage.src}
+        alt="Front view of the available SB-800 Shen Classic 3/4 double bass"
         class="h-full w-full object-cover object-center"
       />
     </div>
