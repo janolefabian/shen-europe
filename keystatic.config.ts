@@ -147,11 +147,13 @@ export default config({
 
         status: fields.select({
           label: "Availability",
+          description: "Not available blendet den Eintrag aus Bestand und Hero aus. Eine veröffentlichte Detailseite bleibt als Referenz erreichbar, ohne Anspielangebot.",
           defaultValue: "available",
           options: [
             { label: "Available", value: "available" },
             { label: "Reserved", value: "reserved" },
             { label: "Coming soon", value: "coming-soon" },
+            { label: "Not available", value: "unavailable" },
             { label: "Sold", value: "sold" },
           ],
         }),

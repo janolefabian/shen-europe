@@ -1,6 +1,7 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 import { instrumentPhotoCategoryValues } from "./lib/instrumentPhotos";
+import { instrumentStatusValues } from "./lib/instrumentAvailability";
 
 const instrumentPhotoCategory = z.enum(instrumentPhotoCategoryValues);
 
@@ -30,7 +31,7 @@ const instruments = defineCollection({
     size: z.string().optional(),
     year: z.number().int().nullable().optional(),
 
-    status: z.enum(["available", "reserved", "coming-soon", "sold"]),
+    status: z.enum(instrumentStatusValues),
     condition: z.enum(["new", "demonstrator", "pre-owned"]).optional(),
     order: z.number().int().default(100),
     featured: z.boolean().default(false),

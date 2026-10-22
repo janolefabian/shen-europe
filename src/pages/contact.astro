@@ -1,248 +1,133 @@
 ---
+import Container from "../components/layout/Container.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getInstruments } from "../lib/instruments";
+import { contactEmail, contactPhone, contactPhoneHref, contactLink } from "../lib/contact";
+import { withBasePath } from "../lib/sitePaths";
 
-const contactEmail = "contact@tempera-strings.com";
-const contactPhone = "+49 (0) 30 88697738";
-const contactPhoneHref = "+493088697738";
-
-const instrumentTitles = Object.fromEntries(
-  (await getInstruments()).map((instrument) => [
-    instrument.data.slug,
-    instrument.data.title,
+const instrumentContexts = Object.fromEntries(
+  (await getInstruments()).map(({ data }) => [
+    data.slug,
+    { title: data.title, status: data.status },
   ]),
 );
-
-const mailto = (subject: string, body: string) =>
-  `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-const generalInquiryUrl = mailto(
-  "Instrument enquiry",
-  "Hello Shen Europe,\n\nI would like to enquire about a Samuel Shen double bass.\n\nBest regards,\n",
-);
-
-const trialUrl = mailto(
-  "Trial request in Berlin",
-  "Hello Shen Europe,\n\nI would like to arrange a trial in Berlin.\n\nBest regards,\n",
-);
-
-const specialOrderUrl = mailto(
-  "Special order enquiry",
-  "Hello Shen Europe,\n\nI would like to discuss a special order for a Samuel Shen double bass.\n\nBest regards,\n",
-);
-
-const dealerUrl = mailto(
-  "Dealer partnership enquiry",
-  "Hello Shen Europe,\n\nI am interested in discussing a possible dealer partnership.\n\nCompany:\nLocation:\n\nBest regards,\n",
-);
+const generalInquiryUrl = contactLink("Instrument enquiry", "Hello Shen Europe,\n\nI would like to ask about an instrument.\n");
+const trialUrl = contactLink("Appointment in Berlin", "Hello Shen Europe,\n\nI would like to arrange a visit to try an available bass.\n");
+const dealerUrl = contactLink("Trade enquiry", "Hello Shen Europe,\n\nI would like to contact you as a specialist dealer.\n\nCompany:\nLocation:\n");
 ---
 
-<BaseLayout
-  title="Contact | Shen Europe"
-  description="Contact Shen Europe to arrange a trial in Berlin, enquire about an available instrument, discuss a special order or dealer partnership."
+<BaseLayout title="Contact | Shen Europe"
+  description="Contact Shen Europe about a double bass, arrange an appointment to try an available instrument in Berlin, or make a trade enquiry."
 >
-  <section class="py-20 sm:py-24 lg:py-32">
-    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
-      <div class="max-w-4xl">
-        <h1 class="font-serif text-5xl leading-[0.98] tracking-[-0.04em] text-neutral-950 sm:text-6xl lg:text-7xl">
-          Contact
-        </h1>
+  <section class="py-12 sm:py-16 lg:py-20">
+    <Container>
+      <h1 class="page-title text-neutral-950">Contact Shen Europe</h1>
+      <p class="mt-6 max-w-2xl text-base leading-[1.8] text-neutral-600">
+        Ask about an individual bass or arrange a time to try an available
+        instrument in Berlin.
+      </p>
 
-        <p class="mt-8 max-w-3xl text-lg leading-relaxed text-neutral-600">
-          Arrange a trial in Berlin, enquire about an available instrument or
-          discuss a special order. Trade enquiries from European dealers are
-          also welcome.
-        </p>
+      <div data-instrument-context data-instruments={JSON.stringify(instrumentContexts)}
+        aria-live="polite" class="hidden mt-8 border-l-2 border-neutral-950 bg-neutral-50 p-6">
+        <p data-context-label class="eyebrow">Your instrument enquiry</p>
+        <h2 data-instrument-title class="subsection-title mt-3"></h2>
+        <p data-instrument-status class="mt-3 text-sm font-medium"></p>
+        <p data-context-note class="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-600"></p>
+        <div class="mt-5 flex flex-wrap gap-x-7 gap-y-3">
+          <a href={generalInquiryUrl} data-instrument-contact class="quiet-link">
+            {contactEmail ? "Enquire about this instrument" : "Call about this instrument"}
+          </a>
+          <a href={withBasePath("/available")} class="quiet-link">View available instruments</a>
+        </div>
+        {!contactEmail && <p class="mt-3 text-xs text-neutral-500">Please mention the instrument title when you call.</p>}
       </div>
 
-      <div class="mt-16 grid gap-14 border-t border-neutral-200 pt-10 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-24">
+      <div class="mt-10 grid gap-10 border-t border-neutral-200 pt-8 lg:grid-cols-2 lg:gap-20">
         <div>
-          <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-            Direct contact
-          </p>
-
-          <dl class="mt-8 space-y-7">
-            <div>
-              <dt class="text-sm text-neutral-500">Email</dt>
-              <dd class="mt-2">
-                <a
-                  href={`mailto:${contactEmail}`}
-                  class="text-lg text-neutral-950 underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-950"
-                >
-                  {contactEmail}
-                </a>
-              </dd>
-            </div>
-
+          <h2 class="eyebrow">Direct contact</h2>
+          <dl class="mt-6 space-y-7">
+            {contactEmail && (
+              <div>
+                <dt class="text-sm text-neutral-500">Email</dt>
+                <dd class="mt-2"><a href={`mailto:${contactEmail}`} class="quiet-link break-all">{contactEmail}</a></dd>
+              </div>
+            )}
             <div>
               <dt class="text-sm text-neutral-500">Telephone</dt>
-              <dd class="mt-2">
-                <a
-                  href={`tel:${contactPhoneHref}`}
-                  class="text-lg text-neutral-950 underline decoration-neutral-300 underline-offset-4 transition-colors hover:decoration-neutral-950"
-                >
-                  {contactPhone}
-                </a>
-              </dd>
+              <dd class="mt-2"><a href={contactPhoneHref} class="text-lg underline decoration-neutral-300 underline-offset-4">{contactPhone}</a></dd>
             </div>
-
             <div>
               <dt class="text-sm text-neutral-500">Location</dt>
-              <dd class="mt-2 text-lg text-neutral-950">Berlin · by appointment</dd>
+              <dd class="mt-2 text-base">Berlin · by appointment</dd>
             </div>
           </dl>
-
-          <p class="mt-10 max-w-sm text-sm leading-relaxed text-neutral-500">
-            Enquiries open in your email application. No information is stored
-            on this website.
-          </p>
+          {!contactEmail && <p class="mt-7 max-w-sm text-sm leading-relaxed text-neutral-600">Please call for instrument enquiries, appointments and trade enquiries.</p>}
         </div>
 
         <div>
-          <div
-            data-instrument-context
-            class="hidden border-b border-neutral-200 pb-10"
-          >
-            <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-              Selected instrument
+          <section id="appointments" class="scroll-mt-28 border-b border-neutral-200 pb-8">
+            <h2 class="subsection-title">Try an instrument in Berlin</h2>
+            <p class="mt-4 text-base leading-[1.8] text-neutral-600">
+              Let us know which available bass you would like to play,
+              and we can arrange a time for your visit.
             </p>
-            <p
-              data-instrument-title
-              class="mt-3 font-serif text-3xl tracking-[-0.025em] text-neutral-950 sm:text-4xl"
-            >
+            <a href={trialUrl} data-appointment-contact class="quiet-link mt-5">
+              {contactEmail ? "Arrange an appointment" : "Call to arrange an appointment"}
+            </a>
+          </section>
+
+          <section id="dealers" class="scroll-mt-28 pt-8">
+            <h2 class="subsection-title">For specialist dealers</h2>
+            <p class="mt-4 text-base leading-[1.8] text-neutral-600">
+              If you are interested in Samuel Shen double basses for your
+              business, contact us to discuss models, availability and working
+              together.
             </p>
-            <p class="mt-4 text-base leading-relaxed text-neutral-600">
-              Pricing and current availability are provided on request.
-            </p>
-            <a
-              href={generalInquiryUrl}
-              data-instrument-email
-              class="mt-7 inline-flex items-center justify-center rounded-full bg-neutral-950 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2"
-            >
-              Enquire about this instrument
+            <a href={dealerUrl} class="quiet-link mt-5">
+              {contactEmail ? "Make a trade enquiry" : "Call for a trade enquiry"}
             </a>
-          </div>
-
-          <div class="divide-y divide-neutral-200 border-y border-neutral-200">
-            <a
-              href={trialUrl}
-              data-trial-email
-              class="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8"
-            >
-              <span>
-                <span class="block font-serif text-2xl tracking-[-0.02em] text-neutral-950">
-                  Arrange a trial
-                </span>
-                <span class="mt-2 block text-sm leading-relaxed text-neutral-600">
-                  Visit by appointment and try an available instrument in Berlin.
-                </span>
-              </span>
-              <span class="text-sm font-medium text-neutral-950 transition-transform group-hover:translate-x-1" aria-hidden="true">
-                →
-              </span>
-            </a>
-
-            <a
-              href={generalInquiryUrl}
-              class="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8"
-            >
-              <span>
-                <span class="block font-serif text-2xl tracking-[-0.02em] text-neutral-950">
-                  Ask about an instrument
-                </span>
-                <span class="mt-2 block text-sm leading-relaxed text-neutral-600">
-                  Request current pricing, availability and further details.
-                </span>
-              </span>
-              <span class="text-sm font-medium text-neutral-950 transition-transform group-hover:translate-x-1" aria-hidden="true">
-                →
-              </span>
-            </a>
-
-            <a
-              href={specialOrderUrl}
-              class="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8"
-            >
-              <span>
-                <span class="block font-serif text-2xl tracking-[-0.02em] text-neutral-950">
-                  Discuss a special order
-                </span>
-                <span class="mt-2 block text-sm leading-relaxed text-neutral-600">
-                  Talk through model, outline, specifications and setup preferences.
-                </span>
-              </span>
-              <span class="text-sm font-medium text-neutral-950 transition-transform group-hover:translate-x-1" aria-hidden="true">
-                →
-              </span>
-            </a>
-
-            <a
-              href={dealerUrl}
-              class="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-center sm:gap-8"
-            >
-              <span>
-                <span class="block font-serif text-2xl tracking-[-0.02em] text-neutral-950">
-                  Dealer partnership
-                </span>
-                <span class="mt-2 block text-sm leading-relaxed text-neutral-600">
-                  Introduce your business and discuss working with Shen Europe.
-                </span>
-              </span>
-              <span class="text-sm font-medium text-neutral-950 transition-transform group-hover:translate-x-1" aria-hidden="true">
-                →
-              </span>
-            </a>
-          </div>
+          </section>
         </div>
       </div>
-    </div>
+    </Container>
   </section>
 </BaseLayout>
 
-<script define:vars={{ contactEmail, instrumentTitles }}>
-  const params = new URLSearchParams(window.location.search);
-  const instrumentSlug = params.get("instrument");
-  const similarSlug = params.get("similar");
-  const slug = instrumentSlug ?? similarSlug;
-  const isSimilarRequest = Boolean(similarSlug && !instrumentSlug);
-  const title = slug ? instrumentTitles[slug] : undefined;
-  const context = document.querySelector("[data-instrument-context]");
-  const titleElement = document.querySelector("[data-instrument-title]");
-  const contextLabel = context?.querySelector("p:first-child");
-  const contextDescription = context?.querySelector("[data-instrument-title] + p");
-  const instrumentEmail = document.querySelector("[data-instrument-email]");
-  const trialEmail = document.querySelector("[data-trial-email]");
+<script>
+  import { contactEmail, contactLink } from "../lib/contact";
+  import { resolveInstrumentInquiry } from "../lib/instrumentInquiry";
+  const context = document.querySelector<HTMLElement>("[data-instrument-context]");
+  const entries = JSON.parse(context?.dataset.instruments ?? "{}");
+  const item = resolveInstrumentInquiry(entries, window.location.search);
 
-  const createMailto = (subject, body) =>
-    `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  if (item && context) {
+    const { similar } = item;
+    const title = context.querySelector("[data-instrument-title]");
+    const status = context.querySelector("[data-instrument-status]");
+    const label = context.querySelector("[data-context-label]");
+    const note = context.querySelector("[data-context-note]");
+    const link = context.querySelector<HTMLAnchorElement>("[data-instrument-contact]");
 
-  if (title && context && titleElement && instrumentEmail) {
-    titleElement.textContent = title;
-    if (isSimilarRequest) {
-      if (contextLabel) contextLabel.textContent = "Reference instrument";
-      if (contextDescription) {
-        contextDescription.textContent =
-          "This instrument has been sold. Ask about a similar model or a future selection.";
-      }
-      instrumentEmail.textContent = "Ask about a similar instrument";
-      instrumentEmail.href = createMailto(
-        `Similar instrument enquiry: ${title}`,
-        `Hello Shen Europe,\n\nI am interested in an instrument similar to ${title}.\n\nBest regards,\n`,
+    if (title) title.textContent = item.title;
+    if (status) status.textContent = item.label;
+    if (label) label.textContent = item.contextLabel;
+    if (note) note.textContent = item.note;
+    if (link) {
+      link.textContent = contactEmail
+        ? (similar ? "Ask about a similar instrument" : item.status === "unavailable" ? "Enquire about this reference" : "Enquire about this instrument")
+        : (similar ? "Call about a similar instrument" : item.status === "unavailable" ? "Call about this reference" : "Call about this instrument");
+      link.href = contactLink(
+        (similar ? "Similar instrument enquiry: " : "Instrument enquiry: ") + item.title,
+        "Hello Shen Europe,\n\nI would like to ask about " + (similar ? "an instrument similar to " : "") + item.title + ".\n",
       );
-    } else {
-      instrumentEmail.href = createMailto(
-        `Instrument enquiry: ${title}`,
-        `Hello Shen Europe,\n\nI would like to enquire about ${title}.\n\nBest regards,\n`,
-      );
-
-      if (trialEmail) {
-        trialEmail.href = createMailto(
-          `Trial request: ${title}`,
-          `Hello Shen Europe,\n\nI would like to arrange a trial of ${title} in Berlin.\n\nBest regards,\n`,
-        );
-      }
     }
 
+    const appointment = document.querySelector<HTMLAnchorElement>("[data-appointment-contact]");
+    if (appointment && item.canArrangeAppointment) {
+      appointment.href = contactLink("Appointment: " + item.title,
+        "Hello Shen Europe,\n\nI would like to try " + item.title + " in Berlin.\n");
+    }
+    document.querySelector("#appointments")?.classList.toggle("hidden", !item.canArrangeAppointment);
     context.classList.remove("hidden");
   }
 </script>

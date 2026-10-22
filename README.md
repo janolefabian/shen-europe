@@ -1,16 +1,75 @@
 # Shen Europe
 
-## Editorial and visual direction
+Static Astro website for presenting Samuel Shen double basses.
 
-Shen Europe should feel elegant, considered and high quality without reading like a marketing-led retail site. It serves both musicians and European dealers, with Shen Europe acting as importer and direct seller.
+## Project rules
 
-- Prefer precise information and restrained hierarchy over promotional language.
-- Express value through typography, spacing, photography, materials, setup and documentation.
-- Keep calls to action clear but quiet.
-- Avoid exaggerated claims, urgency and conventional sales language.
+- Use Shen Europe as the editorial identity, without founder stories or
+  cross-company branding. Fitted components may be named factually.
+- Prefer precise information, restrained typography and natural wood colours
+  over promotional language. Keep body text comfortably readable.
+- Lead with available instruments and appointments to try them; keep the model
+  guide and specialist-dealer contact accessible. No public prices or checkout.
+- Keep availability states separate. Only available instruments may be offered
+  as ready to try; selected sold instruments are clearly labelled references.
+- Publish only verified instrument, construction and service information.
+  Separate individual observations from model-reference specifications. Do not
+  imply a guaranteed sound ranking from model numbers.
+- Preserve instrument proportions and original photographs. No generative
+  retouching, fabricated parts or substitute photographs of another model.
+- Keep noindex enabled unless explicitly instructed otherwise. Noindex is not
+  access control. Pushes and deployments require separate user authorisation.
+- Keep private discussions, business planning and confidential working notes
+  outside version control, even when the GitHub repository is private.
 
-Static Astro website for presenting Samuel Shen double basses available through
-Shen Europe.
+## Local-only material
+
+Use `private-notes/` for internal notes and `design-studies/` for local visual
+experiments. Both root directories are excluded by the versioned `.gitignore`.
+Never force-add them or place their contents in public assets, content files,
+tests or commit messages. An ignore rule does not remove previously committed
+material from Git history.
+
+Local notes are not backed up by a push. Keep a separate local backup; Git
+bundles used for local recovery must not be added to the repository or exposed
+as backup branches or tags.
+
+## Model guide and photography
+
+The model guide groups the existing catalogue by construction, with one
+explanation per group. Only confirmed model combinations belong in the
+catalogue. Do not reintroduce SB-190, SB-288 or the unverified Mahogany variant.
+
+- `src/lib/instrumentTaxonomy.ts` defines the catalogue.
+- `src/lib/modelPresentation.ts` maps catalogue entries to illustrations and
+  public model-reference URLs.
+- `src/lib/modelOutlines.ts` contains the source-based, smoothed body contours.
+- `ModelOutline.astro` compares body shapes at equal height without stretching
+  their proportions. These are schematic outlines, not measured plans or
+  actual-size comparisons.
+- Available examples link to the individual instrument pages using text links.
+
+Instrument photographs use responsive WebP derivatives and reserved dimensions.
+Above-fold images load eagerly; gallery images load lazily. The homepage front
+views are visually aligned, not shown at a measured common scale.
+
+About uses `stacked-bodies.png`, `workshop-bodies.png` and
+`basses-before-varnishing.png` from `src/assets/suzhou/`. Preserve the supplied
+source files unchanged; Astro only encodes responsive derivatives.
+`provenance.json` records source filenames and checksums without personal
+filesystem paths. The archived `varnished-basses.png` is not displayed.
+
+## Verification
+
+```sh
+npm run build
+node --experimental-strip-types --test tests/instrument-availability.test.ts tests/model-guide.test.ts tests/public-build.test.mjs
+git diff --check
+```
+
+Tests cover availability grouping, homepage selection, contact contexts,
+noindex, model mappings, image provenance and internal links/assets. Also check
+desktop and narrow layouts, the menu, image loading and actual enquiry paths.
 
 ## Requirements
 
@@ -145,10 +204,16 @@ Supported status values are:
 - `available`
 - `reserved`
 - `coming-soon`
+- `unavailable`
 - `sold`
 
-Sold instruments keep their detail page but are omitted from the available
-instruments page. The numeric `order` field controls listing order.
+Sold instruments keep their detail page in the separate Selected past instruments
+section. Available, on-the-way and reserved entries have their own sections.
+Not-available entries retain their detail pages but are omitted from public
+stock and archive lists. Fully carved instruments are ordered before hybrids
+and laminated models; `order` sorts entries within the same priority.
+Home features up to two available instruments, prioritising SB-1000, then SB-800.
+The local admin and Keystatic both support the not-available status.
 
 The optional `condition` field accepts `new`, `demonstrator` or `pre-owned`.
 Use the optional `strings` and `bridge` fields for the setup currently fitted

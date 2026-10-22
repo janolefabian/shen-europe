@@ -1,0 +1,29 @@
+---
+import { Image } from "astro:assets";
+import type { InstrumentImage } from "../lib/instrumentImages";
+
+interface Props {
+  image: InstrumentImage;
+  loading?: "eager" | "lazy";
+  priority?: boolean;
+  sizes?: string;
+  fit?: "natural" | "contain";
+  crop?: { x: number; y: number; width: number; height: number };
+}
+const { image, loading = "lazy", priority = false, sizes = "(min-width: 1024px) 380px, 85vw", fit = "natural", crop } = Astro.props;
+const cropStyle = crop
+  ? `aspect-ratio:${crop.width}/${crop.height}; --photo-width:${100 * image.metadata.width / crop.width}%; --photo-left:${-100 * crop.x / crop.width}%; --photo-top:${-100 * crop.y / crop.height}%;`
+  : undefined;
+---
+<div class:list={["instrument-photo", crop && "framed", fit === "contain" && !crop && "contained"]} style={cropStyle}>
+  <Image src={image.metadata} alt={image.alt} widths={[320, 480, 720, 1000]}
+    sizes={sizes} format="webp" quality={85} loading={loading}
+    fetchpriority={priority ? "high" : "auto"} />
+</div>
+<style>
+  .instrument-photo img { display: block; width: 100%; height: auto; }
+  .framed { position: relative; overflow: hidden; }
+  .framed img { position: absolute; width: var(--photo-width); max-width: none; left: var(--photo-left); top: var(--photo-top); }
+  .contained { height: 100%; width: 100%; }
+  .contained img { height: 100%; width: 100%; object-fit: contain; }
+</style>

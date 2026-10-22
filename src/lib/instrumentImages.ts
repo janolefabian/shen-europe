@@ -1,24 +1,20 @@
 import {
   getAutomaticHeroReference,
   type CategorizedInstrumentPhoto,
+  type InstrumentPhotoCategory,
 } from "./instrumentPhotos";
+import type { ImageMetadata } from "astro";
 
 type ImageModule = {
-  default: string;
+  default: ImageMetadata;
 };
 
 const imageModules = import.meta.glob<ImageModule>(
   "/src/content/instruments/**/*.{jpg,jpeg,png,webp,avif}",
   {
     eager: true,
-    query: "?url",
   },
 );
-
-function imageUrl(module: ImageModule | string): string {
-  if (typeof module === "string") return module;
-  return module.default;
-}
 
 function filenameFromPath(path: string): string {
   return path.split("/").pop() ?? "";
@@ -49,11 +45,29 @@ export interface InstrumentImage {
   src: string;
   alt: string;
   filename: string;
+  metadata: ImageMetadata;
+  category?: InstrumentPhotoCategory;
 }
+
+const photoLabels: Record<InstrumentPhotoCategory, string> = {
+  "front-complete": "Full front view", "body-front": "Front view",
+  "body-back": "Back view", "side-ribs": "Ribs", "side-ribs-front": "Front and ribs",
+  "corner-detail": "Corner detail", "tuning-machines-detail": "Tuning machine detail",
+  "scroll-detail": "Scroll detail",
+};
 
 export interface InstrumentImages {
   hero?: InstrumentImage;
   gallery: InstrumentImage[];
+}
+
+// Calibrated to these originals: align the neck/body junction and body bottom.
+// Preserve proportions and original files; this is not a true-to-scale comparison.
+export function getInstrumentPhotoCrop(inventory: string, image?: InstrumentImage) {
+  if (image?.filename !== "hero.png" || image.metadata.width !== 2000 || image.metadata.height !== 3000) return undefined;
+  if (inventory === "BASS-0003") return { x: 109, y: 241, width: 1752, height: 2628 };
+  if (inventory === "BASS-0004") return { x: 83, y: 0, width: 1834, height: 2751 };
+  return undefined;
 }
 
 export type InstrumentGalleryReference = CategorizedInstrumentPhoto;
@@ -82,7 +96,8 @@ export function getInstrumentImages(
     .filter(([path]) => path.startsWith(folderPrefix))
     .map(([path, module]) => ({
       path,
-      src: imageUrl(module),
+      src: module.default.src,
+      metadata: module.default,
       filename: filenameFromPath(path),
     }));
 
@@ -93,15 +108,23 @@ export function getInstrumentImages(
       ? `/${normalizedReference}`
       : `${folderPrefix}${normalizedReference}`;
 
-    return entryByPath.get(path);
+    // Older Keystatic entries can store gallery/0/image.png while the image
+    // directory adds a second gallery segment. Prefer exact references first.
+    return entryByPath.get(path) ?? (
+      normalizedReference.startsWith("gallery/")
+        ? entryByPath.get(`${folderPrefix}gallery/${normalizedReference}`)
+        : undefined
+    );
   };
 
   const galleryEntries =
     references.gallery && references.gallery.length > 0
       ? references.gallery
-          .map(({ image }) => image)
-          .map(resolveReference)
-          .filter((entry): entry is (typeof entries)[number] => Boolean(entry))
+          .map(({ image, category }) => {
+            const entry = resolveReference(image);
+            return entry ? { ...entry, category } : undefined;
+          })
+          .filter((entry): entry is (typeof entries)[number] & { category: InstrumentPhotoCategory } => Boolean(entry))
       : entries
           .filter(({ filename }) => !/^hero\./i.test(filename))
           .sort((a, b) => {
@@ -125,21 +148,22 @@ export function getInstrumentImages(
       /^hero\.(jpg|jpeg|png|webp|avif)$/i.test(filename),
     );
 
-  const toImage = (entry: (typeof entries)[number]): InstrumentImage => {
-    const label = humanizeFilename(entry.filename);
+  const toImage = (entry: (typeof entries)[number] & { category?: InstrumentPhotoCategory }): InstrumentImage => {
+    const label = entry.category ? photoLabels[entry.category] : humanizeFilename(entry.filename);
     return {
       src: entry.src,
       filename: entry.filename,
-      alt: label ? `${title} – ${label}` : title,
+      metadata: entry.metadata,
+      category: entry.category,
+      alt: label ? `${title}: ${label}` : title,
     };
   };
 
   const gallery = galleryEntries.map(toImage);
   const hero = heroEntry
     ? {
-        src: heroEntry.src,
-        filename: heroEntry.filename,
-        alt: `${title} – instrument view`,
+        ...toImage(heroEntry),
+        alt: `${title}: front view`,
       }
     : gallery[0];
 

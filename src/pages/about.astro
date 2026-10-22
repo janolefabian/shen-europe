@@ -1,254 +1,152 @@
 ---
-import { getCollection } from "astro:content";
-
-import Button from "../components/ui/Button.astro";
+import { Image } from "astro:assets";
+import Container from "../components/layout/Container.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getInstrumentImages } from "../lib/instrumentImages";
-
-const aboutInstrument = (await getCollection("instruments")).find(
-  (instrument) => instrument.data.publication === "published",
-);
-const aboutImage = aboutInstrument
-  ? getInstrumentImages(
-      aboutInstrument.filePath ?? aboutInstrument.id,
-      aboutInstrument.data.title,
-      {
-        hero: aboutInstrument.data.hero,
-        gallery: aboutInstrument.data.gallery,
-      },
-    ).hero
-  : undefined;
-
-const processSteps = [
-  {
-    number: "01",
-    title: "First conversation",
-    text: "For a special order, we ask about orchestral or solo use, preferred response, size and setup. We discuss the same points before arranging a trial with an instrument already in Berlin.",
-  },
-  {
-    number: "02",
-    title: "Selection in Suzhou",
-    text: "We examine individual basses rather than ordering only by model number. We compare response, workmanship, wood and the character of each instrument.",
-  },
-  {
-    number: "03",
-    title: "Arrival in Berlin",
-    text: "Each instrument is inspected again after it arrives in Berlin. We check its condition and construction before it is offered for trial or delivery.",
-  },
-  {
-    number: "04",
-    title: "Setup and assessment",
-    text: "We review the bridge, strings, playability and response. Where appropriate, the setup can be adjusted for the instrument and the player's requirements.",
-  },
-  {
-    number: "05",
-    title: "Trial and delivery",
-    text: "Available instruments can be tried in Berlin by appointment. We also arrange delivery within Europe and remain the point of contact after the sale.",
-  },
-];
+import stackedBodies from "../assets/suzhou/stacked-bodies.png";
+import workshopBodies from "../assets/suzhou/workshop-bodies.png";
+import bassesBeforeVarnishing from "../assets/suzhou/basses-before-varnishing.png";
+import { withBasePath } from "../lib/sitePaths";
 ---
 
 <BaseLayout
-  title="About Shen Europe | Selection, Import and Setup"
-  description="How Shen Europe selects Samuel Shen double basses in Suzhou, imports them to Europe and prepares each instrument in Berlin."
+  title="About Shen Europe | From Shen to Berlin"
+  description="Samuel Shen double basses, made and set up in China, imported and sold by Shen Europe in Berlin. About the instruments and arranging a visit."
 >
-  <section>
-    <div class="grid lg:min-h-[calc(100vh-108px)] lg:grid-cols-[minmax(0,1.08fr)_minmax(420px,0.92fr)]">
-      <div class="flex items-center px-5 py-20 sm:px-8 sm:py-24 lg:px-12 lg:py-32 xl:px-14">
-        <div class="max-w-[790px]">
-          <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-            About Shen Europe
-          </p>
-
-          <h1 class="mt-6 font-serif text-5xl leading-[0.96] tracking-[-0.045em] text-neutral-950 sm:text-6xl lg:text-7xl xl:text-[5.25rem]">
-            Samuel Shen double basses selected for Europe
-          </h1>
-
-          <p class="mt-8 max-w-2xl text-lg leading-relaxed text-neutral-600 sm:text-xl">
-            Shen Europe is the European importer and a specialist dealer for
-            Samuel Shen double basses. Tempera Strings GmbH operates Shen Europe
-            from Berlin. We select instruments in Suzhou, import them, check
-            them in Berlin and offer them for trial or order.
-          </p>
-
-          <dl class="mt-12 grid gap-6 border-t border-neutral-200 pt-7 text-sm sm:grid-cols-3 sm:gap-8">
-            <div>
-              <dt class="text-neutral-500">Role</dt>
-              <dd class="mt-2 text-neutral-950">Importer and dealer</dd>
-            </div>
-            <div>
-              <dt class="text-neutral-500">Based in</dt>
-              <dd class="mt-2 text-neutral-950">Berlin, Germany</dd>
-            </div>
-            <div>
-              <dt class="text-neutral-500">Working across</dt>
-              <dd class="mt-2 text-neutral-950">Europe</dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-
-      <div class="min-h-[58vh] overflow-hidden bg-neutral-100 lg:min-h-full">
-        {
-          aboutImage ? (
-            <img
-              src={aboutImage.src}
-              alt="Samuel Shen double bass selected by Shen Europe"
-              class="h-full w-full object-cover object-center"
-            />
-          ) : (
-            <div class="flex h-full min-h-[58vh] items-center justify-center text-neutral-400">
-              Instrument photography coming soon
-            </div>
-          )
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="border-t border-neutral-200 py-20 sm:py-24 lg:py-32">
-    <div class="mx-auto grid w-full max-w-[1600px] gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-24 lg:px-12">
+  <section class="py-12 sm:py-16 lg:py-20">
+    <Container class="about-intro">
       <div>
-        <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-          Why this approach
+        <p class="eyebrow">Origin and instruments</p>
+        <h1 class="page-title mt-4 text-neutral-950">About Shen Europe</h1>
+        <p class="mt-7 max-w-xl text-base leading-[1.8] text-neutral-600">
+          Shen Europe imports and sells Samuel Shen double basses from Berlin.
+          Our focus is on individual instruments that you can try in person
+          before deciding to buy.
+        </p>
+        <p class="mt-5 max-w-xl text-base leading-[1.8] text-neutral-600">
+          The focus is on fully carved basses, with hybrid and laminated
+          instruments also part of the wider Shen range. Current availability
+          is shown against each individual bass, separately from model information.
         </p>
       </div>
-
-      <div class="max-w-4xl">
-        <h2 class="font-serif text-4xl leading-[1.05] tracking-[-0.035em] text-neutral-950 sm:text-5xl lg:text-6xl">
-          The model number is only the starting point
-        </h2>
-
-        <div class="mt-10 grid gap-8 text-base leading-relaxed text-neutral-600 sm:grid-cols-2 sm:text-lg">
-          <p>
-            Two instruments built to the same specification can still differ
-            in response, colour, projection and feel. We therefore assess each
-            bass individually.
-          </p>
-          <p>
-            Every available bass has its own photographs, description and
-            setup details. We discuss pricing, suitability and possible setup
-            changes directly with the player.
-          </p>
-        </div>
-      </div>
-    </div>
+      <figure class="suzhou-photo" data-suzhou-photo="stacked-bodies">
+        <Image src={stackedBodies} alt="Unfinished double bass bodies stacked in rows at Shen in Suzhou"
+          widths={[480, 800, 1200, 1706]} sizes="(min-width: 1280px) 640px, (min-width: 768px) 52vw, 100vw"
+          format="webp" quality={82} loading="eager" fetchpriority="high" class="block h-auto w-full" />
+        <figcaption>Unfinished bodies at Shen in Suzhou.</figcaption>
+      </figure>
+    </Container>
   </section>
 
-  <section class="bg-neutral-950 py-20 text-white sm:py-24 lg:py-32">
-    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
-      <div class="grid gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-24">
-        <div>
-          <p class="text-sm tracking-[0.1em] text-neutral-400 uppercase">
-            Our process
-          </p>
-        </div>
-
-        <div class="max-w-4xl">
-          <h2 class="font-serif text-4xl leading-[1.05] tracking-[-0.035em] sm:text-5xl lg:text-6xl">
-            How an instrument reaches the player
-          </h2>
-          <p class="mt-7 max-w-2xl text-lg leading-relaxed text-neutral-300">
-            Basses selected for stock and special orders enter the process at
-            different points. Every instrument is checked and set up in Berlin
-            before trial or delivery.
-          </p>
-        </div>
-      </div>
-
-      <ol class="mt-16 border-t border-neutral-700 lg:mt-20">
-        {
-          processSteps.map((step) => (
-            <li class="grid gap-5 border-b border-neutral-800 py-8 sm:grid-cols-[5rem_minmax(0,0.7fr)_minmax(0,1.3fr)] sm:gap-8 sm:py-10 lg:grid-cols-[8rem_minmax(260px,0.7fr)_minmax(0,1.3fr)] lg:gap-12">
-              <p class="text-sm tracking-[0.1em] text-neutral-500">
-                {step.number}
-              </p>
-              <h3 class="font-serif text-2xl tracking-[-0.02em] text-white sm:text-3xl">
-                {step.title}
-              </h3>
-              <p class="max-w-3xl text-base leading-relaxed text-neutral-300">
-                {step.text}
-              </p>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
-
-  <section class="border-b border-neutral-200 bg-neutral-50 py-20 sm:py-24 lg:py-32">
-    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
-      <div class="max-w-4xl">
-        <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-          Available instruments and special orders
-        </p>
-        <h2 class="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.035em] text-neutral-950 sm:text-5xl">
-          Try a bass in Berlin or discuss a special order
-        </h2>
-      </div>
-
-      <div class="mt-12 grid gap-px overflow-hidden border border-neutral-200 bg-neutral-200 lg:grid-cols-2">
-        <article class="flex flex-col bg-white p-7 sm:p-10 lg:p-12">
-          <p class="text-xs tracking-[0.1em] text-neutral-500 uppercase">
-            Available in Berlin
-          </p>
-          <h3 class="mt-5 font-serif text-3xl tracking-[-0.025em] text-neutral-950 sm:text-4xl">
-            Try an instrument in Berlin
-          </h3>
-          <p class="mt-5 max-w-xl text-base leading-relaxed text-neutral-600">
-            See photographs, specifications and notes for every available
-            bass. Contact us to ask about its setup or arrange a trial.
-          </p>
-          <div class="mt-9 lg:mt-auto lg:pt-12">
-            <Button href="/available" variant="text">
-              View available instruments
-            </Button>
-          </div>
-        </article>
-
-        <article class="flex flex-col bg-white p-7 sm:p-10 lg:p-12">
-          <p class="text-xs tracking-[0.1em] text-neutral-500 uppercase">
-            Special order
-          </p>
-          <h3 class="mt-5 font-serif text-3xl tracking-[-0.025em] text-neutral-950 sm:text-4xl">
-            Order a specific model
-          </h3>
-          <p class="mt-5 max-w-xl text-base leading-relaxed text-neutral-600">
-            Tell us which model, outline, size and setup you need. We will check
-            availability, timing and pricing for that request.
-          </p>
-          <div class="mt-9 lg:mt-auto lg:pt-12">
-            <Button href="/contact" variant="text">
-              Discuss a special order
-            </Button>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="py-20 sm:py-24 lg:py-32">
-    <div class="mx-auto grid w-full max-w-[1600px] gap-12 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-24 lg:px-12">
+  <section id="suzhou" class="border-t border-neutral-200 py-12 sm:py-16">
+    <Container class="grid gap-6 md:grid-cols-2 lg:gap-24">
       <div>
-        <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-          Direct and through dealers
-        </p>
+        <h2 class="section-title text-neutral-950">Shen in Suzhou</h2>
+        <p class="mt-4 text-sm leading-relaxed text-neutral-500">Photographs supplied by Shen.</p>
       </div>
+      <div class="max-w-xl space-y-5 text-base leading-[1.8] text-neutral-600">
+        <p>
+          Samuel Shen makes the instruments in China. The range includes
+          basses with carved solid-wood tops and backs and solid-wood ribs,
+          hybrids with a carved top and laminated back and ribs, and laminated basses.
+          Body pattern, materials and specification level are separate choices;
+          a model name alone does not describe every detail of an instrument.
+        </p>
+        <p>
+          For the instruments supplied to Shen Europe so far, the setup has
+          been carried out by Shen in China. In Berlin, the existing bridges
+          were stood up and strings were fitted. The instrument pages distinguish
+          documented equipment and playing observations from model-reference specifications.
+        </p>
+        <a href={withBasePath("/models")} class="quiet-link">Construction and model levels</a>
+      </div>
+    </Container>
+    <Container class="workshop-pair">
+      <figure class="suzhou-photo" data-suzhou-photo="basses-before-varnishing">
+        <Image src={bassesBeforeVarnishing} alt="Unfinished double basses with necks and scrolls at Shen in Suzhou"
+          widths={[480, 800, 1200, 1706]} sizes="(min-width: 1280px) 620px, (min-width: 768px) 48vw, 100vw"
+          format="webp" quality={82} loading="lazy" class="block h-auto w-full" />
+        <figcaption>Double basses before varnishing, Suzhou.</figcaption>
+      </figure>
+      <figure class="suzhou-photo" data-suzhou-photo="workshop-bodies">
+        <Image src={workshopBodies} alt="Unfinished instrument bodies arranged in the workshop at Shen in Suzhou"
+          widths={[480, 800, 1200, 1706]} sizes="(min-width: 1280px) 620px, (min-width: 768px) 48vw, 100vw"
+          format="webp" quality={82} loading="lazy" class="block h-auto w-full" />
+        <figcaption>Instrument bodies in the workshop, Suzhou.</figcaption>
+      </figure>
+    </Container>
+  </section>
 
-      <div class="max-w-4xl">
-        <h2 class="font-serif text-4xl leading-[1.05] tracking-[-0.035em] text-neutral-950 sm:text-5xl">
-          Direct sales now, specialist dealers in future
-        </h2>
-        <p class="mt-7 max-w-3xl text-lg leading-relaxed text-neutral-600">
-          Musicians currently buy from Shen Europe directly. We are also
-          building a network of specialist dealers so that instruments can be
-          tried and serviced in more parts of Europe. Each dealer will receive
-          the specifications and setup information for the individual bass.
+  <section class="bg-[#191919] py-12 text-white sm:py-16">
+    <Container>
+        <h2 class="section-title">From the instrument to your visit</h2>
+        <div class="journey-steps">
+          <div>
+            <h3 class="subsection-title">Arrival</h3>
+            <p class="mt-3 text-base leading-[1.8] text-neutral-300">
+              We import the basses from Shen. An instrument on the way is not
+              available to play yet. Available, incoming, reserved and sold
+              instruments are kept separate in the listings.
+            </p>
+          </div>
+          <div>
+            <h3 class="subsection-title">The individual bass</h3>
+            <p class="mt-3 text-base leading-[1.8] text-neutral-300">
+              Front and back views, details of the fittings, and notes about the
+              particular bass help you prepare for a visit. Playing impressions
+              describe that instrument, not every bass carrying the same model number.
+            </p>
+          </div>
+          <div>
+            <h3 class="subsection-title">An appointment in Berlin</h3>
+            <p class="mt-3 text-base leading-[1.8] text-neutral-300">
+              Contact us about an available bass and arrange a time to play it.
+              You do not need to fit a professional category: the relevant questions
+              are how you play, what you need and how the instrument feels to you.
+            </p>
+          </div>
+        </div>
+    </Container>
+  </section>
+
+  <section class="py-12 sm:py-16">
+    <Container class="grid gap-6 md:grid-cols-2 lg:gap-24">
+      <h2 class="section-title text-neutral-950">What a model number cannot tell you</h2>
+      <div class="max-w-xl space-y-5 text-base leading-[1.8] text-neutral-600">
+        <p>
+          Instruments built to the same specification can differ in response,
+          sound and feel. A model level describes materials and construction;
+          it cannot decide which bass suits a particular player.
         </p>
-        <Button href="/contact" variant="outline" size="lg" class="mt-9">
-          Contact Shen Europe
-        </Button>
+        <p>
+          The dimensions and photographs help you compare instruments.
+          An appointment gives you the opportunity to hear and play the bass
+          itself, with your own musical requirements in mind.
+        </p>
+        <a href={withBasePath("/available")} class="quiet-link">Explore available instruments</a>
       </div>
-    </div>
+    </Container>
+  </section>
+
+  <section class="border-t border-neutral-200 py-8">
+    <Container class="flex flex-wrap items-baseline justify-between gap-4 text-sm text-neutral-600">
+      <p>Specialist dealers are welcome to contact Shen Europe directly.</p>
+      <a href={withBasePath("/contact#dealers")} class="quiet-link">Trade enquiries</a>
+    </Container>
   </section>
 </BaseLayout>
+
+<style>
+  /* Container renders these roots without forwarding this page's scope attribute. */
+  :global(.about-intro) { display: grid; align-items: center; gap: 2.5rem; }
+  .suzhou-photo { min-width: 0; width: 100%; }
+  .suzhou-photo figcaption { margin-top: .75rem; color: #737373; font-size: .75rem; line-height: 1.6; }
+  :global(.workshop-pair) { display: grid; gap: 2rem; margin-top: 2.75rem; }
+  .journey-steps { display: grid; gap: 1.75rem; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #404040; }
+  @media (min-width: 768px) {
+    :global(.about-intro) { grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); gap: 3rem; }
+    :global(.workshop-pair) { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .journey-steps { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 3rem; }
+  }
+</style>

@@ -1,134 +1,87 @@
 ---
-import type { CollectionEntry } from "astro:content";
-
 import BaseLayout from "../layouts/BaseLayout.astro";
-import InstrumentCard from "../components/InstrumentCard.astro";
 import Hero from "../components/Hero.astro";
-import Button from "../components/ui/Button.astro";
+import Container from "../components/layout/Container.astro";
+import InstrumentPhoto from "../components/InstrumentPhoto.astro";
+import { getInstrumentImages } from "../lib/instrumentImages";
 import { getInstruments } from "../lib/instruments";
+import { selectHomepageInstruments } from "../lib/instrumentAvailability";
+import { withBasePath } from "../lib/sitePaths";
 
-const orderByPriority = (
-  a: CollectionEntry<"instruments">,
-  b: CollectionEntry<"instruments">,
-) => a.data.order - b.data.order;
-const availableInstruments = (await getInstruments())
-  .filter((instrument) => instrument.data.status !== "sold")
-  .sort(orderByPriority);
-const featuredInstruments = availableInstruments.filter(
-  (instrument) => instrument.data.featured,
-);
-const homepageInstruments = (
-  featuredInstruments.length > 0 ? featuredInstruments : availableInstruments
-).slice(0, 2);
+const homepageInstruments = selectHomepageInstruments(await getInstruments());
+const featured = homepageInstruments[0];
+const featuredImages = featured && getInstrumentImages(featured.filePath ?? featured.id, featured.data.title, featured.data);
+const details = ["body-back", "tuning-machines-detail"].flatMap((category) => {
+  const image = featuredImages?.gallery.find((image) => image.category === category);
+  return image ? [image] : [];
+});
 ---
 
 <BaseLayout
   title="Shen Europe | Samuel Shen Double Basses"
-  description="Samuel Shen double basses selected in Suzhou and set up in Berlin."
+  description="Samuel Shen double basses in Berlin. Explore individual instruments, arrange a visit and try a bass before buying."
 >
-  <Hero />
+  <Hero instruments={homepageInstruments} />
 
-  <section class="border-t border-neutral-200 py-20 sm:py-24 lg:py-32">
-    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
-      <div class="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-24">
-        <div>
-          <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-            Selection and setup
+  {featured && details.length > 0 && (
+    <section class="py-12 sm:py-16" aria-labelledby="instrument-details-title">
+      <Container class="grid items-center gap-9 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+        <div class="max-w-lg">
+          <p class="eyebrow">{featured.data.title}</p>
+          <h2 id="instrument-details-title" class="section-title mt-4">The instrument, in detail</h2>
+          <p class="mt-5 text-base leading-[1.8] text-neutral-600">
+            {featured.data.inventory === "BASS-0004"
+              ? "The figured maple roundback and an individual tuning machine on this Panormo. These photographs show the same bass as the front view above."
+              : "A closer view of the back and fitted components of this instrument. These are photographs of the bass itself, not a model example."}
           </p>
-          <h2 class="mt-4 max-w-xl font-serif text-4xl leading-[1.05] tracking-[-0.035em] text-neutral-950 sm:text-5xl">
-            Selected in Suzhou and set up in Berlin
-          </h2>
+          <a href={withBasePath(`/instruments/${featured.data.slug}/`)} class="quiet-link mt-5">Photographs, equipment and playing notes</a>
         </div>
-
-        <div class="grid gap-10 sm:grid-cols-3 sm:gap-6 lg:gap-10">
-          <div class="border-t border-neutral-200 pt-5">
-            <p class="text-xs tracking-[0.1em] text-neutral-500 uppercase">
-              01
-            </p>
-            <h3 class="mt-4 font-serif text-2xl tracking-[-0.02em] text-neutral-950">
-              Selected in Suzhou
-            </h3>
-            <p class="mt-4 text-sm leading-relaxed text-neutral-600">
-              We compare individual instruments for response, character and
-              workmanship.
-            </p>
-          </div>
-
-          <div class="border-t border-neutral-200 pt-5">
-            <p class="text-xs tracking-[0.1em] text-neutral-500 uppercase">
-              02
-            </p>
-            <h3 class="mt-4 font-serif text-2xl tracking-[-0.02em] text-neutral-950">
-              Prepared in Berlin
-            </h3>
-            <p class="mt-4 text-sm leading-relaxed text-neutral-600">
-              Each bass is inspected and set up before trial or delivery.
-            </p>
-          </div>
-
-          <div class="border-t border-neutral-200 pt-5">
-            <p class="text-xs tracking-[0.1em] text-neutral-500 uppercase">
-              03
-            </p>
-            <h3 class="mt-4 font-serif text-2xl tracking-[-0.02em] text-neutral-950">
-              Available in Europe
-            </h3>
-            <p class="mt-4 text-sm leading-relaxed text-neutral-600">
-              Instruments can be tried in Berlin or delivered within Europe.
-            </p>
-          </div>
+        <div class="grid grid-cols-2 items-start gap-4 sm:gap-6">
+          {details.map((image) => (
+            <figure>
+              <a href={withBasePath(`/instruments/${featured.data.slug}/#gallery`)} aria-label={`View ${image.alt}`}>
+                <InstrumentPhoto image={image} sizes="(min-width: 1024px) 260px, 42vw"
+                  crop={featured.data.inventory === "BASS-0004" && image.category === "body-back"
+                    ? { x: 50, y: 0, width: 1900, height: 2850 } : undefined} />
+              </a>
+              <figcaption class="mt-3 text-xs leading-relaxed text-neutral-500">
+                {image.category === "body-back" ? "Back view" : "Tuning machine detail"}
+              </figcaption>
+            </figure>
+          ))}
         </div>
+      </Container>
+    </section>
+  )}
+
+  <section class="border-t border-neutral-200 py-12 sm:py-16">
+    <Container class="grid gap-10 md:grid-cols-2 md:gap-12 lg:gap-24">
+      <div>
+        <h2 class="section-title text-neutral-950">From Shen to the individual bass</h2>
+        <p class="mt-5 max-w-lg text-base leading-[1.8] text-neutral-600">
+          The instruments are made and set up by Shen in China. We import
+          and sell them directly, with photographs and notes for each bass.
+          Fully carved models lead the selection; hybrids and laminated
+          instruments remain part of the wider range.
+        </p>
+        <a href={withBasePath("/about")} class="quiet-link mt-5">About Shen Europe</a>
       </div>
-    </div>
+
+      <div>
+        <h2 class="section-title text-neutral-950">Arrange a visit</h2>
+        <p class="mt-5 max-w-lg text-base leading-[1.8] text-neutral-600">
+          Photos and specifications are a starting point. Playing the bass
+          lets you hear its response and find out how it feels in your hands.
+          Contact us to discuss an instrument and arrange a time to visit.
+        </p>
+        <a href={withBasePath("/contact#appointments")} class="quiet-link mt-5">Contact for an appointment</a>
+      </div>
+    </Container>
   </section>
-
-  {
-    homepageInstruments.length > 0 && (
-      <section class="border-t border-neutral-200 bg-neutral-50 py-20 sm:py-24 lg:py-32">
-        <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
-          <div class="flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-                Currently in Berlin
-              </p>
-              <h2 class="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.035em] text-neutral-950 sm:text-5xl">
-                Available for trial
-              </h2>
-            </div>
-
-            <Button href="/available" variant="text">
-              View all instruments
-            </Button>
-          </div>
-
-          <div class="mt-12 grid max-w-6xl gap-x-8 gap-y-20 lg:grid-cols-2">
-            {homepageInstruments.map((instrument) => (
-              <InstrumentCard instrument={instrument} />
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  <section class="border-t border-neutral-200 py-16 sm:py-20 lg:py-24">
-    <div class="mx-auto grid w-full max-w-[1600px] gap-8 px-5 sm:px-8 lg:grid-cols-[1fr_auto] lg:items-end lg:px-12">
-      <div class="max-w-3xl">
-        <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-          Trials and special orders
-        </p>
-        <h2 class="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.03em] text-neutral-950 sm:text-5xl">
-          Trial in Berlin or special order
-        </h2>
-        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-neutral-600">
-          Arrange a trial or tell us which model, dimensions and setup you are
-          looking for.
-        </p>
-      </div>
-
-      <Button href="/contact" variant="outline" size="lg">
-        Get in touch
-      </Button>
-    </div>
+  <section class="border-t border-neutral-200 py-7">
+    <Container class="flex flex-wrap items-baseline justify-between gap-4 text-sm text-neutral-600">
+      <p>Enquiries from specialist dealers are also welcome.</p>
+      <a href={withBasePath("/contact#dealers")} class="quiet-link">Trade contact</a>
+    </Container>
   </section>
 </BaseLayout>

@@ -1,257 +1,122 @@
 ---
 import { render } from "astro:content";
-
+import Container from "../../components/layout/Container.astro";
+import InstrumentPhoto from "../../components/InstrumentPhoto.astro";
 import InstrumentGallery from "../../components/InstrumentGallery.astro";
 import YouTubeVideo from "../../components/YouTubeVideo.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getInstrumentImages } from "../../lib/instrumentImages";
+import { getInstrumentImages, getInstrumentPhotoCrop } from "../../lib/instrumentImages";
 import { getInstruments } from "../../lib/instruments";
 import { withBasePath } from "../../lib/sitePaths";
+import { instrumentStatusLabels, instrumentStatusNotes } from "../../lib/instrumentAvailability";
 
 export async function getStaticPaths() {
-  const instruments = await getInstruments();
-
-  return instruments.map((instrument) => ({
-    params: { slug: instrument.data.slug },
-    props: { instrument },
+  return (await getInstruments()).map((instrument) => ({
+    params: { slug: instrument.data.slug }, props: { instrument },
   }));
 }
-
 const { instrument } = Astro.props;
 const { data } = instrument;
 const { Content } = await render(instrument);
-
-const images = getInstrumentImages(
-  instrument.filePath ?? instrument.id,
-  data.title,
-  { hero: data.hero, gallery: data.gallery },
-);
+const images = getInstrumentImages(instrument.filePath ?? instrument.id, data.title, data);
 const isSold = data.status === "sold";
-const inquiryUrl = withBasePath(
-  isSold
-    ? `/contact?similar=${encodeURIComponent(data.slug)}`
-    : `/contact?instrument=${encodeURIComponent(data.slug)}`,
-);
-
-const statusLabels = {
-  available: "Available",
-  reserved: "Reserved",
-  "coming-soon": "Coming soon",
-  sold: "Sold",
-};
-
-const conditionLabels = {
-  new: "New",
-  demonstrator: "Demonstrator instrument",
-  "pre-owned": "Pre-owned",
-};
-
-const specifications = [
-  ["Inventory", data.inventory],
-  ["Condition", data.condition ? conditionLabels[data.condition] : undefined],
-  ["Model", data.model],
-  ["Outline", data.outline],
-  ["Size", data.size],
+const inquiryUrl = withBasePath(isSold
+  ? `/contact?similar=${encodeURIComponent(data.slug)}`
+  : `/contact?instrument=${encodeURIComponent(data.slug)}`);
+const conditionLabels = { new: "New", demonstrator: "Demonstrator", "pre-owned": "Pre-owned" };
+const confirmed = [
+  ["Condition", data.condition && conditionLabels[data.condition]],
   ["Year", data.year?.toString()],
-  ["String length", data.stringLength],
-  ["Body length", data.bodyLength],
-  ["Weight", data.weight],
-  ["Top", data.topMaterial],
-  ["Back", data.backMaterial],
-  ["Ribs", data.ribs],
-  ["Purfling", data.purfling],
-  ["Varnish", data.varnish],
-  ["Neck", data.neck],
-  ["Fingerboard", data.fingerboard],
   ["Tuning machines", data.tuningMachines],
   ["Strings", data.strings],
   ["Bridge", data.bridge],
-  ["Tailpiece", data.tailpiece],
-  ["Endpin", data.endpin],
-  ["Warranty", data.warranty],
 ].filter((item): item is [string, string] => Boolean(item[1]));
+const specifications = [
+  ["Model level", data.model], ["Body pattern", data.outline], ["Size", data.size],
+  ["String length", data.stringLength], ["Body length", data.bodyLength], ["Weight", data.weight],
+  ["Top", data.topMaterial], ["Back", data.backMaterial], ["Ribs", data.ribs],
+  ["Purfling", data.purfling], ["Varnish", data.varnish], ["Neck", data.neck],
+  ["Fingerboard", data.fingerboard], ["Tailpiece", data.tailpiece], ["Endpin", data.endpin],
+].filter((item): item is [string, string] => Boolean(item[1]));
+const gallery = [...images.gallery].sort((a, b) => {
+  const priority = ["body-back", "tuning-machines-detail", "side-ribs", "side-ribs-front", "corner-detail", "body-front"];
+  const rank = (category?: string) => { const i = priority.indexOf(category ?? ""); return i < 0 ? priority.length : i; };
+  return rank(a.category) - rank(b.category);
+});
 ---
 
-<BaseLayout
-  title={`${data.title} | Shen Europe`}
-  description={data.shortDescription}
->
-  <section class="grid grid-cols-1 lg:grid-cols-2">
-    <div
-      class="min-h-[62vh] overflow-hidden bg-neutral-100 lg:min-h-[calc(100vh-108px)]"
-    >
-      {
-        images.hero ? (
-          <img
-            src={images.hero.src}
-            alt={images.hero.alt}
-            class="h-full w-full object-cover object-center"
-          />
-        ) : (
-          <div class="flex h-full min-h-[62vh] items-center justify-center text-neutral-400">
-            Image coming soon
-          </div>
-        )
-      }
-    </div>
-
-    <div
-      class="flex items-center px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
-    >
-      <div class="max-w-2xl">
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <p class="text-sm text-neutral-500">
-            {data.model} · {data.outline}
-          </p>
-          {
-            isSold && (
-              <span class="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700">
-                <span class="size-1.5 rounded-full bg-neutral-400" aria-hidden="true" />
-                Sold
-              </span>
-            )
-          }
+<BaseLayout title={`${data.title} | Shen Europe`} description={data.shortDescription}>
+  <section class="py-8 sm:py-12">
+    <Container>
+      <a href={withBasePath("/available")} class="quiet-link">All instruments</a>
+      <div class="mt-7 grid gap-8 md:grid-cols-2 md:items-center lg:gap-20">
+        <div class="order-2 mx-auto w-full max-w-[380px] md:order-1">
+          {images.hero && <InstrumentPhoto image={images.hero}
+            crop={getInstrumentPhotoCrop(data.inventory, images.hero)}
+            loading="eager" priority sizes="(min-width: 768px) 380px, 88vw" />}
         </div>
-
-        <h1
-          class="mt-3 font-serif text-5xl leading-[0.98] font-normal tracking-[-0.04em] text-neutral-950 sm:text-6xl lg:text-7xl"
-        >
-          {data.title}
-        </h1>
-
-        <p class="mt-8 text-lg leading-[1.7] text-neutral-600">
-          {data.shortDescription}
-        </p>
-
-        <dl
-          class="mt-10 grid grid-cols-2 gap-x-8 gap-y-5 border-y border-neutral-200 py-6 text-sm"
-        >
-          <div>
-            <dt class="text-neutral-500">Status</dt>
-            <dd class="mt-1 text-neutral-950">{statusLabels[data.status]}</dd>
+        <div class="order-1 md:order-2">
+          <p class="eyebrow">{instrumentStatusLabels[data.status]}</p>
+          <h1 class="page-title mt-4">{data.title}</h1>
+          <p class="mt-6 max-w-xl text-base leading-[1.8] text-neutral-600">{data.shortDescription}</p>
+          <div class="mt-6 border-y border-neutral-200 py-5">
+            <p class="text-sm leading-relaxed text-neutral-700">{instrumentStatusNotes[data.status]}</p>
           </div>
-
-          {
-            !isSold && (
-              <div>
-                <dt class="text-neutral-500">Location</dt>
-                <dd class="mt-1 text-neutral-950">{data.location}</dd>
-              </div>
-            )
-          }
-
-          {
-            !isSold && (
-              <div>
-                <dt class="text-neutral-500">Pricing</dt>
-                <dd class="mt-1 text-neutral-950">On request</dd>
-              </div>
-            )
-          }
-
-          {
-            data.stringLength && (
-              <div>
-                <dt class="text-neutral-500">String length</dt>
-                <dd class="mt-1 text-neutral-950">{data.stringLength}</dd>
-              </div>
-            )
-          }
-        </dl>
-
-        <a
-          href={inquiryUrl}
-          class="mt-10 inline-block border-b-2 border-neutral-950 pb-2 text-sm font-semibold tracking-[0.1em] uppercase transition-opacity hover:opacity-55"
-        >
-          {isSold ? "Ask about a similar instrument" : "Enquire about this instrument"}
-        </a>
+          <a href={inquiryUrl} class="quiet-link mt-6">
+            {isSold ? "Ask about a similar instrument" : data.status === "unavailable" ? "Ask about this reference" : "Enquire about this instrument"}
+          </a>
+        </div>
       </div>
-    </div>
+    </Container>
   </section>
 
-  {
-    images.gallery.length > 0 && (
-      <section class="border-t border-neutral-200 py-16 sm:py-20 lg:py-24">
-        <div class="mx-auto w-full max-w-[1200px] px-5 sm:px-8 lg:px-12">
-          <h2 class="mb-8 font-serif text-4xl leading-[1.02] tracking-[-0.035em] text-neutral-950 sm:text-5xl lg:mb-10">
-            Gallery
-          </h2>
-          <InstrumentGallery images={images.gallery} />
-        </div>
-      </section>
-    )
-  }
-
-  {
-    data.youtubeVideoId && (
-      <section class="border-t border-neutral-200 py-20 sm:py-24 lg:py-32">
-        <div class="mx-auto w-full max-w-[1200px] px-5 sm:px-8 lg:px-12">
-          <h2 class="font-serif text-4xl leading-[1.02] tracking-[-0.035em] text-neutral-950 sm:text-5xl">
-            Listen to this instrument
-          </h2>
-          <div class="mt-10">
-            <YouTubeVideo
-              videoId={data.youtubeVideoId}
-              title={`${data.title} video`}
-            />
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  <section class="border-t border-neutral-200 py-20 sm:py-24 lg:py-32">
-    <div
-      class="mx-auto grid w-full max-w-[1600px] gap-16 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-24 lg:px-12"
-    >
+  <section class="border-t border-neutral-200 py-12 sm:py-16">
+    <Container class="grid gap-10 md:grid-cols-2 lg:gap-20">
+      <div class="instrument-copy text-base leading-[1.8] text-neutral-600"><Content /></div>
       <div>
-        <h2 class="font-serif text-4xl tracking-[-0.03em] text-neutral-950">
-          Details
-        </h2>
-      </div>
-
-      <dl class="divide-y divide-neutral-200 border-t border-neutral-200">
-        {
-          specifications.map(([label, value]) => (
-            <div class="grid gap-2 py-4 sm:grid-cols-[180px_1fr] sm:gap-8">
-              <dt class="text-sm text-neutral-500">{label}</dt>
-              <dd class="text-sm leading-relaxed text-neutral-950">{value}</dd>
+        <h2 class="subsection-title">Documented on this instrument</h2>
+        <dl class="mt-5 divide-y divide-neutral-200 border-y border-neutral-200">
+          {confirmed.map(([label, value]) => (
+            <div class="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-4 py-3 text-sm leading-relaxed">
+              <dt class="text-neutral-500">{label}</dt><dd>{value}</dd>
             </div>
-          ))
-        }
-      </dl>
-    </div>
+          ))}
+        </dl>
+        <h2 class="subsection-title mt-10">Model-reference specifications</h2>
+        <p class="mt-3 text-sm leading-relaxed text-neutral-500">
+          Standard construction and dimensions from the model description.
+          These are not a new set of measurements or a specification for every future delivery.
+        </p>
+        <dl class="mt-5 divide-y divide-neutral-200 border-y border-neutral-200">
+          {specifications.map(([label, value]) => (
+            <div class="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-4 py-3 text-sm leading-relaxed">
+              <dt class="text-neutral-500">{label}</dt><dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </Container>
   </section>
 
-  <section class="border-t border-neutral-200 py-16 sm:py-20 lg:py-24">
-    <div
-      class="instrument-copy mx-auto w-full max-w-3xl px-5 text-lg leading-relaxed text-neutral-700 sm:px-8"
-    >
-      <Content />
-    </div>
-  </section>
+  {gallery.length > 0 && (
+    <section id="gallery" class="scroll-mt-28 border-t border-neutral-200 py-12 sm:py-16">
+      <Container>
+        <h2 class="section-title mb-8">Photographs of this instrument</h2>
+        <InstrumentGallery images={gallery} />
+      </Container>
+    </section>
+  )}
+  {data.youtubeVideoId && (
+    <section class="border-t border-neutral-200 py-12 sm:py-16">
+      <Container>
+        <h2 class="section-title">Listen to this instrument</h2>
+        <div class="mt-8"><YouTubeVideo videoId={data.youtubeVideoId} title={`${data.title} video`} /></div>
+      </Container>
+    </section>
+  )}
 </BaseLayout>
-
 <style>
-  :global(.instrument-copy > * + *) {
-    margin-top: 1.25rem;
-  }
-
-  :global(.instrument-copy h2),
-  :global(.instrument-copy h3) {
-    font-family: "Times New Roman", Times, serif;
-    color: #171717;
-    line-height: 1.1;
-    letter-spacing: -0.025em;
-  }
-
-  :global(.instrument-copy h2) {
-    margin-top: 3rem;
-    font-size: clamp(2rem, 4vw, 3rem);
-  }
-
-  :global(.instrument-copy h3) {
-    margin-top: 2.25rem;
-    font-size: 1.5rem;
-  }
+  .instrument-copy :global(h2) { margin-block: 2.25rem 1rem; color: #171717; font-family: var(--font-serif); font-size: clamp(1.375rem, 2vw, 1.625rem); font-weight: 400; line-height: 1.25; }
+  .instrument-copy :global(h2:first-child) { margin-top: 0; }
+  .instrument-copy :global(p + p) { margin-top: 1rem; }
 </style>

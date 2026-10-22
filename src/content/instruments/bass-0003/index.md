@@ -29,31 +29,30 @@ order: 100
 featured: true
 location: Berlin
 shortDescription: >-
-  A projecting, soloistic Shen Classic 3/4 with a broad, refined voice that
-  remains present and full in the upper register.
+  A 2023 Shen Classic 3/4 demonstrator with a spruce top, figured maple back
+  and Tempera BASSO orchestral strings.
 stringLength: 41.25 in / 104.8 cm
 bodyLength: 43 3/4 in / 111.1 cm
 topMaterial: Fully carved spruce
 backMaterial: Fully carved, highly figured maple
-ribs: Fully carved maple
+ribs: Solid maple
 purfling: Inlaid
-varnish: Hand-applied oil varnish
 neck: Maple D neck
 fingerboard: Ebony
-tuningMachines: High-quality individual tuning machines
+tuningMachines: Individual tuning machines
 strings: Tempera BASSO orchestral strings
-bridge: Selected high-grade bridge wood
+bridge: Existing bridge supplied with the instrument
 endpin: Shen composite plug with 10 mm rod and replaceable screw-on tip
 warranty: 1 year limited warranty
 ---
-## Character
+## This instrument
 
-This SB-800 Shen Classic 3/4 has a distinctly soloistic character. Its voice is broad and projecting, with width and presence in the upper register. The wood is of particularly high quality and the sound has a refined character.
+This 2023 SB-800 is a Shen Classic 3/4 demonstrator with a figured maple back. The photographs show this instrument and its fitted components. It is available to try in Berlin by appointment. Please contact us to discuss its current condition and the individual offer.
 
-## Response and setup
+## Fitted equipment
 
-It works for both arco and pizzicato playing, with a relatively lean and direct response. This demonstrator is fitted with Tempera BASSO orchestral strings, high-quality individual tuning machines and selected bridge wood.
+The bass is fitted with Tempera BASSO orchestral strings and individual tuning machines. Its setup was carried out by Shen in China. In Berlin, the existing bridge was stood up and the strings were fitted.
 
-## Suitable for
+## Model reference
 
-Its projection and strength in the upper register make it particularly suitable for students with solo ambitions.
+The Classic outline combines a carved spruce top and maple back with solid maple ribs. The dimensions and standard construction below are drawn from the model reference rather than a fresh measurement of this bass.

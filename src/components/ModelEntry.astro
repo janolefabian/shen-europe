@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { bassModelGroups } from "../lib/instrumentTaxonomy";
+import { modelPresentation } from "../lib/modelPresentation";
+import { withBasePath } from "../lib/sitePaths";
+import ModelOutline from "./ModelOutline.astro";
+
+type CatalogOption = (typeof bassModelGroups)[number]["options"][number];
+interface Props { option: CatalogOption; instruments: CollectionEntry<"instruments">[] }
+const { option, instruments } = Astro.props;
+const model = modelPresentation[option.value];
+const available = instruments.filter(({ data }) => data.status === "available"
+  && data.outline === option.value && (option.qualities as readonly string[]).includes(data.model));
+---
+
+<article class="model-entry" data-model={option.value}>
+  <div class="model-drawing"><ModelOutline pattern={model.pattern} label={option.label} /></div>
+  <div class="model-copy">
+    <h4>{model.name}</h4>
+    {model.size && <p class="size">{model.size}</p>}
+    <p class="levels"><span class="sr-only">Model levels: </span>{option.qualities.map((quality, index) => (
+      <Fragment>{index > 0 && " · "}<span class="model-level">{quality}</span></Fragment>
+    ))}</p>
+    {model.note && <p class="variant-note">{model.note}</p>}
+    {available.map((instrument) => (
+        <a href={withBasePath(`/instruments/${instrument.data.slug}/`)} class="instrument-example"
+          aria-label={`Available to try: ${instrument.data.title}`}>
+          <span class="example-label">Available to try</span>
+          <span class="example-title">{instrument.data.title}</span>
+        </a>
+    ))}
+  </div>
+</article>
+
+<style>
+  .model-entry { display: grid; grid-template-columns: 82px minmax(0,1fr); align-items: start; column-gap: 1.25rem; border-top: 1px solid #dededb; padding-block: 1.75rem; }
+  .model-drawing { width: 82px; margin-top: .15rem; }
+  .model-copy { min-width: 0; }
+  h4 { font-family: var(--font-serif); font-size: 1.375rem; line-height: 1.2; font-weight: 400; }
+  .size { margin-top: .4rem; font-size: .8125rem; color: #666; }
+  .levels { margin-top: .85rem; font-size: .8125rem; line-height: 1.7; color: #333; }
+  .model-level { white-space: nowrap; }
+  .variant-note { margin-top: .8rem; max-width: 20rem; color: #666; font-size: .75rem; line-height: 1.65; }
+  .instrument-example { display: block; margin-top: 1.1rem; padding-top: .85rem; border-top: 1px solid #e4e4e1; }
+  .example-label, .example-title { display: block; }
+  .example-label { font-size: .6875rem; color: #666; }
+  .example-title { margin-top: .3rem; font-size: .8125rem; line-height: 1.4; text-decoration: underline; text-decoration-color: #aaa; text-underline-offset: .2em; }
+  a:hover { color: #171717; }
+  a:focus-visible { outline: 2px solid #171717; outline-offset: 5px; }
+  @media (min-width: 640px) {
+    .model-entry { grid-template-columns: 96px minmax(0,1fr); gap: 1.5rem; }
+    .model-drawing { width: 96px; }
+  }
+</style>

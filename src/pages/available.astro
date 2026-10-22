@@ -1,121 +1,69 @@
 ---
+import Container from "../components/layout/Container.astro";
 import InstrumentCard from "../components/InstrumentCard.astro";
-import Button from "../components/ui/Button.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { groupInventory } from "../lib/instrumentAvailability";
 import { getInstruments } from "../lib/instruments";
+import { withBasePath } from "../lib/sitePaths";
 
-const allInstruments = await getInstruments();
-const currentInstruments = allInstruments
-  .filter((instrument) => instrument.data.status !== "sold")
-  .sort((a, b) => a.data.order - b.data.order);
-const pastInstruments = allInstruments
-  .filter((instrument) => instrument.data.status === "sold")
-  .sort(
-    (a, b) =>
-      a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
-  );
+const groups = groupInventory(await getInstruments());
+const visibleGroups = groups.filter((group) => group.status === "available" || group.instruments.length > 0);
 ---
 
 <BaseLayout
-  title="Available Shen Double Basses | Shen Europe"
-  description="Samuel Shen double basses currently available, reserved or arriving soon in Berlin, with selected past instruments kept as references."
+  title="Showroom | Shen Europe"
+  description="Individual Samuel Shen double basses in Berlin, with photographs and specifications. Available, incoming, reserved and sold instruments are listed separately."
 >
-  <section class="py-20 sm:py-24 lg:py-32">
-    <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
-      <div class="max-w-4xl">
-        <h1 class="font-serif text-5xl leading-[0.98] tracking-[-0.04em] text-neutral-950 sm:text-6xl lg:text-7xl">
-          Available Instruments
-        </h1>
+  <section class="py-12 sm:py-16">
+    <Container>
+      <h1 class="page-title text-neutral-950">Showroom</h1>
+      <p class="mt-6 max-w-2xl text-base leading-[1.8] text-neutral-600">
+        Try the available basses in Berlin by appointment.
+        Each instrument is documented with photographs and details of its fitted components.
+        Please enquire for pricing.
+      </p>
+      <nav aria-label="Instrument availability" class="mt-8 flex flex-wrap gap-x-7 gap-y-4 border-t border-neutral-200 pt-5">
+        {visibleGroups.map((group) => (
+          <a href={`#${group.id}`} class="quiet-link">
+            {group.title} <span class="ml-1 text-neutral-500">({group.instruments.length})</span>
+          </a>
+        ))}
+      </nav>
+    </Container>
+  </section>
 
-        <p class="mt-8 max-w-3xl text-lg leading-relaxed text-neutral-600">
-          The instruments below are in Berlin and can be tried by appointment.
-          Each one has been inspected and set up before being offered. Other
-          Shen models can be ordered on request.
-        </p>
-
-        <ul class="mt-8 flex flex-wrap gap-x-8 gap-y-3 border-t border-neutral-200 pt-6 text-sm text-neutral-700">
-          <li class="flex items-center gap-3">
-            <span class="size-1.5 rounded-full bg-neutral-950" aria-hidden="true"></span>
-            Trials by appointment in Berlin
-          </li>
-          <li class="flex items-center gap-3">
-            <span class="size-1.5 rounded-full bg-neutral-950" aria-hidden="true"></span>
-            European delivery available
-          </li>
-        </ul>
-      </div>
-
-      {
-        currentInstruments.length > 0 ? (
-          <div class="mt-14 grid max-w-[1360px] gap-x-7 gap-y-14 sm:grid-cols-2 xl:grid-cols-3">
-            {currentInstruments.map((instrument) => (
-              <InstrumentCard instrument={instrument} variant="compact" />
+  {visibleGroups.map((group) => (
+    <section id={group.id} data-inventory-status={group.status}
+      aria-labelledby={`${group.id}-title`}
+      class:list={["scroll-mt-28 border-t border-neutral-200 py-12 sm:py-16", group.status === "sold" && "bg-neutral-50"]}
+    >
+      <Container>
+        <div class="max-w-2xl">
+          <h2 id={`${group.id}-title`} class="section-title text-neutral-950">{group.title}</h2>
+          <p class="mt-3 text-sm leading-relaxed text-neutral-600">{group.description}</p>
+        </div>
+        {group.instruments.length > 0 ? (
+          <div class:list={["mt-9 grid gap-x-7 gap-y-12 sm:grid-cols-2", group.status === "sold" ? "lg:grid-cols-4" : group.instruments.length < 3 ? "justify-items-center" : "xl:grid-cols-3"]}>
+            {group.instruments.map((instrument) => (
+              <InstrumentCard instrument={instrument} variant={group.status === "sold" ? "archive" : "compact"} />
             ))}
           </div>
         ) : (
-          <div class="mt-16 max-w-3xl border-t border-neutral-200 pt-10">
-            <p class="text-lg leading-relaxed text-neutral-700">
-              No instruments are currently available for immediate trial.
-              Contact Shen Europe to discuss incoming instruments or a special
-              order.
-            </p>
-            <Button href="/contact" variant="text" class="mt-7">
-              Contact Shen Europe
-            </Button>
-          </div>
-        )
-      }
-    </div>
-  </section>
+          <p class="mt-8 max-w-xl text-base leading-relaxed text-neutral-600">
+            No instruments are currently available to try.
+            <a href={withBasePath("/contact")} class="quiet-link">Contact us about availability.</a>
+          </p>
+        )}
+      </Container>
+    </section>
+  ))}
 
-  {
-    pastInstruments.length > 0 && (
-      <section class="border-t border-neutral-200 bg-neutral-50 py-16 sm:py-20 lg:py-24">
-        <div class="mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12">
-          <div class="grid gap-7 lg:grid-cols-[minmax(240px,0.55fr)_minmax(0,1.45fr)] lg:gap-20">
-            <div>
-              <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-                Previously in Europe
-              </p>
-              <h2 class="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.03em] text-neutral-950 sm:text-5xl">
-                Selected past instruments
-              </h2>
-            </div>
-
-            <p class="max-w-3xl text-lg leading-relaxed text-neutral-600">
-              A selection of instruments previously available through Shen
-              Europe. Their pages remain online as references for models,
-              materials and individual setups.
-            </p>
-          </div>
-
-          <div class="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {pastInstruments.map((instrument) => (
-              <InstrumentCard instrument={instrument} variant="archive" />
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  <section class="border-t border-neutral-200 py-16 sm:py-20 lg:py-24">
-    <div class="mx-auto grid w-full max-w-[1600px] gap-8 px-5 sm:px-8 lg:grid-cols-[1fr_auto] lg:items-end lg:px-12">
-      <div class="max-w-3xl">
-        <p class="text-sm tracking-[0.1em] text-neutral-500 uppercase">
-          Special orders
-        </p>
-        <h2 class="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.03em] text-neutral-950 sm:text-5xl">
-          Looking for a different model?
-        </h2>
-        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-neutral-600">
-          Ask about the model, expected delivery time and setup options.
-        </p>
-      </div>
-
-      <Button href="/contact" variant="outline" size="lg">
-        Discuss a special order
-      </Button>
-    </div>
+  <section class="border-t border-neutral-200 py-10">
+    <Container class="flex flex-wrap items-baseline justify-between gap-5">
+      <p class="max-w-xl text-sm leading-relaxed text-neutral-600">
+        Looking beyond the current stock? The model overview explains the wider range.
+      </p>
+      <a href={withBasePath("/models")} class="quiet-link">Model overview</a>
+    </Container>
   </section>
 </BaseLayout>

@@ -66,7 +66,7 @@ export const bassModelGroups = [
         qualities: ["SB-200"],
       },
       {
-        label: "Gemunder 7/8 Willow · 5-Saiter",
+        label: "Gemunder 7/8 Willow, 5-string",
         value: "Gemunder 7/8 Willow 5-String",
         qualities: ["SB-200"],
       },
@@ -76,17 +76,17 @@ export const bassModelGroups = [
     label: "Hybrid",
     options: [
       {
-        label: "Shen SB150 Hybrid",
+        label: "Shen 3/4 Hybrid",
         value: "Shen 3/4 Hybrid",
         qualities: ["SB-150"],
       },
       {
-        label: "Shen SB180 3/4 Hybrid",
+        label: "Shen 3/4 Flamed Hybrid",
         value: "Shen 3/4 Flamed Hybrid",
         qualities: ["SB-180"],
       },
       {
-        label: "Shen SB150 7/8 Gemunder Hybrid Flatback",
+        label: "Gemunder 7/8 Hybrid Flatback",
         value: "Gemunder 7/8 Hybrid",
         qualities: ["SB-150"],
       },
@@ -96,22 +96,22 @@ export const bassModelGroups = [
     label: "Laminat",
     options: [
       {
-        label: "Shen SB100 3/4",
+        label: "Shen SB-100 3/4",
         value: "Shen SB100 3/4",
         qualities: ["SB-100"],
       },
       {
-        label: "Shen SB88 3/4",
+        label: "Shen SB-88 3/4",
         value: "Shen SB88 3/4",
         qualities: ["SB-88"],
       },
       {
-        label: "Shen SB80",
+        label: "Shen SB-80",
         value: "Shen SB80",
         qualities: ["SB-80"],
       },
       {
-        label: "Shen SB90 Blonde",
+        label: "Shen SB-90 Blonde",
         value: "Shen Blonde",
         qualities: ["SB-90"],
       },

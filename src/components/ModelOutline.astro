@@ -1,0 +1,23 @@
+---
+import { modelOutlineDefinitions, type ModelOutlineKey } from "../lib/modelOutlines";
+
+interface Props { pattern: ModelOutlineKey; label: string }
+const { pattern, label } = Astro.props;
+const outline = modelOutlineDefinitions[pattern];
+const scale = 360 / (outline.bottom - outline.top);
+const transform = `translate(130 20) scale(${scale}) translate(${-outline.center} ${-outline.top})`;
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 400" width="104" height="160"
+  class="model-outline" role="img" aria-label={`${label}: simplified body outline`}
+  data-outline={pattern}>
+  <desc>Smoothed and symmetrised from a reference photograph. Body shapes are shown at equal length, not to scale.</desc>
+  <g transform={transform} fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round">
+    <path d={outline.halfPath} vector-effect="non-scaling-stroke" />
+    <path d={outline.halfPath} transform={`translate(${2 * outline.center} 0) scale(-1 1)`} vector-effect="non-scaling-stroke" />
+  </g>
+</svg>
+
+<style>
+  .model-outline { display: block; width: 100%; height: auto; color: #222; overflow: visible; }
+</style>

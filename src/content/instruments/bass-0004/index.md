@@ -13,7 +13,7 @@ gallery:
   - image: gallery/4/image.png
     category: corner-detail
   - image: gallery/5/image.png
-    category: corner-detail
+    category: tuning-machines-detail
 hero: hero.png
 slug: sb-1000-panormo-bass-0004
 inventory: BASS-0004
@@ -26,29 +26,28 @@ order: 100
 featured: true
 location: Berlin
 shortDescription: >-
-  A fully carved large 3/4 Panormo roundback with a broad body, deep low
-  register and 41.25-inch string length.
+  A large 3/4 Panormo demonstrator with a carved spruce top and figured
+  maple roundback.
 stringLength: 41.25 in / 104.8 cm
 bodyLength: 44 1/4 in / 112.4 cm
 topMaterial: Fully carved spruce
 backMaterial: Fully carved maple, roundback
-ribs: Fully carved maple
+ribs: Solid maple
 purfling: Inlaid
-varnish: Hand-applied oil varnish
 neck: Maple D neck
 fingerboard: Ebony
-tuningMachines: Euro individual tuning machines
+tuningMachines: Individual tuning machines
 endpin: Shen composite plug with 10 mm rod and replaceable screw-on tip
 warranty: 1 year limited warranty
 ---
-## Body and response
+## This instrument
 
-The SB-1000 uses Shen's Grand Panormo pattern. It is a large 3/4 bass with a broad body, a 44 1/4-inch body length and a 41.25-inch string length. The design provides a deep low register and a solid orchestral foundation.
+Our playing impression of this particular SB-1000 is of a very resonant bass with a full, powerful tone and considerable volume. That describes this demonstrator, not a promise about every Panormo. It is available for players to try, whether professional, studying or playing for their own enjoyment.
 
-## Construction
+## Fitted equipment and setup
 
-This demonstrator is the roundback version. It is fully carved, with a spruce top, maple back and maple ribs, inlaid purfling and a hand-applied oil varnish. It has a maple neck, an ebony fingerboard and individual European-style tuning machines.
+The photographs show the figured maple roundback and the individual tuning machines fitted to this bass. Setup was carried out by Shen in China. In Berlin, the existing bridge was stood up and strings were fitted.
 
-## Size and use
+## Model reference
 
-The Panormo is intended for orchestral players who want the scale and foundation of a large bass. Despite the large body, the string length remains a standard 41.25 inches.
+The Panormo is a broad-bodied, large 3/4 pattern with a carved spruce top, carved maple roundback and solid maple ribs. The model reference gives a 44 1/4-inch body length and a 41.25-inch string length. These are reference dimensions, not new measurements of this individual bass.

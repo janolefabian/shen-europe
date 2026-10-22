@@ -1,202 +1,36 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { getInstrumentImages } from "../lib/instrumentImages";
+import InstrumentPhoto from "./InstrumentPhoto.astro";
+import { getInstrumentImages, getInstrumentPhotoCrop } from "../lib/instrumentImages";
 import { withBasePath } from "../lib/sitePaths";
-
+import { instrumentStatusLabels } from "../lib/instrumentAvailability";
 interface Props {
   instrument: CollectionEntry<"instruments">;
-  variant?: "default" | "compact" | "archive";
+  variant?: "default" | "compact" | "archive" | "summary";
 }
-
 const { instrument, variant = "default" } = Astro.props;
 const { data } = instrument;
-const compact = variant === "compact";
 const archive = variant === "archive";
-
-const images = getInstrumentImages(
-  instrument.filePath ?? instrument.id,
-  data.title,
-  { hero: data.hero, gallery: data.gallery },
-);
-
-const statusLabels = {
-  available: "Available",
-  reserved: "Reserved",
-  "coming-soon": "Coming soon",
-  sold: "Sold",
-} as const;
-
-const statusDots = {
-  available: "bg-emerald-600",
-  reserved: "bg-amber-500",
-  "coming-soon": "bg-sky-600",
-  sold: "bg-neutral-400",
-} as const;
-
+const images = getInstrumentImages(instrument.filePath ?? instrument.id, data.title, data);
 const instrumentUrl = withBasePath(`/instruments/${data.slug}/`);
-const archiveMeta = [data.size, data.stringLength].filter(Boolean).join(" · ");
+const construction = ["SB-200", "SB-300", "SB-800", "SB-1000"].includes(data.model)
+  ? "Fully carved" : ["SB-150", "SB-180"].includes(data.model) ? "Hybrid" : "Laminated";
+const facts = [construction, data.size, data.year?.toString()].filter(Boolean).join(" · ");
 ---
-
-{
-  archive ? (
-    <article class="group">
-      <a
-        href={instrumentUrl}
-        class="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-4"
-        aria-label={`View ${data.title}`}
-      >
-        <div class="relative aspect-[4/3] overflow-hidden bg-neutral-100">
-          {images.hero ? (
-            <img
-              src={images.hero.src}
-              alt={images.hero.alt}
-              loading="lazy"
-              class="h-full w-full object-contain object-center transition duration-500 ease-out group-hover:scale-[1.015]"
-            />
-          ) : (
-            <div class="flex h-full items-center justify-center text-sm text-neutral-400">
-              Image coming soon
-            </div>
-          )}
-
-          <span class="absolute top-3 right-3 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-3 py-1.5 text-xs font-medium text-neutral-700 backdrop-blur-sm">
-            <span class="size-1.5 rounded-full bg-neutral-400" aria-hidden="true" />
-            Sold
-          </span>
-        </div>
-      </a>
-
-      <div class="pt-4">
-        <h3 class="font-serif text-xl leading-tight tracking-[-0.02em] text-neutral-950">
-          <a href={instrumentUrl} class="transition-opacity hover:opacity-55">
-            {data.title}
-          </a>
-        </h3>
-
-        {archiveMeta && (
-          <p class="mt-2 text-sm text-neutral-500">{archiveMeta}</p>
-        )}
-
-        <a
-          href={instrumentUrl}
-          class="mt-4 inline-block border-b border-neutral-950 pb-1 text-sm font-medium text-neutral-950 transition-opacity hover:opacity-55"
-        >
-          View reference
-        </a>
-      </div>
-    </article>
-  ) : (
-<article class="group">
-  <a
-    href={instrumentUrl}
-    class="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-4"
-    aria-label={`View ${data.title}`}
-  >
-    <div
-      class:list={[
-        "relative overflow-hidden bg-neutral-100",
-        compact ? "aspect-[4/5]" : "aspect-[3/4]",
-      ]}
-    >
-      {
-        images.hero ? (
-          <img
-            src={images.hero.src}
-            alt={images.hero.alt}
-            loading="lazy"
-            class:list={[
-              "h-full w-full object-center transition duration-500 ease-out group-hover:scale-[1.015]",
-              compact ? "object-contain" : "object-cover",
-            ]}
-          />
-        ) : (
-          <div class="flex h-full items-center justify-center text-sm text-neutral-400">
-            Image coming soon
-          </div>
-        )
-      }
-
-      {
-        compact && (
-          <span class="absolute top-3 right-3 inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/90 px-3 py-1.5 text-xs font-medium text-neutral-700 backdrop-blur-sm">
-            <span class:list={["size-1.5 rounded-full", statusDots[data.status]]} aria-hidden="true" />
-            {statusLabels[data.status]}
-          </span>
-        )
-      }
+<article class="w-full max-w-[400px]">
+  <a href={instrumentUrl} aria-label={`View ${data.title}`} class="block focus-visible:outline-2 focus-visible:outline-offset-4">
+    <div class:list={["mx-auto w-full", archive ? "max-w-[190px]" : "max-w-[260px]"]}>
+      {images.hero ? (
+        <InstrumentPhoto image={images.hero} crop={getInstrumentPhotoCrop(data.inventory, images.hero)}
+          sizes={archive ? "190px" : "260px"} />
+      ) : <div class="grid aspect-[2/3] place-items-center bg-neutral-100 text-sm text-neutral-500">Photographs to follow</div>}
     </div>
   </a>
-
-  <div class:list={[compact ? "pt-4" : "pt-6"]}>
-    <div class="flex flex-wrap items-start justify-between gap-4">
-      <div>
-        {!compact && <p class="text-sm text-neutral-500">{data.model} · {data.outline}</p>}
-
-        <h2
-          class:list={[
-            "font-serif leading-tight tracking-[-0.025em] text-neutral-950",
-            compact ? "text-2xl" : "mt-2 text-3xl",
-          ]}
-        >
-          <a href={instrumentUrl} class="transition-opacity hover:opacity-55">
-            {data.title}
-          </a>
-        </h2>
-      </div>
-
-      {
-        !compact && (
-          <span class="inline-flex shrink-0 items-center gap-2 rounded-full border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700">
-            <span class:list={["size-1.5 rounded-full", statusDots[data.status]]} aria-hidden="true" />
-            {statusLabels[data.status]}
-          </span>
-        )
-      }
-    </div>
-
-    <p
-      class:list={[
-        "max-w-xl text-neutral-600",
-        compact ? "mt-3 text-sm leading-relaxed" : "mt-5 text-base leading-relaxed",
-      ]}
-    >
-      {data.shortDescription}
-    </p>
-
-    <dl
-      class:list={[
-        "grid grid-cols-2 border-t border-neutral-200 text-sm sm:grid-cols-3",
-        compact ? "mt-4 gap-x-4 gap-y-3 pt-4" : "mt-6 gap-x-6 gap-y-4 pt-5",
-      ]}
-    >
-      <div>
-        <dt class="text-neutral-500">Pricing</dt>
-        <dd class="mt-1 text-neutral-950">On request</dd>
-      </div>
-
-      <div>
-        <dt class="text-neutral-500">Location</dt>
-        <dd class="mt-1 text-neutral-950">{data.location}</dd>
-      </div>
-
-      {data.stringLength && (
-        <div>
-          <dt class="text-neutral-500">String length</dt>
-          <dd class="mt-1 text-neutral-950">{data.stringLength}</dd>
-        </div>
-      )}
-    </dl>
-
-    <a
-      href={instrumentUrl}
-      class:list={[
-        "inline-block border-b border-neutral-950 pb-1 text-sm font-medium text-neutral-950 transition-opacity hover:opacity-55",
-        compact ? "mt-5" : "mt-7",
-      ]}
-    >
-      View instrument
-    </a>
+  <div class="border-t border-neutral-200 pt-5 mt-5">
+    <p class="text-xs text-neutral-500">{instrumentStatusLabels[data.status]}</p>
+    <h3 class="subsection-title mt-2"><a href={instrumentUrl} class="hover:underline underline-offset-4">{data.title}</a></h3>
+    <p class="mt-3 text-sm text-neutral-600">{facts}</p>
+    {!archive && <p class="mt-3 text-sm leading-relaxed text-neutral-600">{data.shortDescription}</p>}
+    <a href={instrumentUrl} class="quiet-link mt-5">{archive ? "View reference" : "View instrument"}</a>
   </div>
 </article>
-  )
-}

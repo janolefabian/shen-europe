@@ -1,0 +1,27 @@
+{
+  "received": "2026-10-21",
+  "origin": "Photographs supplied by Shen; Canva exports supplied by the owner for the website.",
+  "processing": "Source PNG files copied unchanged. Responsive WebP encoding at build time only. No further retouching or generative editing.",
+  "files": [
+    {
+      "file": "stacked-bodies.png",
+      "source": "Licht-Optimierung für Bühne/1.png",
+      "sha256": "6a5d9d0f4c114da95442c0bac2e934410f11d793dd35dbb97c611c3b0d94b207"
+    },
+    {
+      "file": "workshop-bodies.png",
+      "source": "Licht-Optimierung für Bühne/2.png",
+      "sha256": "07fab2a7f3991aa7f346c4d8fdf8a1a824ceb8e416fa3ad33206236aa3a2f9fb"
+    },
+    {
+      "file": "varnished-basses.png",
+      "source": "Licht-Optimierung für Bühne/3.png",
+      "sha256": "7ecaffc0b36f011fd45e63628af6ece2741cec1920b98f325a84ec1ed05f46c7"
+    },
+    {
+      "file": "basses-before-varnishing.png",
+      "source": "Licht-Optimierung für Bühne.png",
+      "sha256": "cfaca446510d9c093b3ac089e6c8f501abef40d8761113cbe826ebe84ca16b91"
+    }
+  ]
+}

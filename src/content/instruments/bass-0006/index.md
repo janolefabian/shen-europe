@@ -13,14 +13,13 @@ featured: false
 location: "Berlin"
 shortDescription: >-
   A 3/4 hybrid with a fully carved spruce top, rounded maple veneer back and
-  maple veneer ribs, built for regular playing and transport.
+  maple veneer ribs.
 stringLength: "41.25 in / 104.8 cm"
 bodyLength: "43 3/4 in / 111.1 cm"
 topMaterial: "Fully carved spruce"
 backMaterial: "Maple veneer, roundback"
 ribs: "Maple veneer"
 purfling: "Inlaid"
-varnish: "Hand-applied oil varnish"
 neck: "Maple D neck"
 fingerboard: "Ebony"
 tuningMachines: "Standard individual tuning machines"
@@ -47,12 +46,12 @@ gallery:
 
 ## Construction
 
-The SB-150 is Shen's 3/4 hybrid model. It combines a fully carved spruce top with a rounded maple veneer back and maple veneer ribs. This instrument has inlaid purfling and a hand-applied oil varnish.
+This SB-150 is a 3/4 hybrid with a carved spruce top, rounded laminated maple back and laminated maple ribs. Its own photographs show the front, back, ribs, corners and fitted tuning machines.
 
 ## Dimensions and handling
 
-The body measures 43 3/4 inches, with a standard 41.25-inch string length. Its sloping shoulders provide easy access to the upper positions.
+The model reference gives a 43 3/4-inch body length and a 41.25-inch string length. These dimensions and the standard construction below have not been re-measured on this individual bass.
 
-## Equipment and use
+## Setup and appointment
 
-The maple D neck carries an ebony fingerboard. The bass is fitted with standard individual tuning machines, a dyed maple Hill-style tailpiece and Shen's composite endpin assembly. The hybrid construction pairs a carved top with a durable back and ribs for regular playing and transport.
+The setup was carried out by Shen in China. In Berlin, the existing bridge was stood up and strings were fitted. The bass is available to play by appointment; the visit is an opportunity to assess its response and feel for yourself.

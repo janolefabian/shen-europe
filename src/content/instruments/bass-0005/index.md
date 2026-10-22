@@ -27,29 +27,24 @@ featured: false
 location: Berlin
 shortDescription: >-
   A fully carved large 3/4 Rogeri roundback with a spruce top, willow back and
-  ribs, and a warm orchestral sound.
+  ribs. Sold; retained as a photographic reference.
 stringLength: 41.25 in / 104.8 cm
 bodyLength: 44 5/8 in / 113.3 cm
 topMaterial: Fully carved spruce
 backMaterial: Fully carved willow, roundback
-ribs: Fully carved willow
+ribs: Solid willow
 purfling: Inlaid
-varnish: Hand-applied oil varnish
 neck: Maple D neck
 fingerboard: Ebony
-tuningMachines: Suzhou individual tuning machines
+tuningMachines: Individual tuning machines
 tailpiece: Ebony Hill-style tailpiece
 endpin: Shen composite plug with 10 mm rod and replaceable screw-on tip
 warranty: 1 year limited warranty
 ---
-## Body and response
+## This instrument
 
-The SB-200 Rogeri Willow combines Shen's large Rogeri outline with a fully carved willow back and unusually deep willow ribs. It has a warm, broad sound and a strong low register.
+This SB-200 Rogeri Willow has been sold. Its photographs remain as a record of this individual roundback instrument, not as an offer of current stock.
 
 ## Construction
 
-This instrument is the roundback version. It has a fully carved spruce top, a fully carved willow back and willow ribs, with inlaid purfling and a hand-applied oil varnish. The maple neck carries an ebony fingerboard. The setup includes individual Suzhou tuning machines and an ebony Hill-style tailpiece.
-
-## Size and use
-
-The Rogeri Willow has a large 3/4 body, a 44 5/8-inch body length and a standard 41.25-inch string length. It is suited to players looking for a large orchestral bass with a warm sound.
+The Rogeri Willow pairs a carved spruce top with a carved willow roundback and solid willow ribs. This photographed bass has individual tuning machines. Standard construction and dimensions below are model-reference information.

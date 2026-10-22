@@ -1,48 +1,91 @@
 ---
-import Stack from "./layout/Stack.astro";
-import Button from "./ui/Button.astro";
-import Heading from "./ui/Heading.astro";
-import Text from "./ui/Text.astro";
-import sb800FrontImage from "../content/instruments/bass-0003/hero.png";
+import type { CollectionEntry } from "astro:content";
+import Container from "./layout/Container.astro";
+import InstrumentPhoto from "./InstrumentPhoto.astro";
+import { getInstrumentImages, getInstrumentPhotoCrop } from "../lib/instrumentImages";
+import { withBasePath } from "../lib/sitePaths";
+
+interface Props { instruments: CollectionEntry<"instruments">[] }
+const photographs = Astro.props.instruments
+  .filter(({ data }) => data.status === "available")
+  .slice(0, 2)
+  .map((instrument) => {
+    const photo = getInstrumentImages(instrument.filePath ?? instrument.id, instrument.data.title, instrument.data).hero;
+    return {
+      instrument, photo,
+      crop: getInstrumentPhotoCrop(instrument.data.inventory, photo),
+      instrumentUrl: withBasePath(`/instruments/${instrument.data.slug}/`),
+    };
+  }).filter(({ photo }) => photo);
 ---
 
-<section class="bg-white">
-  <div
-    class="grid min-h-[calc(100vh-88px)] grid-cols-1 lg:min-h-[calc(100vh-108px)] lg:grid-cols-2"
-  >
-    <div
-      class="flex items-center px-5 py-16 sm:px-8 sm:py-20 lg:px-12 xl:px-14"
-    >
-      <Stack gap="lg" class="max-w-[660px]">
-        <Heading as="h1" size="hero">
-          Samuel Shen <br />
-          Double Basses <br />
-          in Europe
-        </Heading>
-
-        <Text size="lg" class="max-w-[610px]">
-          Samuel Shen double basses selected in Suzhou, set up in Berlin and
-          available for trial or order in Europe.
-        </Text>
-
-        <div>
-          <Button
-            href="/available"
-            variant="text"
-            class="border-b-2 pb-2 text-xs font-semibold tracking-[0.11em] uppercase sm:text-sm"
-          >
-            View available instruments
-          </Button>
+<section class="hero" aria-labelledby="introduction-title">
+  <Container>
+    <div class:list={["hero-inner", photographs.length === 0 && "without-photo"]}>
+      <div class="hero-heading">
+        <p class="hero-label">Shen Europe</p>
+        <h1 id="introduction-title">Samuel Shen <span>double basses</span></h1>
+      </div>
+      {photographs.length > 0 && (
+        <div class:list={["hero-photographs", photographs.length === 1 && "single-photo"]} aria-label="A selection of available instruments">
+        {photographs.map(({ instrument, photo, crop, instrumentUrl }, index) => (
+        <figure class="hero-figure">
+          <a href={instrumentUrl} aria-label={`View ${instrument.data.title}`} class="hero-photo-link">
+            <InstrumentPhoto image={photo!} crop={crop} loading="eager" priority={index === 0}
+              sizes={photographs.length === 1 ? "(min-width: 1024px) 400px, 260px" : "(min-width: 1280px) 310px, (min-width: 1024px) 27vw, (min-width: 640px) 300px, 43vw"} />
+          </a>
+          <figcaption>
+            <a href={instrumentUrl}>{instrument.data.title}</a>
+            <span>Available to try{instrument.data.size && ` · ${instrument.data.size}`}</span>
+          </figcaption>
+        </figure>
+        ))}
         </div>
-      </Stack>
+      )}
+      <div class="hero-copy">
+        <p class="hero-introduction">{photographs.length > 0
+          ? "Imported from China. Available to play in Berlin by appointment."
+          : "Samuel Shen double basses, imported from China. Contact us about future availability."}</p>
+        <nav aria-label="Explore the instruments" class="hero-links">
+          <a href={withBasePath("/available")} class="hero-primary">Available instruments <span aria-hidden="true">↗</span></a>
+          <a href={withBasePath("/models")} class="hero-secondary">Model overview</a>
+        </nav>
+      </div>
     </div>
-
-    <div class="min-h-[62vh] overflow-hidden lg:min-h-[calc(100vh-108px)]">
-      <img
-        src={sb800FrontImage.src}
-        alt="Front view of the available SB-800 Shen Classic 3/4 double bass"
-        class="h-full w-full object-cover object-center"
-      />
-    </div>
-  </div>
+  </Container>
 </section>
+
+<style>
+  .hero { background: #191919; color: #f3f2ef; }
+  .hero-inner { display: grid; gap: 1.75rem; padding-block: 2rem 2.5rem; }
+  .hero-label { color: #b4b4b1; font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; }
+  h1 { margin-top: .7rem; font-family: var(--font-serif); font-size: clamp(2.25rem, 3.8vw, 3.25rem); font-weight: 400; line-height: 1.13; letter-spacing: -.025em; }
+  h1 span { display: block; margin-top: .12em; font-size: .75em; }
+  .hero-photographs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; width: 100%; max-width: 640px; margin-inline: auto; }
+  .hero-photographs.single-photo { grid-template-columns: 1fr; max-width: 260px; }
+  .hero-figure { min-width: 0; }
+  .hero-photo-link { display: block; }
+  figcaption { margin-top: .85rem; }
+  figcaption a { display: block; font-family: var(--font-serif); font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 1.3; }
+  figcaption span { display: block; margin-top: .35rem; color: #aaa; font-size: .75rem; }
+  .hero-introduction { max-width: 24rem; color: #c3c3c0; font-size: 1rem; line-height: 1.75; }
+  .hero-links { display: flex; flex-wrap: wrap; align-items: baseline; gap: 1rem 1.75rem; margin-top: 1.5rem; }
+  .hero-primary { display: inline-flex; align-items: center; gap: 1rem; border-bottom: 1px solid #b4b4b1; padding-block: .4rem; font-size: .9375rem; }
+  .hero-secondary { color: #c3c3c0; font-size: .875rem; text-decoration: underline; text-underline-offset: .3em; text-decoration-color: #666; }
+  .hero a:hover { color: white; text-decoration: underline; text-underline-offset: .3em; }
+  .hero a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+  @media (min-width: 640px) {
+    .hero-inner { padding-block: 3rem; }
+    .hero-photographs { gap: 1.5rem; }
+    .hero-photographs.single-photo { max-width: 400px; }
+  }
+  @media (min-width: 1024px) {
+    /* Fill the initial viewport below the 98px desktop header, without clipping short screens. */
+    .hero-inner { min-height: calc(100svh - 98px); grid-template-columns: minmax(0, .9fr) minmax(0, 1.7fr); grid-template-rows: 1fr 1fr; column-gap: 3rem; row-gap: 1.75rem; }
+    .hero-heading { align-self: end; }
+    .hero-copy { grid-column: 1; grid-row: 2; align-self: start; }
+    .hero-photographs { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+    .hero-links { flex-direction: column; gap: 1.1rem; }
+    .without-photo { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+  }
+</style>
