@@ -29,8 +29,7 @@ order: 100
 featured: true
 location: Berlin
 shortDescription: >-
-  A 2023 Shen Classic 3/4 demonstrator with a spruce top, figured maple back
-  and Tempera BASSO orchestral strings.
+  A 2023 Shen Classic 3/4 demonstrator with a spruce top and figured maple back.
 stringLength: 41.25 in / 104.8 cm
 bodyLength: 43 3/4 in / 111.1 cm
 topMaterial: Fully carved spruce
@@ -51,7 +50,7 @@ This 2023 SB-800 is a Shen Classic 3/4 demonstrator with a figured maple back. T
 
 ## Fitted equipment
 
-The bass is fitted with Tempera BASSO orchestral strings and individual tuning machines. Its setup was carried out by Shen in China. In Berlin, the existing bridge was stood up and the strings were fitted.
+The bass is fitted with individual tuning machines. Its setup was carried out by Shen in China. In Berlin, the existing bridge was stood up and the strings were fitted.
 
 ## Model reference
 
