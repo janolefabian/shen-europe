@@ -114,7 +114,7 @@ test("instrument pages distinguish individual notes from reference specification
   assert.match(panormo, /Tuning machine detail/);
 });
 
-test("About uses the three selected Suzhou photographs and omits the varnished-bass room", () => {
+test("About pairs two Suzhou photographs with one undated Samuel archival photograph", () => {
   const html = read("about/index.html");
   const images = [...html.matchAll(/<img\b[^>]*>/g)].map(([image]) => image);
   assert.equal(images.length, 3);
@@ -123,14 +123,33 @@ test("About uses the three selected Suzhou photographs and omits the varnished-b
   for (const image of images.slice(1)) assert.match(image, /loading="lazy"/);
   for (const image of images) {
     assert.match(image, /srcset="[^"]+\.webp/);
-    assert.match(image, /alt="[^"]+Suzhou"/);
+    assert.match(image, /alt="[^"]+"/);
     assert.match(image, /width="\d+"/);
     assert.match(image, /height="\d+"/);
   }
-  assert.equal([...html.matchAll(/data-suzhou-photo="/g)].length, 3);
-  assert.match(html, /Photographs supplied by Shen/);
+  assert.equal([...html.matchAll(/data-suzhou-photo="/g)].length, 2);
+  assert.equal([...html.matchAll(/data-archive-photo="/g)].length, 1);
+  assert.match(images[0], /alt="[^"]+Suzhou"/);
+  assert.match(images[1], /alt="Samuel Shen[^"]+undated archival photograph"/);
+  assert.match(images[2], /alt="[^"]+Suzhou"/);
+  assert.match(html, /Photograph supplied by Shen/);
+  assert.doesNotMatch(html, /data-suzhou-photo="workshop-bodies"/);
   assert.doesNotMatch(html, /varnished-basses|Rows of varnished double basses|Double basses at Shen in Suzhou\./);
   assert.doesNotMatch(html, /SB-800 · Shen Classic 3\/4, corner detail|design-studies|ai-lighting|cleaned-v2|generated_images/);
+});
+
+test("Samuel's biography stays factual and does not assign a date or location to the archive photo", () => {
+  const html = read("about/index.html");
+  const story = html.match(/<section\b[^>]*id="samuel-shen"[^>]*>[\s\S]*?<\/section>/)?.[0];
+  assert.ok(story);
+  assert.match(story, /aria-labelledby="samuel-shen-title"/);
+  assert.match(story, /trained as a violin maker in Canada/);
+  assert.match(story, /ran his own workshop/);
+  assert.match(story, /later returned to China/);
+  assert.match(story, /Samuel Shen at the workbench\. Undated archival photograph\./);
+  const caption = story.match(/<figcaption[^>]*>([\s\S]*?)<\/figcaption>/)?.[1] ?? "";
+  assert.doesNotMatch(caption, /Canada|Suzhou|China|\b(?:19|20)\d{2}\b|1990s|1980s/);
+  assert.doesNotMatch(story, /master luthier|generations|centuries|award-winning|European tradition/i);
 });
 
 test("Suzhou source files remain identical to the approved Canva exports", () => {

@@ -3,8 +3,8 @@ import { Image } from "astro:assets";
 import Container from "../components/layout/Container.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import stackedBodies from "../assets/suzhou/stacked-bodies.png";
-import workshopBodies from "../assets/suzhou/workshop-bodies.png";
 import bassesBeforeVarnishing from "../assets/suzhou/basses-before-varnishing.png";
+import samuelAtWorkbench from "../assets/archive/samuel-shen-at-workbench.jpg";
 import { withBasePath } from "../lib/sitePaths";
 ---
 
@@ -37,42 +37,77 @@ import { withBasePath } from "../lib/sitePaths";
     </Container>
   </section>
 
-  <section id="suzhou" class="border-t border-neutral-200 py-12 sm:py-16">
-    <Container class="grid gap-6 md:grid-cols-2 lg:gap-24">
-      <div>
-        <h2 class="section-title text-neutral-950">Shen in Suzhou</h2>
-        <p class="mt-4 text-sm leading-relaxed text-neutral-500">Photographs supplied by Shen.</p>
+  <section id="samuel-shen" aria-labelledby="samuel-shen-title" class="samuel-section py-12 sm:py-16">
+    <Container class="samuel-story">
+      <div class="samuel-copy">
+        <p class="eyebrow">The maker</p>
+        <h2 id="samuel-shen-title" class="section-title mt-3 text-neutral-950">Samuel Shen</h2>
+        <div class="mt-5 space-y-4 text-base leading-[1.8] text-neutral-600">
+          <p>
+            Samuel Shen trained as a violin maker in Canada, where he also
+            ran his own workshop.
+          </p>
+          <p>
+            He later returned to China and established the company that
+            produces Shen instruments today.
+          </p>
+        </div>
       </div>
-      <div class="max-w-xl space-y-5 text-base leading-[1.8] text-neutral-600">
-        <p>
-          Samuel Shen makes the instruments in China. The range includes
-          basses with carved solid-wood tops and backs and solid-wood ribs,
-          hybrids with a carved top and laminated back and ribs, and laminated basses.
-          Body pattern, materials and specification level are separate choices;
-          a model name alone does not describe every detail of an instrument.
-        </p>
-        <p>
-          For the instruments supplied to Shen Europe so far, the setup has
-          been carried out by Shen in China. In Berlin, the existing bridges
-          were stood up and strings were fitted. The instrument pages distinguish
-          documented equipment and playing observations from model-reference specifications.
-        </p>
-        <a href={withBasePath("/models")} class="quiet-link">Construction and model levels</a>
-      </div>
+      <figure class="archive-photo" data-archive-photo="samuel-at-workbench">
+        <Image src={samuelAtWorkbench}
+          alt="Samuel Shen working on an instrument at the workbench in an undated archival photograph"
+          widths={[400, 640, 960, 1200]} sizes="(min-width: 768px) 448px, (min-width: 488px) 448px, calc(100vw - 40px)"
+          format="webp" quality={85} loading="lazy" class="block h-auto w-full" />
+        <figcaption>Samuel Shen at the workbench. Undated archival photograph.</figcaption>
+      </figure>
     </Container>
-    <Container class="workshop-pair">
+  </section>
+
+  <section id="suzhou" aria-labelledby="suzhou-title" class="py-12 sm:py-16">
+    <Container class="suzhou-story">
+      <div>
+        <h2 id="suzhou-title" class="section-title text-neutral-950">Shen in Suzhou</h2>
+        <div class="mt-5 max-w-xl space-y-5 text-base leading-[1.8] text-neutral-600">
+          <p>
+            Shen produces the instruments in China. The range includes
+            basses with carved solid-wood tops and backs and solid-wood ribs,
+            hybrids with a carved top and laminated back and ribs, and laminated basses.
+            Body pattern, materials and specification level are separate choices;
+            a model name alone does not describe every detail of an instrument.
+          </p>
+          <p>
+            For the instruments supplied to Shen Europe so far, the setup has
+            been carried out by Shen in China. In Berlin, the existing bridges
+            were stood up and strings were fitted. The instrument pages distinguish
+            documented equipment and playing observations from model-reference specifications.
+          </p>
+          <a href={withBasePath("/models")} class="quiet-link">Construction and model levels</a>
+        </div>
+      </div>
       <figure class="suzhou-photo" data-suzhou-photo="basses-before-varnishing">
         <Image src={bassesBeforeVarnishing} alt="Unfinished double basses with necks and scrolls at Shen in Suzhou"
           widths={[480, 800, 1200, 1706]} sizes="(min-width: 1280px) 620px, (min-width: 768px) 48vw, 100vw"
           format="webp" quality={82} loading="lazy" class="block h-auto w-full" />
-        <figcaption>Double basses before varnishing, Suzhou.</figcaption>
+        <figcaption>Double basses before varnishing, Suzhou. Photograph supplied by Shen.</figcaption>
       </figure>
-      <figure class="suzhou-photo" data-suzhou-photo="workshop-bodies">
-        <Image src={workshopBodies} alt="Unfinished instrument bodies arranged in the workshop at Shen in Suzhou"
-          widths={[480, 800, 1200, 1706]} sizes="(min-width: 1280px) 620px, (min-width: 768px) 48vw, 100vw"
-          format="webp" quality={82} loading="lazy" class="block h-auto w-full" />
-        <figcaption>Instrument bodies in the workshop, Suzhou.</figcaption>
-      </figure>
+    </Container>
+  </section>
+
+  <section id="shen-in-the-us" aria-labelledby="shen-in-the-us-title" class="border-t border-neutral-200 py-12 sm:py-16">
+    <Container class="grid gap-6 md:grid-cols-2 lg:gap-24">
+      <h2 id="shen-in-the-us-title" class="section-title text-neutral-950">Shen in the United States</h2>
+      <div class="us-context max-w-xl space-y-5 text-base leading-[1.8] text-neutral-600">
+        <p>
+          Samuel Shen double basses are represented in the United States by{" "}
+          <a href="https://cscproducts.com/">CSC Products</a>{" "}
+          and sold through specialist instrument shops.
+        </p>
+        <p>
+          In its published comments on the Shen range, US dealer{" "}
+          <a href="https://www.brucewallacebass.com/basssales">Wallace Bass Shop</a>{" "}
+          highlights the instruments’ design, workmanship and seasoned wood.
+        </p>
+      </div>
     </Container>
   </section>
 
@@ -137,16 +172,30 @@ import { withBasePath } from "../lib/sitePaths";
 
 <style>
   /* Container renders these roots without forwarding this page's scope attribute. */
-  :global(.about-intro) { display: grid; align-items: center; gap: 2.5rem; }
-  .suzhou-photo { min-width: 0; width: 100%; }
-  .suzhou-photo figcaption { margin-top: .75rem; color: #737373; font-size: .75rem; line-height: 1.6; }
-  :global(.workshop-pair) { display: grid; gap: 2rem; margin-top: 2.75rem; }
+  :global(.about-intro), :global(.samuel-story), :global(.suzhou-story) {
+    display: grid; align-items: center; gap: 2.5rem;
+  }
+  .suzhou-photo, .archive-photo { min-width: 0; width: 100%; }
+  .suzhou-photo figcaption, .archive-photo figcaption {
+    margin-top: .75rem; color: #737373; font-size: .75rem; line-height: 1.6;
+  }
+  .samuel-section { background: #f6f6f6; }
+  .archive-photo { max-width: 28rem; }
+  .samuel-copy { max-width: 30rem; }
+  #samuel-shen, #shen-in-the-us { scroll-margin-top: 7rem; }
+  .us-context a { color: #171717; text-decoration: underline; text-decoration-color: #c4c4c4; text-underline-offset: .2em; }
+  .us-context a:hover { text-decoration-color: currentColor; }
+  .us-context a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
   .journey-steps { display: grid; gap: 1.75rem; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #404040; }
   @media (min-width: 768px) {
-    :global(.about-intro) { grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); gap: 3rem; }
-    :global(.workshop-pair) { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    :global(.about-intro), :global(.samuel-story), :global(.suzhou-story) {
+      grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); gap: 3rem;
+    }
+    .samuel-copy { grid-column: 2; grid-row: 1; }
+    .archive-photo { grid-column: 1; grid-row: 1; }
   }
   @media (min-width: 1024px) {
+    :global(.samuel-story), :global(.suzhou-story) { column-gap: 5rem; }
     .journey-steps { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 3rem; }
   }
 </style>
