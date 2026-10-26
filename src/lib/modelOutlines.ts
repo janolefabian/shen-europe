@@ -2,6 +2,9 @@
 // on 2026-10-20. No automatic pixel tracing and no changes to instrument photos.
 // Source-coordinate curves are normalised to the same displayed BODY length.
 // A shared pattern is deliberately reused across levels, not invented anew for each SB code.
+// Panormo's partly obscured lower edge was revised on 2026-10-26 using Rogeri
+// as a schematic reference: a broad, shallow base rather than a rounded bowl.
+// Its visible upper contour and flanks are unchanged.
 export const modelOutlineDefinitions = {
   "rogeri": {
     "label": "Rogeri",
@@ -71,9 +74,11 @@ export const modelOutlineDefinitions = {
     "label": "Panormo",
     "center": 640,
     "top": 156,
-    "bottom": 1700,
-    "halfPath": "M640 156 H676 C689 198 741 217 799 249 C947 313 1029 385 1011 493 C1009 573 1001 642 980 681 Q974 693 994 703 L987 715 C947 693 916 723 905 766 C885 832 901 960 932 1006 C958 1045 1006 1053 1035 1033 L1040 1048 C1019 1090 1067 1178 1100 1289 C1133 1419 1116 1545 1059 1605 C975 1680 728 1700 640 1700",
-    "referenceImage": "src/content/instruments/bass-0004/hero.png"
+    "bottom": 1720,
+    "halfPath": "M640 156 H676 C689 198 741 217 799 249 C947 313 1029 385 1011 493 C1009 573 1001 642 980 681 Q974 693 994 703 L987 715 C947 693 916 723 905 766 C885 832 901 960 932 1006 C958 1045 1006 1053 1035 1033 L1040 1048 C1019 1090 1067 1178 1100 1289 C1133 1419 1116 1545 1059 1605 C1002 1665 910 1720 640 1720",
+    "referenceImage": "src/content/instruments/bass-0004/hero.png",
+    "completionReference": "rogeri",
+    "completionNote": "The lower edge, partly obscured by a support in the reference photograph, is completed schematically with reference to the Rogeri drawing."
   }
 } as const;
 
