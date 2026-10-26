@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/layout/Container.astro';
+import ModelComparison from '../components/ModelComparison.astro';
+---
+<BaseLayout title="Body comparison preview | Shen Europe">
+  <section class="comparison-preview">
+    <Container>
+      <header class="preview-heading">
+        <p class="eyebrow">Model guide · Preview</p>
+        <h1 class="page-title">Models</h1>
+        <p class="intro">Explore by construction. Pin a model to compare its shape with the others.</p>
+      </header>
+      <ModelComparison />
+    </Container>
+  </section>
+</BaseLayout>
+<style>
+  .comparison-preview { padding-block: 2.5rem 4rem; }
+  .preview-heading { margin-bottom: 2.5rem; }
+  h1 { margin-top: .6rem; }
+  .intro { margin-top: .85rem; color: var(--color-muted); font-size: .9375rem; line-height: 1.7; }
+  @media (max-width: 639px) { .comparison-preview { padding-top: 1.5rem; } .preview-heading { margin-bottom: 1.5rem; } }
+</style>

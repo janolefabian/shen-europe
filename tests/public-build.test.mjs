@@ -12,7 +12,7 @@ const pages = listHtml("dist");
 const read = (path) => readFileSync(`dist/${path}`, "utf8");
 
 test("all public pages retain noindex and contain no cross-brand contact or unconfirmed service promises", () => {
-  assert.equal(pages.length, 9);
+  assert.equal(pages.length, 10);
   for (const path of pages) {
     const html = readFileSync(path, "utf8");
     assert.match(html, /name="robots"[^>]*noindex/, path);
@@ -44,7 +44,7 @@ test("sold references are outside the available stock section", () => {
   assert.match(current, /sb-800-shen-classic-3-4-bass-0003/);
 });
 
-test("all nine pages use deployable internal links and image files", () => {
+test("all pages use deployable internal links and image files", () => {
   for (const path of pages) {
     const html = readFileSync(path, "utf8");
     for (const match of html.matchAll(/(?:href|src)="(\/[^"#?]*)(?:[^"\s]*)"/g)) {
@@ -70,23 +70,32 @@ test("model guide links only available examples without inventing catalogue prom
   const html = read("models/index.html");
   assert.doesNotMatch(html, /No example currently|5-Saiter|Carved solid wood throughout|SB-190|SB-288|Mahogany/);
   assert.match(html, /href="[^"]*sb-800-shen-classic/);
-  assert.match(html, /Available to try: SB-800/);
-  assert.match(html, /Available to try: SB-1000/);
-  assert.match(html, /Available to try: SB-150/);
+  const available = [...html.matchAll(/class="available-examples"[^>]*>[\s\S]*?<\/div>/g)].map(([panel]) => panel);
+  assert.equal(available.length, 3);
+  for (const level of ["SB-800", "SB-1000", "SB-150"]) {
+    assert.ok(available.some(panel => panel.includes("Available to try") && panel.includes(level)), level);
+  }
 });
 
 test("model guide renders the complete illustrated catalogue with one construction heading per group", () => {
   const html = read("models/index.html");
-  assert.equal([...html.matchAll(/data-model="/g)].length, 17);
-  assert.equal([...html.matchAll(/data-outline="/g)].length, 17);
+  assert.equal([...html.matchAll(/data-entry="/g)].length, 17);
+  assert.equal([...html.matchAll(/data-details="/g)].length, 17);
+  assert.equal([...html.matchAll(/data-source="/g)].length, 9);
   for (const group of ["fully-carved", "hybrid", "laminated"]) {
-    assert.equal([...html.matchAll(new RegExp(`id="${group}-title"`, "g"))].length, 1);
+    assert.equal([...html.matchAll(new RegExp(`id="heading-${group}"`, "g"))].length, 1);
   }
-  assert.match(html, /compare body shapes at equal height, not actual instrument sizes/);
+  assert.match(html, /Body lengths to scale/);
+  assert.match(html, /Widths estimated from photographs/);
+  assert.doesNotMatch(html, /equal height|Model guide · Preview/);
+  for (const group of ["fully-carved", "hybrid", "laminated"]) assert.match(html, new RegExp(`id="${group}"`));
+  assert.match(html, /<dialog[^>]*aria-labelledby="mobile-comparison-title"/);
+  assert.match(html, /data-model-picker/);
+  assert.match(html, /data-pin-current/);
   assert.match(html, /Gamba outline shown/);
   assert.match(html, /US specification lists laminated willow ribs/);
   assert.doesNotMatch(html, /<img\b|example-photo|Photograph of this instrument/);
-  assert.equal([...html.matchAll(/class="instrument-example"/g)].length, 3);
+  assert.equal([...html.matchAll(/class="available-examples"/g)].length, 3);
   assert.doesNotMatch(html, /Reading the model name|Drawing reference<\/summary>/);
 });
 
@@ -100,6 +109,15 @@ test("model guide has one optional name explanation instead of a competing intro
   assert.match(guide, /Wood selection/);
   assert.equal([...html.matchAll(/class="name-example"/g)].length, 1);
   assert.doesNotMatch(html, /intro-grid|mobile-name-guide|A model name, explained/);
+});
+
+test("Panormo drawing discloses the schematic lower edge without presenting it as measured geometry", () => {
+  const html = read("models/index.html");
+  const panormo = html.match(/<div\b[^>]*data-details="Panormo"[^>]*>[\s\S]*?<\/details>/)?.[0];
+  assert.ok(panormo);
+  assert.match(panormo, /provisional local reference/);
+  assert.match(panormo, /partly obscured[\s\S]*?schematically[\s\S]*?Rogeri/);
+  assert.match(html, /simplified, symmetrical illustrations, not measured plans/);
 });
 
 test("instrument pages distinguish individual notes from reference specifications", () => {
